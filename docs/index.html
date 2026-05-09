@@ -1,33 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mouzi — Intelligent File Organizer for Windows</title>
-  <meta name="description" content="Mouzi is a silent, elegant file organizer that lives in your system tray and keeps your Downloads folder automatically tidy. 100% offline, 100% free.">
-  <meta name="keywords" content="file organizer, downloads organizer, windows tray app, automatic file sorting, file manager, open source">
+  <title>Mouzi - Intelligent Downloads Folder File Organizer</title>
+  <meta name="description"
+    content="Mouzi is a silent, elegant file organizer that lives in your system tray and keeps your Downloads folder automatically tidy. 100% offline, 100% free.">
+  <meta name="keywords"
+    content="file organizer, downloads organizer, windows tray app, automatic file sorting, file manager, open source">
   <meta name="author" content="Mouzi">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://mouzi.cc">
 
-  <meta property="og:title" content="Mouzi — Intelligent File Organizer for Windows">
-  <meta property="og:description" content="Download, forget — it remembers. Mouzi organizes your files automatically. 100% offline & open source.">
+  <meta property="og:title" content="Mouzi - Intelligent Downloads Folder File Organizer for Windows">
+  <meta property="og:description"
+    content="Your downloads, tamed. Mouzi organizes your downloaded files automatically. 100% offline & open source.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://mouzi.cc">
-  <meta property="og:image" content="https://mouzi.cc/og-image.png">
+  <meta property="og:image" content="https://mouzi.cc/mouzilogo.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Mouzi — Intelligent File Organizer">
-  <meta name="twitter:description" content="Silent, automatic file organizer for Windows. Lives in your tray. 100% offline.">
+  <meta name="twitter:title" content="Mouzi - Intelligent Downloads Folder File Organizer">
+  <meta name="twitter:description"
+    content="Silent, automatic file organizer for Windows. Lives in your tray. 100% offline.">
 
-  <link rel="icon" type="image/png" href="/icon.png">
-  <link rel="apple-touch-icon" href="/icon.png">
+  <link rel="icon" type="image/png" href="/mouzilogo.png">
+  <link rel="apple-touch-icon" href="/mouzilogo.png">
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "Mouzi",
-    "description": "Intelligent file organizer for Windows that lives in your system tray and keeps your Downloads folder automatically tidy.",
+    "description": "Intelligent Downloads Folder File Organizer for Windows that lives in your system tray and keeps your Downloads folder automatically tidy.",
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Windows 10, Windows 11",
     "offers": {
@@ -51,16 +56,20 @@
       --primary: #6366f1;
       --primary-hover: #818cf8;
       --bg: #0b0f19;
-      --surface: rgba(255,255,255,0.03);
-      --surface-hover: rgba(255,255,255,0.06);
-      --border: rgba(255,255,255,0.08);
+      --surface: rgba(255, 255, 255, 0.03);
+      --surface-hover: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.08);
       --text: #f8fafc;
       --muted: #94a3b8;
       --radius: 14px;
-      --shadow: 0 8px 32px rgba(0,0,0,0.35);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
     }
 
-    * { margin:0; padding:0; box-sizing:border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     html {
       scroll-behavior: smooth;
@@ -81,8 +90,8 @@
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(ellipse 80% 60% at 20% 40%, rgba(99,102,241,0.12) 0%, transparent 70%),
-        radial-gradient(ellipse 60% 50% at 80% 60%, rgba(139,92,246,0.08) 0%, transparent 70%);
+        radial-gradient(ellipse 80% 60% at 20% 40%, rgba(99, 102, 241, 0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 80% 60%, rgba(139, 92, 246, 0.08) 0%, transparent 70%);
       z-index: -1;
       pointer-events: none;
     }
@@ -99,7 +108,7 @@
       top: 0;
       z-index: 100;
       backdrop-filter: blur(12px);
-      background: rgba(11,15,25,0.7);
+      background: rgba(11, 15, 25, 0.7);
       border-bottom: 1px solid var(--border);
     }
 
@@ -121,10 +130,12 @@
     }
 
     .logo-icon {
-      width: 32px; height: 32px;
+      width: 32px;
+      height: 32px;
       border-radius: 8px;
-      background: linear-gradient(135deg, var(--primary), #8b5cf6);
-      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--primary), #a08064);
+      display: grid;
+      place-items: center;
       font-size: 14px;
     }
 
@@ -142,7 +153,9 @@
       transition: color 0.2s;
     }
 
-    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover {
+      color: var(--text);
+    }
 
     /* Hero */
     .hero {
@@ -165,7 +178,8 @@
     }
 
     .hero-badge .dot {
-      width: 7px; height: 7px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: #22c55e;
       box-shadow: 0 0 8px #22c55e;
@@ -177,7 +191,7 @@
       line-height: 1.1;
       letter-spacing: -0.03em;
       margin-bottom: 20px;
-      background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+      background: linear-gradient(135deg, #fff 0%, #d9c9bb 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: fadeInUp 0.6s 0.1s ease-out both;
@@ -214,14 +228,14 @@
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--primary), #8b5cf6);
-      color: #fff;
-      box-shadow: 0 4px 20px rgba(99,102,241,0.35);
+      background: linear-gradient(135deg, var(--primary), #a08064);
+      color: #1c1816;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(99,102,241,0.45);
+      box-shadow: 0 8px 28px rgba(99, 102, 241, 0.45);
     }
 
     .btn-secondary {
@@ -232,7 +246,7 @@
 
     .btn-secondary:hover {
       background: var(--surface-hover);
-      border-color: rgba(255,255,255,0.15);
+      border-color: rgba(255, 255, 255, 0.15);
     }
 
     .github-badge {
@@ -242,7 +256,9 @@
     }
 
     /* Sections */
-    section { padding: 80px 0; }
+    section {
+      padding: 80px 0;
+    }
 
     .section-title {
       font-size: 1.75rem;
@@ -269,15 +285,17 @@
 
     .feature-card:hover {
       background: var(--surface-hover);
-      border-color: rgba(255,255,255,0.12);
+      border-color: rgba(255, 255, 255, 0.12);
       transform: translateY(-3px);
     }
 
     .feature-icon {
-      width: 40px; height: 40px;
+      width: 40px;
+      height: 40px;
       border-radius: 10px;
-      background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.15));
-      display: grid; place-items: center;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
+      display: grid;
+      place-items: center;
       font-size: 1.1rem;
       margin-bottom: 14px;
     }
@@ -381,7 +399,9 @@
       user-select: none;
     }
 
-    summary::-webkit-details-marker { display: none; }
+    summary::-webkit-details-marker {
+      display: none;
+    }
 
     summary::after {
       content: '+';
@@ -408,7 +428,7 @@
       margin: 0 auto;
       padding: 40px;
       border-radius: var(--radius);
-      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.08));
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.08));
       border: 1px solid var(--border);
       text-align: center;
     }
@@ -457,29 +477,51 @@
       transition: color 0.2s;
     }
 
-    footer a:hover { color: var(--text); }
+    footer a:hover {
+      color: var(--text);
+    }
 
     /* Animations */
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* Responsive */
     @media (max-width: 640px) {
-      .nav-links { display: none; }
-      .hero { padding: 60px 0 50px; }
-      section { padding: 50px 0; }
-      .download-card { min-width: unset; width: 100%; }
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding: 60px 0 50px;
+      }
+
+      section {
+        padding: 50px 0;
+      }
+
+      .download-card {
+        min-width: unset;
+        width: 100%;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <nav>
     <div class="container">
       <a href="/" class="logo">
-        <span class="logo-icon">🧹</span>
+        <img src="/mouzilogo.png" alt="Mouzi" width="32" height="32" style="border-radius:8px;">
         Mouzi
       </a>
       <ul class="nav-links">
@@ -494,18 +536,19 @@
   <header class="hero">
     <div class="container">
       <div class="hero-badge">
-        <span class="dot"></span>
+        <img src="/mouzilogo.png" alt="" width="16" height="16" style="border-radius:4px;">
         100% Offline &amp; Open Source
       </div>
-      <h1>Download, forget —<br>it remembers.</h1>
+      <h1>Download, forget -<br>it remembers.</h1>
       <p class="hero-sub">
         Mouzi is a silent file organizer that lives in your system tray.
-        It watches your folders and automatically sorts files by type —
+        It watches your folders and automatically sorts files by type -
         images, documents, archives, and more.
       </p>
       <div class="hero-actions">
         <a href="#download" class="btn btn-primary">Download for Windows</a>
-        <a href="https://github.com/hsr88/mouzi" target="_blank" rel="noopener" class="btn btn-secondary">⭐ Star on GitHub</a>
+        <a href="https://github.com/hsr88/mouzi" target="_blank" rel="noopener" class="btn btn-secondary">⭐ Star on
+          GitHub</a>
       </div>
       <div class="github-badge">
         <a href="https://github.com/hsr88/mouzi" target="_blank" rel="noopener">
@@ -524,12 +567,14 @@
         <div class="feature-card">
           <div class="feature-icon">🔇</div>
           <h3>Silent by Design</h3>
-          <p>Runs quietly in the background. No pop-ups, no interruptions — just a subtle toast when files are organized.</p>
+          <p>Runs quietly in the background. No pop-ups, no interruptions - just a subtle toast when files are
+            organized.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">⚡</div>
           <h3>Smart Rules Engine</h3>
-          <p>Define custom rules with extensions, regex patterns, and dynamic paths like <code>{year}/{month}</code>.</p>
+          <p>Define custom rules with extensions, regex patterns, and dynamic paths like <code>{year}/{month}</code>.
+          </p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">📜</div>
@@ -586,27 +631,35 @@
       <div class="faq-list">
         <details>
           <summary>How does Mouzi work?</summary>
-          <p>Mouzi sits in your system tray and watches selected folders (like Downloads). When a new file appears, it waits 2 seconds to ensure the download is complete, then moves it to the appropriate subfolder based on your rules.</p>
+          <p>Mouzi sits in your system tray and watches selected folders (like Downloads). When a new file appears, it
+            waits 2 seconds to ensure the download is complete, then moves it to the appropriate subfolder based on your
+            rules.</p>
         </details>
         <details>
           <summary>Is my data sent anywhere?</summary>
-          <p>No. Mouzi is 100% offline. File names, rules, and history are stored in a local SQLite database on your machine. Nothing ever leaves your computer.</p>
+          <p>No. Mouzi is 100% offline. File names, rules, and history are stored in a local SQLite database on your
+            machine. Nothing ever leaves your computer.</p>
         </details>
         <details>
           <summary>Can I customize the rules?</summary>
-          <p>Absolutely. Open Settings from the tray menu and go to the Rules tab. You can create rules based on file extensions, regex patterns, and set custom destination folders with placeholders like <code>{year}</code>, <code>{month}</code>, or <code>{filename}</code>.</p>
+          <p>Absolutely. Open Settings from the tray menu and go to the Rules tab. You can create rules based on file
+            extensions, regex patterns, and set custom destination folders with placeholders like <code>{year}</code>,
+            <code>{month}</code>, or <code>{filename}</code>.
+          </p>
         </details>
         <details>
           <summary>What if Mouzi moves a file to the wrong place?</summary>
-          <p>Open the History tab in Settings. Every action can be undone with one click — Mouzi will move the file back to its original location.</p>
+          <p>Open the History tab in Settings. Every action can be undone with one click - Mouzi will move the file back
+            to its original location.</p>
         </details>
         <details>
           <summary>Does it start automatically with Windows?</summary>
-          <p>Not yet — this feature is on the roadmap. For now, you can add Mouzi to your Startup folder manually.</p>
+          <p>Not yet - this feature is on the roadmap. For now, you can add Mouzi to your Startup folder manually.</p>
         </details>
         <details>
           <summary>Is it really free?</summary>
-          <p>Yes. Mouzi is open source under the MIT License. You can use it, modify it, and even build your own version from the source code.</p>
+          <p>Yes. Mouzi is open source under the MIT License. You can use it, modify it, and even build your own version
+            from the source code.</p>
         </details>
       </div>
     </div>
@@ -616,7 +669,8 @@
     <div class="container">
       <div class="support-card">
         <h3>Support Mouzi</h3>
-        <p>If Mouzi saves you time and keeps your Downloads folder sane, consider buying me a coffee. It helps keep the project alive and improving.</p>
+        <p>If Mouzi saves you time and keeps your Downloads folder sane, consider buying me a coffee. It helps keep the
+          project alive and improving.</p>
         <a href="https://ko-fi.com/hsr" target="_blank" rel="noopener" class="kofi-btn">
           ☕ Buy me a coffee
         </a>
@@ -627,7 +681,8 @@
   <footer>
     <div class="container">
       <p>
-        &copy; 2025 Mouzi. Open source under <a href="https://github.com/hsr88/mouzi/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>.
+        &copy; 2025 Mouzi. Open source under <a href="https://github.com/hsr88/mouzi/blob/main/LICENSE" target="_blank"
+          rel="noopener">MIT License</a>.
         &middot; <a href="https://github.com/hsr88/mouzi" target="_blank" rel="noopener">GitHub</a>
         &middot; <a href="https://ko-fi.com/hsr" target="_blank" rel="noopener">Ko-fi</a>
       </p>
@@ -635,4 +690,5 @@
   </footer>
 
 </body>
+
 </html>
