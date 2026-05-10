@@ -703,6 +703,91 @@
     }
 
     /* ================================================================
+       SMARTSCREEN NOTICE
+       ================================================================ */
+    .smartscreen-notice {
+      grid-column: span 2;
+      padding: 1rem 0 0;
+      border-top: 1px solid var(--border);
+      background: transparent;
+      border-radius: 0;
+      display: flex;
+      gap: 0.75rem;
+      text-align: left;
+    }
+
+    .smartscreen-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .smartscreen-content {
+      font-size: 0.75rem;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+
+    .smartscreen-title {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+      font-size: 0.78rem;
+    }
+
+    .smartscreen-text {
+      margin-bottom: 0.75rem;
+    }
+
+    .smartscreen-text strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .smartscreen-steps-title {
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    .smartscreen-steps {
+      list-style: decimal;
+      padding-left: 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .smartscreen-steps li {
+      margin-bottom: 0.2rem;
+    }
+
+    .smartscreen-steps strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .smartscreen-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.82rem;
+      transition: opacity 0.3s;
+    }
+
+    .smartscreen-link:hover {
+      opacity: 0.8;
+    }
+
+    @media (max-width: 640px) {
+      .smartscreen-notice {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+    }
+
+    /* ================================================================
        FAQ
        ================================================================ */
     .faq-list {
@@ -1142,8 +1227,26 @@
           <p class="download-desc">For IT administrators and managed deployments.</p>
           <a href="./download/Mouzi_0.1.0_x64_en-US.msi" class="btn-secondary" download>Download .msi</a>
         </div>
+        <div class="smartscreen-notice reveal">
+          <div class="smartscreen-icon">🛡️</div>
+          <div class="smartscreen-content">
+            <p class="smartscreen-title">Windows may show a "Windows protected your PC" warning</p>
+            <p class="smartscreen-text">This happens because Mouzi is new and not yet signed with a code certificate
+              (which costs ~$400/year - not feasible for a free side project). Mouzi is <strong>100% open source and
+                safe</strong>.</p>
+            <p class="smartscreen-steps-title">To run it anyway:</p>
+            <ol class="smartscreen-steps">
+              <li>Click <strong>"More info"</strong> on the SmartScreen popup</li>
+              <li>Click <strong>"Run anyway"</strong></li>
+              <li>Smile - your files are safe and private 🧹</li>
+            </ol>
+            <a href="https://www.virustotal.com/gui/file/2e169d20d02cd1bb8f424c4af7b28a2264a44ac838c2575871ac12e3f039066b"
+              target="_blank" rel="noopener" class="smartscreen-link">
+              🔍 View VirusTotal scan results →
+            </a>
+          </div>
+        </div>
       </div>
-    </div>
   </section>
 
   <section id="faq">
@@ -1187,7 +1290,8 @@
         <details class="reveal">
           <summary>Does it start automatically with Windows?</summary>
           <div class="faq-answer">
-            <p>Yes. Mouzi registers itself to start with Windows automatically. You can toggle this off in Settings → General.</p>
+            <p>Yes. Mouzi registers itself to start with Windows automatically. You can toggle this off in Settings →
+              General.</p>
           </div>
         </details>
         <details class="reveal delay-1">
@@ -1200,13 +1304,15 @@
         <details class="reveal">
           <summary>Does Mouzi support Dark Mode?</summary>
           <div class="faq-answer">
-            <p>Yes. Mouzi follows your Windows theme automatically. You can also switch manually between Light, Dark, and System in Settings → General.</p>
+            <p>Yes. Mouzi follows your Windows theme automatically. You can also switch manually between Light, Dark,
+              and System in Settings → General.</p>
           </div>
         </details>
         <details class="reveal delay-1">
           <summary>Will Mouzi slow down my computer?</summary>
           <div class="faq-answer">
-            <p>No. Mouzi is built with Rust and Tauri, using minimal memory and CPU. It runs silently in the background and you won't even notice it's there.</p>
+            <p>No. Mouzi is built with Rust and Tauri, using minimal memory and CPU. It runs silently in the background
+              and you won't even notice it's there.</p>
           </div>
         </details>
       </div>

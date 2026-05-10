@@ -72,6 +72,13 @@ Auto-detects your Windows system language. Supported:
 | [`Mouzi_0.1.0_x64-setup.exe`](https://mouzi.cc/download) | ~3.3 MB | Regular users (auto-installer) |
 | [`Mouzi_0.1.0_x64_en-US.msi`](https://mouzi.cc/download) | ~4.7 MB | Enterprise / Active Directory |
 
+**SHA-256 Checksums**
+
+```
+Mouzi_0.1.0_x64-setup.exe: 2e169d20d02cd1bb8f424c4af7b28a2264a44ac838c2575871ac12e3f039066b
+Mouzi_0.1.0_x64_en-US.msi: 555676d199e8d7cac7b70703359e0a8387cf0400cf03a109eaf856d06815a701
+```
+
 > ⚠️ **Windows 10/11 only.** Requires the [Microsoft Edge WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (pre-installed on most systems).
 
 ---
