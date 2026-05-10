@@ -37,6 +37,7 @@ export interface AppSettings {
   theme: string;
   telemetry_enabled: boolean;
   first_run: boolean;
+  autostart: boolean;
 }
 
 interface AppState {
@@ -50,6 +51,7 @@ interface AppState {
 
   loadSettings: () => Promise<void>;
   saveSettings: (settings: AppSettings) => Promise<void>;
+  setAutostart: (enabled: boolean) => Promise<void>;
   loadRules: () => Promise<void>;
   loadFolders: () => Promise<void>;
   loadLogs: () => Promise<void>;
@@ -81,6 +83,19 @@ export const useAppStore = create<AppState>((set, get) => ({
   saveSettings: async (settings) => {
     await invoke('update_settings_cmd', { settings });
     set({ settings });
+  },
+
+  setAutostart: async (enabled) => {
+    const { settings } = get();
+    if (!settings) return;
+    if (enabled) {
+      await invoke('enable_autostart_cmd');
+    } else {
+      await invoke('disable_autostart_cmd');
+    }
+    const updated = { ...settings, autostart: enabled };
+    await invoke('update_settings_cmd', { settings: updated });
+    set({ settings: updated });
   },
 
   loadRules: async () => {

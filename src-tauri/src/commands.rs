@@ -1,6 +1,7 @@
 use crate::db::*;
 use crate::rules::manual_scan_folder;
 use tauri::{AppHandle, Manager};
+use tauri_plugin_autostart::ManagerExt;
 use tauri_plugin_notification::NotificationExt;
 
 #[tauri::command]
@@ -153,4 +154,25 @@ pub fn show_notification(app: AppHandle, title: String, body: String) {
         .title(title)
         .body(body)
         .show();
+}
+
+#[tauri::command]
+pub fn enable_autostart_cmd(app: AppHandle) -> Result<(), String> {
+    app.autolaunch()
+        .enable()
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn disable_autostart_cmd(app: AppHandle) -> Result<(), String> {
+    app.autolaunch()
+        .disable()
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn is_autostart_enabled_cmd(app: AppHandle) -> Result<bool, String> {
+    app.autolaunch()
+        .is_enabled()
+        .map_err(|e| e.to_string())
 }

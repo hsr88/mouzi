@@ -45,6 +45,7 @@ pub struct AppSettings {
     pub theme: String,
     pub telemetry_enabled: bool,
     pub first_run: bool,
+    pub autostart: bool,
 }
 
 static DB: OnceCell<Arc<Mutex<Connection>>> = OnceCell::new();
@@ -98,10 +99,19 @@ pub fn init_db(app_dir: PathBuf) -> SqliteResult<()> {
             language TEXT NOT NULL DEFAULT 'en',
             theme TEXT NOT NULL DEFAULT 'system',
             telemetry_enabled INTEGER NOT NULL DEFAULT 0,
-            first_run INTEGER NOT NULL DEFAULT 1
+            first_run INTEGER NOT NULL DEFAULT 1,
+            autostart INTEGER NOT NULL DEFAULT 1
         )",
         [],
     )?;
+
+    // Migration: add autostart column if missing
+    let cols: Vec<String> = conn.prepare("PRAGMA table_info(settings)")?
+        .query_map([], |row| row.get::<_, String>(1))?
+        .collect::<Result<Vec<_>, _>>()?;
+    if !cols.iter().any(|c| c == "autostart") {
+        conn.execute("ALTER TABLE settings ADD COLUMN autostart INTEGER NOT NULL DEFAULT 1", [])?;
+    }
 
     // Insert default settings if empty
     let count: i64 = conn.query_row(
@@ -112,7 +122,7 @@ pub fn init_db(app_dir: PathBuf) -> SqliteResult<()> {
 
     if count == 0 {
         conn.execute(
-            "INSERT INTO settings (language, theme, telemetry_enabled, first_run) VALUES ('en', 'system', 0, 1)",
+            "INSERT INTO settings (language, theme, telemetry_enabled, first_run, autostart) VALUES ('en', 'system', 0, 1, 1)",
             [],
         )?;
     }
@@ -320,7 +330,7 @@ pub fn get_settings() -> SqliteResult<AppSettings> {
     let db = get_db();
     let conn = db.lock().unwrap();
     conn.query_row(
-        "SELECT id, language, theme, telemetry_enabled, first_run FROM settings LIMIT 1",
+        "SELECT id, language, theme, telemetry_enabled, first_run, autostart FROM settings LIMIT 1",
         [],
         |row| {
             Ok(AppSettings {
@@ -329,6 +339,7 @@ pub fn get_settings() -> SqliteResult<AppSettings> {
                 theme: row.get(2)?,
                 telemetry_enabled: row.get::<_, i32>(3)? != 0,
                 first_run: row.get::<_, i32>(4)? != 0,
+                autostart: row.get::<_, i32>(5).unwrap_or(1) != 0,
             })
         },
     )
@@ -338,12 +349,13 @@ pub fn update_settings(settings: &AppSettings) -> SqliteResult<()> {
     let db = get_db();
     let conn = db.lock().unwrap();
     conn.execute(
-        "UPDATE settings SET language=?1, theme=?2, telemetry_enabled=?3, first_run=?4 WHERE id=?5",
+        "UPDATE settings SET language=?1, theme=?2, telemetry_enabled=?3, first_run=?4, autostart=?5 WHERE id=?6",
         params![
             settings.language,
             settings.theme,
             settings.telemetry_enabled as i32,
             settings.first_run as i32,
+            settings.autostart as i32,
             settings.id
         ],
     )?;

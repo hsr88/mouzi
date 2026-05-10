@@ -9,6 +9,7 @@ use db::init_db;
 use directories::ProjectDirs;
 use std::sync::{Arc, Mutex};
 use tauri::Manager;
+use tauri_plugin_autostart::ManagerExt;
 use watcher::FolderWatcher;
 
 pub struct AppState {
@@ -20,6 +21,10 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_notification::init())
+        .plugin(tauri_plugin_autostart::init(
+            tauri_plugin_autostart::MacosLauncher::LaunchAgent,
+            Some(vec!["--autostart"]),
+        ))
         .manage(AppState {
             watcher: Arc::new(Mutex::new(FolderWatcher::new())),
         })
@@ -48,6 +53,16 @@ pub fn run() {
             // Setup system tray
             tray::setup_tray(&app_handle)?;
 
+            // Sync autostart with user settings
+            if let Ok(settings) = db::get_settings() {
+                let auto_manager = app.autolaunch();
+                if settings.autostart {
+                    let _ = auto_manager.enable();
+                } else {
+                    let _ = auto_manager.disable();
+                }
+            }
+
             // Start folder watcher
             let state = app.state::<AppState>();
             let mut watcher = state.watcher.lock().unwrap();
@@ -71,6 +86,9 @@ pub fn run() {
             undo_action_cmd,
             get_settings_cmd,
             update_settings_cmd,
+            enable_autostart_cmd,
+            disable_autostart_cmd,
+            is_autostart_enabled_cmd,
             clear_logs_cmd,
             scan_folder_cmd,
             open_folder_cmd,

@@ -36,6 +36,7 @@ export default function Settings() {
     undoAction,
     settings,
     saveSettings,
+    setAutostart,
   } = useAppStore();
 
   const [tab, setTab] = useState<Tab>("folders");
@@ -378,6 +379,23 @@ export default function Settings() {
                 <option value="light">Light</option>
                 <option value="dark">Dark</option>
               </select>
+            </div>
+            <div className="flex items-center justify-between pt-2">
+              <label className="text-sm font-medium text-text-muted">
+                {t("settings.general.startWithSystem")}
+              </label>
+              <button
+                onClick={() => setAutostart(!settings?.autostart)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  settings?.autostart ? "bg-primary" : "bg-surface-dark"
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    settings?.autostart ? "translate-x-6" : "translate-x-1"
+                  }`}
+                />
+              </button>
             </div>
             <div className="space-y-3 pt-4 border-t border-border">
               <a
