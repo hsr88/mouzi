@@ -167,8 +167,8 @@ Output will be in `src-tauri/target/release/bundle/`.
 - [x] Multi-language support
 - [x] Dark mode
 - [x] History & undo
+- [x] Start with Windows (registry Run key)
 - [ ] Suggest mode (modal confirmation per file)
-- [ ] Start with Windows (registry Run key)
 - [ ] Local AI tagging (ONNX runtime for content classification)
 - [ ] Rule learning from user manual moves
 - [ ] macOS & Linux ports
