@@ -1175,8 +1175,18 @@
         display: none;
       }
     }
+
+    .cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; background: rgba(10,10,8,0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--border); padding: 1rem 1.5rem; display: none; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .cookie-banner p { color: var(--text-muted); font-size: 0.82rem; margin: 0; }
+    .cookie-banner p a { color: var(--primary); text-decoration: none; }
+    .cookie-banner .cb-actions { display: flex; gap: 0.5rem; }
+    .cookie-banner button { border: none; cursor: pointer; font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 7px 18px; border-radius: 100px; transition: all 0.3s; }
+    .cookie-banner .cb-accept { background: var(--primary); color: var(--bg); }
+    .cookie-banner .cb-accept:hover { background: #d4c4b5; }
+    .cookie-banner .cb-reject { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+    .cookie-banner .cb-reject:hover { color: var(--text); border-color: var(--text-muted); }
+
   </style>
-  <script data-goatcounter="https://mouzi.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 
 <body>
@@ -1191,7 +1201,7 @@
       </a>
       <ul class="nav-links">
         <li><a href="#features">Features</a></li>
-        <li><a href="./about.html">About</a></li>
+        <li><a href="/about/">About</a></li>
         <li><a href="#faq">FAQ</a></li>
         <li><a href="https://github.com/hsr88/mouzi" target="_blank" rel="noopener">GitHub</a></li>
         <li><a href="https://ko-fi.com/hsr" target="_blank" rel="noopener">Support</a></li>
@@ -1449,7 +1459,7 @@
         <a href="https://ko-fi.com/hsr" target="_blank" rel="noopener">Ko-fi</a>
       </div>
       <div class="footer-legal" style="margin-top:0.75rem;display:flex;gap:1.5rem;justify-content:center;">
-        <a href="./privacy.html" style="color:var(--text-muted);text-decoration:none;font-size:0.72rem;font-weight:400;opacity:0.5;transition:opacity 0.3s,color 0.3s;">Privacy</a>
+        <a href="/privacy/" style="color:var(--text-muted);text-decoration:none;font-size:0.72rem;font-weight:400;opacity:0.5;transition:opacity 0.3s,color 0.3s;">Privacy</a>
       </div>
     </div>
   </footer>
@@ -1547,6 +1557,32 @@
         }
       });
     });
+  </script>
+
+  <div class="cookie-banner" id="cookie-banner">
+    <p>We use cookies to analyze traffic. <a href="/privacy/">Learn more</a></p>
+    <div class="cb-actions">
+      <button class="cb-accept" onclick="acceptCookies()">Accept</button>
+      <button class="cb-reject" onclick="rejectCookies()">Reject</button>
+    </div>
+  </div>
+
+  <script>
+    function loadGA() {
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-GMDTSE5DFS';
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-GMDTSE5DFS');
+    }
+    const consent = localStorage.getItem('cookie-consent');
+    if (consent === 'accepted') { loadGA(); }
+    else if (!consent) { document.getElementById('cookie-banner').style.display = 'flex'; }
+    function acceptCookies() { localStorage.setItem('cookie-consent', 'accepted'); loadGA(); document.getElementById('cookie-banner').style.display = 'none'; }
+    function rejectCookies() { localStorage.setItem('cookie-consent', 'rejected'); document.getElementById('cookie-banner').style.display = 'none'; }
   </script>
 </body>
 

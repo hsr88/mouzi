@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Policy — Mouzi</title>
   <meta name="description" content="Mouzi privacy policy. No data leaves your computer.">
-  <link rel="canonical" href="https://mouzi.cc/privacy.html">
+  <link rel="canonical" href="https://mouzi.cc/privacy/">
   <link rel="icon" type="image/png" href="./mouzilogo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,6 +70,16 @@
     .footer-legal a { color: var(--text-muted); text-decoration: none; font-size: 0.72rem; font-weight: 400; opacity: 0.6; transition: opacity 0.3s, color 0.3s; }
     .footer-legal a:hover { opacity: 1; color: var(--text); }
 
+    .cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; background: rgba(10,10,8,0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--border); padding: 1rem 1.5rem; display: none; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .cookie-banner p { color: var(--text-muted); font-size: 0.82rem; margin: 0; }
+    .cookie-banner p a { color: var(--primary); text-decoration: none; }
+    .cookie-banner .cb-actions { display: flex; gap: 0.5rem; }
+    .cookie-banner button { border: none; cursor: pointer; font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 7px 18px; border-radius: 100px; transition: all 0.3s; }
+    .cookie-banner .cb-accept { background: var(--primary); color: var(--bg); }
+    .cookie-banner .cb-accept:hover { background: #d4c4b5; }
+    .cookie-banner .cb-reject { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+    .cookie-banner .cb-reject:hover { color: var(--text); border-color: var(--text-muted); }
+
     @media (max-width: 768px) {
       .nav-links, .nav-cta { display: none; }
       .menu-toggle { display: flex; }
@@ -77,20 +87,19 @@
       .page { padding-top: 100px; }
     }
   </style>
-  <script data-goatcounter="https://mouzi.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
   <div class="noise"></div>
 
   <nav>
     <div class="nav-inner">
-      <a href="./index.html" class="logo">
+      <a href="/" class="logo">
         <img src="./mouzilogo.png" alt="" width="28" height="28">
         <span>Mouzi</span>
       </a>
       <ul class="nav-links">
-        <li><a href="./index.html">Home</a></li>
-        <li><a href="./about.html">About</a></li>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about/">About</a></li>
         <li><a href="./index.html#features">Features</a></li>
         <li><a href="https://github.com/hsr88/mouzi" target="_blank" rel="noopener">GitHub</a></li>
         <li><a href="https://ko-fi.com/hsr" target="_blank" rel="noopener">Support</a></li>
@@ -109,14 +118,15 @@
       <p>Mouzi is a desktop application that runs entirely on your computer. <strong>No file names, no file contents, and no usage data ever leave your device.</strong> All data — including your sorting rules, action history, and settings — is stored in a local SQLite database on your hard drive.</p>
 
       <h2>The website</h2>
-      <p>This website (<code>mouzi.cc</code>) uses <strong>GoatCounter</strong> for analytics. GoatCounter is a privacy-friendly analytics tool that:</p>
+      <p>This website (<code>mouzi.cc</code>) uses <strong>Google Analytics 4</strong> to understand how visitors use the site. We only load Google Analytics after you explicitly consent via the cookie banner.</p>
+      <p>Google Analytics may collect:</p>
       <ul>
-        <li>Does <strong>not</strong> use cookies</li>
-        <li>Does <strong>not</strong> collect personal data or IP addresses</li>
-        <li>Does <strong>not</strong> track you across websites</li>
-        <li>Collects only anonymous aggregate data (page views, referrer, screen size, country)</li>
+        <li>IP address (anonymized where possible)</li>
+        <li>Device and browser information</li>
+        <li>Pages visited and time spent</li>
+        <li>Referrer and approximate location</li>
       </ul>
-      <p>Because no personal data is collected, no cookie consent banner is required under GDPR or the ePrivacy Directive.</p>
+      <p>This data is processed by Google and stored on their servers. You can reject analytics cookies at any time — the site works perfectly without them.</p>
 
       <h2>What we do not do</h2>
       <ul>
@@ -142,7 +152,7 @@
       </div>
       <p class="footer-copy">Open source under MIT License. Built with care by <a href="https://hsr.gg" target="_blank" rel="noopener">hsr</a>.</p>
       <div class="footer-legal">
-        <a href="./privacy.html">Privacy</a>
+        <a href="/privacy/">Privacy</a>
       </div>
     </div>
   </footer>
@@ -154,6 +164,32 @@
     const navLinks = document.querySelector('.nav-links');
     menuToggle.addEventListener('click', () => { menuToggle.classList.toggle('active'); navLinks.classList.toggle('mobile-open'); });
     navLinks.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => { menuToggle.classList.remove('active'); navLinks.classList.remove('mobile-open'); }); });
+  </script>
+
+  <div class="cookie-banner" id="cookie-banner">
+    <p>We use cookies to analyze traffic. <a href="/privacy/">Learn more</a></p>
+    <div class="cb-actions">
+      <button class="cb-accept" onclick="acceptCookies()">Accept</button>
+      <button class="cb-reject" onclick="rejectCookies()">Reject</button>
+    </div>
+  </div>
+
+  <script>
+    function loadGA() {
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-GMDTSE5DFS';
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-GMDTSE5DFS');
+    }
+    const consent = localStorage.getItem('cookie-consent');
+    if (consent === 'accepted') { loadGA(); }
+    else if (!consent) { document.getElementById('cookie-banner').style.display = 'flex'; }
+    function acceptCookies() { localStorage.setItem('cookie-consent', 'accepted'); loadGA(); document.getElementById('cookie-banner').style.display = 'none'; }
+    function rejectCookies() { localStorage.setItem('cookie-consent', 'rejected'); document.getElementById('cookie-banner').style.display = 'none'; }
   </script>
 </body>
 </html>
