@@ -703,6 +703,24 @@
     }
 
     /* ================================================================
+       DEMO VIDEO
+       ================================================================ */
+    .demo-video-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .demo-video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ================================================================
        SMARTSCREEN NOTICE
        ================================================================ */
     .smartscreen-notice {
@@ -1317,6 +1335,20 @@
           </div>
         </details>
       </div>
+  </section>
+
+  <section id="demo">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Demo</span>
+        <h2 class="section-title">See it in action.</h2>
+      </div>
+      <div class="demo-video-wrap reveal">
+        <video class="demo-video" autoplay muted loop playsinline preload="metadata">
+          <source src="./mozui_action.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
   </section>
 
   <section id="faq">
