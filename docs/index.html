@@ -1215,7 +1215,7 @@
   </nav>
 
   <header class="hero">
-    <video class="hero-video" autoplay muted loop>
+    <video class="hero-video" autoplay muted loop playsinline disableRemotePlayback preload="metadata" poster="./mouzilogo.png">
       <source src="./video_bg.webm" type="video/webm">
       <source src="./video_bg.mp4" type="video/mp4">
     </video>
@@ -1531,15 +1531,22 @@
        ================================================================ */
     const heroVideo = document.querySelector('.hero-video');
     if (heroVideo) {
+      let failCount = 0;
       const tryPlay = () => {
         if (heroVideo.paused) {
           heroVideo.muted = true;
-          heroVideo.play().catch(() => { });
+          heroVideo.play().catch(() => {
+            failCount++;
+            if (failCount >= 3) {
+              heroVideo.style.display = 'none';
+            }
+          });
         }
       };
       tryPlay();
       heroVideo.addEventListener('canplay', tryPlay);
       heroVideo.addEventListener('loadeddata', tryPlay);
+      heroVideo.addEventListener('error', () => { heroVideo.style.display = 'none'; });
       ['click', 'mousemove', 'scroll', 'touchstart'].forEach(evt => {
         document.addEventListener(evt, tryPlay, { once: true });
       });
