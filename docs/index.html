@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mouzi — Intelligent File Organizer</title>
+  <title>Mouzi — Intelligent Downloads folder file Organizer</title>
   <meta name="description"
     content="Mouzi is a silent, elegant file organizer that lives in your system tray and keeps your Downloads folder automatically tidy. 100% offline, 100% free.">
   <meta name="keywords"
@@ -329,7 +329,7 @@
       height: 100%;
       object-fit: cover;
       z-index: 0;
-      opacity: 1;
+      opacity: 0.5;
     }
 
     .hero-overlay {
@@ -374,14 +374,30 @@
       animation: reveal-up 1s var(--ease-out-expo) 0.15s forwards;
     }
 
+    .hero-title-row {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: reveal-up 1.1s var(--ease-out-expo) 0.3s forwards;
+    }
+
+    .hero-logo {
+      width: clamp(2.2rem, 4.5vw, 3.5rem);
+      height: clamp(2.2rem, 4.5vw, 3.5rem);
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
     .hero-headline {
       font-size: clamp(2.6rem, 6.5vw, 5.2rem);
       font-weight: 400;
       line-height: 1.05;
       letter-spacing: -0.03em;
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: reveal-up 1.1s var(--ease-out-expo) 0.3s forwards;
+      margin-bottom: 0;
     }
 
     .hero-headline em {
@@ -1022,14 +1038,20 @@
 
   <header class="hero">
     <video class="hero-video" autoplay muted loop>
+      <source src="./video_bg.webm" type="video/webm">
       <source src="./video_bg.mp4" type="video/mp4">
     </video>
     <div class="hero-overlay"></div>
     <div class="hero-spotlight"></div>
     <div class="hero-content">
       <p class="hero-eyebrow">For Windows 10 & 11</p>
-      <h1 class="hero-headline">Never think about<br><em>your Downloads</em> again.</h1>
-      <p class="hero-sub">Mouzi lives in your system tray and automatically sorts every downloaded file by type. No
+      <div class="hero-title-row">
+        <img src="./mouzilogo.png" alt="" class="hero-logo" width="56" height="56">
+        <h1 class="hero-headline">Organize <em>Downloads</em> folder automatically</h1>
+      </div>
+
+      <p class="hero-sub"><strong>Mouzi</strong> lives in your system tray and automatically sorts every downloaded file
+        by type. No
         cloud. No clutter. No effort.</p>
       <div class="hero-actions">
         <a href="#download" class="btn-primary">Download for Windows</a>
@@ -1052,7 +1074,9 @@
     <div class="container">
       <div class="section-header reveal">
         <span class="section-label">Capabilities</span>
-        <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
+        <h2 class="section-title">Your downloads, tamed.
+        </h2>
+        <img style="position: absolute; top: -100; LEFT: 100;" src="./mouzilogo.png" alt="" width="158" height="158">
       </div>
       <div class="bento-grid">
         <div class="bento-card large reveal">
@@ -1073,9 +1097,9 @@
         </div>
         <div class="bento-card large reveal">
           <span class="card-num">04</span>
-          <h3>Privacy First</h3>
-          <p>Zero cloud. Zero telemetry. All data stays on your machine in a local SQLite database. Nothing ever leaves
-            your computer.</p>
+          <h3>Clean now</h3>
+          <p>Need to clean up your messy Downloads folder? You can do it in one click! Mouzi scans and organizes all
+            your files in a few seconds, with just one click. No stress, no mess.</p>
         </div>
         <div class="bento-card reveal delay-1">
           <span class="card-num">05</span>
@@ -1084,8 +1108,9 @@
         </div>
         <div class="bento-card reveal delay-2">
           <span class="card-num">06</span>
-          <h3>Dark Mode</h3>
-          <p>Follows your Windows theme or switch manually. Easy on the eyes, day or night.</p>
+          <h3>Privacy First</h3>
+          <p>Zero cloud. Zero telemetry. All data stays on your machine in a local SQLite database. Nothing ever leaves
+            your computer.</p>
         </div>
       </div>
     </div>
@@ -1267,15 +1292,12 @@
       const tryPlay = () => {
         if (heroVideo.paused) {
           heroVideo.muted = true;
-          heroVideo.play().catch((e) => { console.log('Play blocked:', e.message); });
+          heroVideo.play().catch(() => { });
         }
       };
-      console.log('Video initial state — paused:', heroVideo.paused, 'muted:', heroVideo.muted, 'readyState:', heroVideo.readyState);
       tryPlay();
-      heroVideo.addEventListener('canplay', () => { console.log('canplay fired'); tryPlay(); });
-      heroVideo.addEventListener('loadeddata', () => { console.log('loadeddata fired'); tryPlay(); });
-      heroVideo.addEventListener('play', () => console.log('VIDEO STARTED PLAYING'));
-      heroVideo.addEventListener('pause', () => console.log('VIDEO PAUSED'));
+      heroVideo.addEventListener('canplay', tryPlay);
+      heroVideo.addEventListener('loadeddata', tryPlay);
       ['click', 'mousemove', 'scroll', 'touchstart'].forEach(evt => {
         document.addEventListener(evt, tryPlay, { once: true });
       });
