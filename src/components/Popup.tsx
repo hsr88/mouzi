@@ -74,7 +74,7 @@ export default function Popup() {
   return (
     <div className="flex h-full flex-col bg-surface text-text rounded-xl shadow-2xl border border-border overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-surface-dark border-b border-border">
+      <div data-tauri-drag-region className="flex items-center justify-between px-4 py-3 bg-surface-dark border-b border-border">
         <div className="flex items-center gap-2">
           <Sparkles size={16} className="text-primary" />
           <span className="font-semibold text-sm">{t("popup.title")}</span>
