@@ -80,8 +80,7 @@ export default function Settings() {
         <div className="px-4 py-4 flex items-center gap-2">
           <button
             onClick={() => {
-              window.location.hash = "#/popup";
-              window.location.reload();
+              invoke("close_settings");
             }}
             className="p-1.5 rounded-md hover:bg-border transition-colors"
           >

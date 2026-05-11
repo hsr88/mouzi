@@ -101,6 +101,7 @@ pub fn run() {
             get_downloads_folder,
             initialize_defaults_cmd,
             close_popup,
+            close_settings,
             show_notification
         ])
         .run(tauri::generate_context!())

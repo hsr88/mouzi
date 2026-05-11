@@ -171,6 +171,12 @@ pub fn close_popup(app: AppHandle) {
     }
 }
 
+#[tauri::command]
+pub fn close_settings(app: AppHandle) {
+    if let Some(window) = app.get_webview_window("settings") {
+        let _ = window.close();
+    }
+}
 
 #[tauri::command]
 pub fn show_notification(app: AppHandle, title: String, body: String) {
