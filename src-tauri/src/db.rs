@@ -137,7 +137,32 @@ pub fn get_db() -> Arc<Mutex<Connection>> {
     DB.get().expect("Database not initialized").clone()
 }
 
-pub fn insert_default_rules(folder_path: &str) -> SqliteResult<()> {
+pub fn migrate_rules_to_relative() -> SqliteResult<()> {
+    let folders = get_watched_folders()?;
+    let db = get_db();
+    let conn = db.lock().unwrap();
+    for folder in folders {
+        let folder_norm = folder.path.trim_end_matches('/').trim_end_matches('\\');
+        if folder_norm.is_empty() { continue; }
+        let mut stmt = conn.prepare("SELECT id, destination FROM rules WHERE destination LIKE ?1")?;
+        let rows: Vec<(i64, String)> = stmt
+            .query_map([format!("{}%", folder_norm)], |row| Ok((row.get(0)?, row.get(1)?)))?
+            .collect::<SqliteResult<Vec<_>>>()?;
+        for (id, dest) in rows {
+            let relative = if dest.starts_with(&folder_norm) {
+                dest[folder_norm.len()..].trim_start_matches('/').trim_start_matches('\\').to_string()
+            } else {
+                dest.clone()
+            };
+            if !relative.is_empty() && relative != dest {
+                conn.execute("UPDATE rules SET destination = ?1 WHERE id = ?2", params![relative, id])?;
+            }
+        }
+    }
+    Ok(())
+}
+
+pub fn insert_default_rules(_folder_path: &str) -> SqliteResult<()> {
     let db = get_db();
     let conn = db.lock().unwrap();
 

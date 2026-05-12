@@ -41,6 +41,7 @@ pub fn run() {
                 let data_dir = proj_dirs.data_dir().to_path_buf();
                 std::fs::create_dir_all(&data_dir).ok();
                 init_db(data_dir.clone()).expect("Failed to initialize database");
+                let _ = db::migrate_rules_to_relative();
             }
 
             // Initialize default rules on first run
