@@ -1,4 +1,5 @@
 use crate::db::{get_rules, log_action, ActionLog, Rule};
+use crate::ignore::{is_ignored, load_mouziignore};
 use chrono::Utc;
 use regex::Regex;
 use std::fs;
@@ -146,6 +147,14 @@ pub fn execute_rule(file_info: &FileInfo, rule: &Rule) -> Result<String, String>
 }
 
 pub fn process_file(path: &Path) -> Result<Option<(Rule, String)>, String> {
+    if let Some(parent) = path.parent() {
+        let patterns = load_mouziignore(&parent.to_string_lossy());
+        if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
+            if is_ignored(name, &patterns) {
+                return Ok(None);
+            }
+        }
+    }
     let file_info = scan_file(path).ok_or("Cannot read file metadata")?;
     let rule = find_matching_rule(&file_info).ok_or("No matching rule")?;
 

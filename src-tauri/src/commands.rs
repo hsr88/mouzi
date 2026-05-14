@@ -1,4 +1,5 @@
 use crate::db::*;
+use crate::ignore::{load_mouziignore, save_mouziignore};
 use crate::rules::manual_scan_folder;
 use crate::AppState;
 use std::time::Instant;
@@ -217,4 +218,14 @@ pub fn is_autostart_enabled_cmd(app: AppHandle) -> Result<bool, String> {
     app.autolaunch()
         .is_enabled()
         .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn load_mouziignore_cmd(folder_path: String) -> Result<Vec<String>, String> {
+    Ok(load_mouziignore(&folder_path))
+}
+
+#[tauri::command]
+pub fn save_mouziignore_cmd(folder_path: String, patterns: Vec<String>) -> Result<(), String> {
+    save_mouziignore(&folder_path, &patterns)
 }

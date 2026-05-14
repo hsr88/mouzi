@@ -1,5 +1,6 @@
 pub mod commands;
 pub mod db;
+pub mod ignore;
 pub mod rules;
 pub mod tray;
 pub mod watcher;
@@ -103,7 +104,9 @@ pub fn run() {
             initialize_defaults_cmd,
             close_popup,
             close_settings,
-            show_notification
+            show_notification,
+            load_mouziignore_cmd,
+            save_mouziignore_cmd,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

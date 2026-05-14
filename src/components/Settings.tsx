@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 
-type Tab = "folders" | "rules" | "history" | "general";
+type Tab = "folders" | "rules" | "history" | "ignore" | "general";
 
 export default function Settings() {
   const { t, i18n } = useTranslation();
@@ -109,6 +109,12 @@ export default function Settings() {
             onClick={() => setTab("history")}
             icon={<History size={16} />}
             label={t("settings.history.title")}
+          />
+          <SidebarButton
+            active={tab === "ignore"}
+            onClick={() => setTab("ignore")}
+            icon={<X size={16} />}
+            label="Ignore"
           />
           <SidebarButton
             active={tab === "general"}
@@ -481,7 +487,152 @@ export default function Settings() {
             </div>
           </div>
         )}
+
+        {tab === "ignore" && (
+          <IgnoreTab />
+        )}
       </div>
+    </div>
+  );
+}
+
+function IgnoreTab() {
+  const { folders } = useAppStore();
+  const [selectedFolder, setSelectedFolder] = useState("");
+  const [patterns, setPatterns] = useState<string[]>([]);
+  const [newPattern, setNewPattern] = useState("");
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    if (selectedFolder) {
+      invoke<string[]>("load_mouziignore_cmd", { folderPath: selectedFolder })
+        .then(setPatterns)
+        .catch(() => setPatterns([]));
+    } else {
+      setPatterns([]);
+    }
+  }, [selectedFolder]);
+
+  const handleAdd = () => {
+    const trimmed = newPattern.trim();
+    if (!trimmed || patterns.includes(trimmed)) return;
+    setPatterns([...patterns, trimmed]);
+    setNewPattern("");
+    setSaved(false);
+  };
+
+  const handleRemove = (idx: number) => {
+    setPatterns(patterns.filter((_, i) => i !== idx));
+    setSaved(false);
+  };
+
+  const handleSave = async () => {
+    if (!selectedFolder) return;
+    try {
+      await invoke("save_mouziignore_cmd", {
+        folderPath: selectedFolder,
+        patterns,
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch (e) {
+      console.error("save_mouziignore failed:", e);
+    }
+  };
+
+  return (
+    <div className="space-y-6 max-w-md">
+      <h2 className="text-lg font-semibold">Ignore Rules</h2>
+      <p className="text-sm text-text-muted">
+        Choose a watched folder and set patterns for files Mouzi should skip.
+        Patterns are saved as a <code>.mouziignore</code> file in that folder.
+      </p>
+
+      <div>
+        <label className="text-sm font-medium text-text-muted block mb-2">
+          Folder
+        </label>
+        <select
+          value={selectedFolder}
+          onChange={(e) => setSelectedFolder(e.target.value)}
+          className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
+        >
+          <option value="">Select a folder...</option>
+          {folders.map((f) => (
+            <option key={f.id} value={f.path}>
+              {f.path}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {selectedFolder && (
+        <>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-text-muted block">
+              Patterns
+            </label>
+            {patterns.length === 0 && (
+              <p className="text-sm text-text-muted italic">
+                No ignore rules yet. Add one below.
+              </p>
+            )}
+            {patterns.map((p, i) => (
+              <div
+                key={i}
+                className="flex items-center justify-between rounded-md border border-border bg-surface px-3 py-2"
+              >
+                <code className="text-sm text-primary">{p}</code>
+                <button
+                  onClick={() => handleRemove(i)}
+                  className="text-text-muted hover:text-red-400 transition-colors"
+                  title="Remove"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={newPattern}
+              onChange={(e) => setNewPattern(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+              placeholder="e.g. *.tmp or node_modules/"
+              className="flex-1 rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
+            />
+            <button
+              onClick={handleAdd}
+              disabled={!newPattern.trim()}
+              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-bg hover:bg-primary/90 disabled:opacity-40 transition-colors"
+            >
+              Add
+            </button>
+          </div>
+
+          <div className="rounded-md border border-border bg-surface p-3">
+            <p className="text-xs text-text-muted mb-1">
+              <strong className="text-text">Tips:</strong>
+            </p>
+            <ul className="text-xs text-text-muted space-y-1 list-disc pl-4">
+              <li><code>*.tmp</code> — ignore all .tmp files</li>
+              <li><code>node_modules/</code> — ignore the folder</li>
+              <li><code>~$*</code> — ignore Office temp files</li>
+              <li><code>.DS_Store</code> — ignore exact file name</li>
+            </ul>
+          </div>
+
+          <button
+            onClick={handleSave}
+            className="flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-bg hover:bg-primary/90 transition-colors"
+          >
+            <Save size={16} />
+            {saved ? "Saved!" : "Save .mouziignore"}
+          </button>
+        </>
+      )}
     </div>
   );
 }
