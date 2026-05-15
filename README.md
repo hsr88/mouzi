@@ -183,6 +183,7 @@ Output will be in `src-tauri/target/release/bundle/`.
 - [x] Check for updates button
 - [x] `.mouziignore` - per-folder ignore patterns (like `.gitignore`)
 - [x] Portable version (single .exe, no installer)
+- [ ] Grace period option - delay moving files by X minutes (so browser download links stay valid)
 - [ ] Export/import rules as JSON (backup + sharing)
 - [ ] Suggest mode (modal confirmation per file)
 - [ ] Local AI tagging (ONNX runtime for content classification)
