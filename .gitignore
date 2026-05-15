@@ -42,4 +42,7 @@ Thumbs.db
 *.exe
 *.msi
 *.msix
+# But keep released installers in docs
+!docs/download/*.exe
+!docs/download/*.msi
 .kimi/
