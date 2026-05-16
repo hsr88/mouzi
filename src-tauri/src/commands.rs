@@ -21,6 +21,7 @@ pub fn get_system_language() -> String {
         "it" => "it".to_string(),
         "de" => "de".to_string(),
         "fr" => "fr".to_string(),
+        "ru" => "ru".to_string(),
         _ => "en".to_string(),
     }
 }
