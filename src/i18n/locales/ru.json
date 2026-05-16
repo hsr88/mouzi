@@ -1,0 +1,58 @@
+{
+  "app": {
+    "name": "Mouzi",
+    "tagline": "Скачал — забыл, Mouzi всё запомнит"
+  },
+  "popup": {
+    "title": "Mouzi",
+    "cleanNow": "Сортировать сейчас",
+    "openDownloads": "Открыть загрузки",
+    "recentActions": "Недавние действия",
+    "noActions": "Пока нет действий",
+    "weeklyStats": "На этой неделе",
+    "undo": "Отменить",
+    "settings": "Настройки",
+    "quit": "Выход"
+  },
+  "settings": {
+    "title": "Настройки Mouzi",
+    "folders": {
+      "title": "Отслеживаемые папки",
+      "add": "Добавить папку",
+      "remove": "Удалить",
+      "mode": "Режим",
+      "silent": "Тихий",
+      "suggest": "Предлагать"
+    },
+    "rules": {
+      "title": "Правила",
+      "add": "Добавить правило",
+      "edit": "Редактировать",
+      "delete": "Удалить",
+      "name": "Название",
+      "extensions": "Расширения",
+      "destination": "Папка назначения",
+      "pattern": "Шаблон",
+      "priority": "Приоритет",
+      "action": "Действие",
+      "enabled": "Включено"
+    },
+    "history": {
+      "title": "История",
+      "clear": "Очистить историю",
+      "undo": "Отменить",
+      "undone": "Отменено",
+      "empty": "История пуста"
+    },
+    "general": {
+      "title": "Общие",
+      "language": "Язык",
+      "theme": "Тема",
+      "telemetry": "Включить телеметрию",
+      "startWithSystem": "Запускать вместе с системой"
+    }
+  },
+  "notifications": {
+    "cleaned": "Отсортировано: {{count}}"
+  }
+}
