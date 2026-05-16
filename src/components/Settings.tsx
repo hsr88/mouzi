@@ -477,7 +477,7 @@ export default function Settings() {
                 onClick={() =>
                   invoke("open_folder_cmd", { path: "https://ko-fi.com/hsr" })
                 }
-                className="inline-flex items-center gap-2 rounded-xl bg-[#ff5e5b] px-8 py-3 text-base font-semibold text-white shadow-lg shadow-[#ff5e5b]/20 hover:bg-[#e05451] hover:shadow-xl hover:shadow-[#e05451]/30 transition-all"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#ff5e5b] px-8 py-3 text-base font-semibold text-white shadow-lg shadow-[#ff5e5b]/20 hover:bg-[#e05451] hover:shadow-xl hover:shadow-[#ff5e5b]/30 hover:-translate-y-0.5 transition-all"
               >
                 <Heart size={20} className="fill-white" />
                 Support Mouzi on Ko-fi
