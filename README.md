@@ -201,7 +201,10 @@ If Mouzi saves you time and keeps your Downloads folder sane, consider supportin
 Or visit the project homepage: **[mouzi.cc](https://mouzi.cc)**
 
 ---
+## See Also
+For manual control over folder ordering and custom thumbnails in File Explorer, check out [Ordir](https://github.com/landnthrn/ordir) - a tool that lets you organize folders in any order you want.
 
+---
 ## 📄 License
 
 Mouzi is released under the [MIT License](LICENSE).
