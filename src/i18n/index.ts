@@ -16,7 +16,7 @@ const resources = {
   ru: { translation: ru },
 };
 
-export type SupportedLang = 'en' | 'pl' | 'it' | 'de' | 'fr'| 'ru';
+export type SupportedLang = 'en' | 'pl' | 'it' | 'de' | 'fr' | 'ru';
 
 export async function initI18n(lang: SupportedLang) {
   await i18n.use(initReactI18next).init({
