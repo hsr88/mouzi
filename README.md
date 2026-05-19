@@ -204,7 +204,10 @@ Or visit the project homepage: **[mouzi.cc](https://mouzi.cc)**
 
 ---
 ## See Also
-For manual control over folder ordering and custom thumbnails in File Explorer, check out [Ordir](https://github.com/landnthrn/ordir) - a tool that lets you organize folders in any order you want.
+
+### [Ordir](https://github.com/landnthrn/ordir)
+
+Order folders any way you want inside Windows File Explorer, and add custom thumbnails.
 
 ---
 ## 📄 License
