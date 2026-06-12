@@ -67,7 +67,6 @@ pub fn show_popup_window(app: &AppHandle) {
         .title(i18n.get("popup_title"))
         .inner_size(300.0, 420.0)
         .decorations(false)
-        .transparent(true)
         .always_on_top(true)
         .skip_taskbar(true)
         .shadow(false)
