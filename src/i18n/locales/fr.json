@@ -34,6 +34,16 @@
       "modePaused": "En pause",
       "modeDesc": "Choisissez comment Mouzi gère les fichiers dans ce dossier."
     },
+    "archive": {
+      "title": "Importer une archive",
+      "description": "Choisissez une archive Google Takeout .zip, .tgz ou .tar.gz. Mouzi l'extrait, renomme sûrement les doublons imbriqués et exécute vos règles.",
+      "import": "Importer l'archive",
+      "importing": "Import de l'archive...",
+      "importingShort": "Import...",
+      "importSuccess": "{{extracted}} fichier(s) extrait(s) et {{count}} fichier(s) organisé(s).",
+      "importError": "Échec de l'import de l'archive : {{error}}",
+      "openImportFolder": "Ouvrir le dossier d'import"
+    },
     "rules": {
       "title": "Règles",
       "add": "Ajouter une règle",

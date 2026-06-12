@@ -34,6 +34,16 @@
       "modePaused": "一時停止",
       "modeDesc": "このフォルダのファイルを Mouzi がどう扱うか選んでください。"
     },
+    "archive": {
+      "title": "アーカイブをインポート",
+      "description": "Google Takeout の .zip、.tgz、または .tar.gz アーカイブを選択します。Mouzi が展開し、重複する入れ子の名前を安全に変更してルールを実行します。",
+      "import": "アーカイブをインポート",
+      "importing": "アーカイブをインポートしています...",
+      "importingShort": "インポート中...",
+      "importSuccess": "{{extracted}} 個のファイルを展開し、{{count}} 個のファイルを整理しました。",
+      "importError": "アーカイブのインポートに失敗しました: {{error}}",
+      "openImportFolder": "インポートフォルダーを開く"
+    },
     "rules": {
       "title": "ルール",
       "add": "ルールを追加",

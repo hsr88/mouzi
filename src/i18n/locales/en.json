@@ -34,6 +34,16 @@
       "modePaused": "Paused",
       "modeDesc": "Choose how Mouzi handles files in this folder."
     },
+    "archive": {
+      "title": "Import archive",
+      "description": "Pick a Google Takeout .zip, .tgz, or .tar.gz archive. Mouzi extracts it, flattens duplicate nested names safely, and runs your rules.",
+      "import": "Import Archive",
+      "importing": "Importing archive...",
+      "importingShort": "Importing...",
+      "importSuccess": "Extracted {{extracted}} file(s) and organized {{count}} file(s).",
+      "importError": "Failed to import archive: {{error}}",
+      "openImportFolder": "Open import folder"
+    },
     "rules": {
       "title": "Rules",
       "add": "Add Rule",

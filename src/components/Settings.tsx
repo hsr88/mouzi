@@ -24,6 +24,11 @@ import {
 
 type Tab = "folders" | "rules" | "history" | "ignore" | "general";
 type GraceUnit = "seconds" | "minutes" | "hours";
+type ArchiveImportResult = {
+  extractedCount: number;
+  sortedCount: number;
+  stagingPath: string;
+};
 
 const GRACE_STEPS = [
   0, 30, 60, 300, 900, 1800, 3600, 7200, 21600, 43200, 86400, 172800, 604800,
@@ -119,6 +124,12 @@ export default function Settings() {
   const [localSchedule, setLocalSchedule] = useState<ScheduleSettings>(defaultSchedule());
   const [ruleToast, setRuleToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [replaceOnImport, setReplaceOnImport] = useState(false);
+  const [archiveToast, setArchiveToast] = useState<{
+    message: string;
+    type: "success" | "error" | "info";
+    stagingPath?: string;
+  } | null>(null);
+  const [isImportingArchive, setIsImportingArchive] = useState(false);
 
   useEffect(() => {
     loadRules();
@@ -251,6 +262,39 @@ export default function Settings() {
     setTimeout(() => setRuleToast(null), 3000);
   };
 
+  const handleImportArchive = async () => {
+    try {
+      const selected = await open({
+        filters: [{ name: "Archives", extensions: ["zip", "tgz", "gz"] }],
+        multiple: false,
+      });
+      const path = Array.isArray(selected) ? selected[0] : selected;
+      if (!path) return;
+
+      setIsImportingArchive(true);
+      setArchiveToast({ message: t("settings.archive.importing"), type: "info" });
+
+      const summary = await invoke<ArchiveImportResult>("import_archive_cmd", { path });
+      await loadLogs();
+      setArchiveToast({
+        message: t("settings.archive.importSuccess", {
+          count: summary.sortedCount,
+          extracted: summary.extractedCount,
+        }),
+        type: "success",
+        stagingPath: summary.stagingPath,
+      });
+    } catch (e) {
+      console.error("Import archive failed:", e);
+      setArchiveToast({
+        message: t("settings.archive.importError", { error: String(e) }),
+        type: "error",
+      });
+    } finally {
+      setIsImportingArchive(false);
+    }
+  };
+
   const currentGraceSeconds = useMemo(
     () => unitToSeconds(graceValue, graceUnit),
     [graceValue, graceUnit]
@@ -331,6 +375,50 @@ export default function Settings() {
                 <Plus size={14} />
                 {t("settings.folders.add")}
               </button>
+            </div>
+            <div className="rounded-lg border border-border bg-surface-dark p-4 space-y-3">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-sm font-semibold">{t("settings.archive.title")}</h3>
+                  <p className="mt-1 text-xs text-text-muted">
+                    {t("settings.archive.description")}
+                  </p>
+                </div>
+                <button
+                  onClick={handleImportArchive}
+                  disabled={isImportingArchive}
+                  className="flex shrink-0 items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm hover:bg-surface transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  <Upload size={14} />
+                  {isImportingArchive
+                    ? t("settings.archive.importingShort")
+                    : t("settings.archive.import")}
+                </button>
+              </div>
+              {archiveToast && (
+                <div
+                  className={`text-xs px-3 py-2 rounded-md ${
+                    archiveToast.type === "success"
+                      ? "bg-green-50 text-green-700 border border-green-200"
+                      : archiveToast.type === "error"
+                      ? "bg-red-50 text-red-700 border border-red-200"
+                      : "bg-blue-50 text-blue-700 border border-blue-200"
+                  }`}
+                >
+                  <div>{archiveToast.message}</div>
+                  {archiveToast.stagingPath && (
+                    <button
+                      onClick={() =>
+                        invoke("open_folder_cmd", { path: archiveToast.stagingPath })
+                      }
+                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium underline"
+                    >
+                      <ExternalLink size={12} />
+                      {t("settings.archive.openImportFolder")}
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
             <div className="space-y-2">
               {folders.map((f) => (
