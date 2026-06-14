@@ -1,0 +1,134 @@
+{
+  "__translator_info__": {
+    "author": "Vũ Anh Vũ",
+    "email": "vuanhvu11982@gmail.com",
+    "project": "Mouzi Vietnamese Translation",
+    "date": "2026-06-14"
+  },
+  "app": {
+    "name": "Mouzi",
+    "tagline": "Tải về, quên đi – ứng dụng sẽ nhớ",
+    "loading": "Đang tải Mouzi..."
+  },
+  "popup": {
+    "title": "Mouzi",
+    "cleanNow": "Dọn dẹp ngay",
+    "openDownloads": "Mở thư mục tải về",
+    "recentActions": "Hoạt động gần đây",
+    "noActions": "Chưa có hoạt động nào",
+    "weeklyStats": "Tuần này",
+    "undo": "Hoàn tác",
+    "settings": "Cài đặt",
+    "quit": "Thoát",
+    "organized": "Đã sắp xếp: {{file}}",
+    "openFolder": "Nhấp để mở → {{folder}}",
+    "pendingFiles": "{{count}} tệp đang chờ",
+    "cleanManual": "Dọn dẹp ngay"
+  },
+  "settings": {
+    "title": "Cài đặt Mouzi",
+    "folders": {
+      "title": "Thư mục theo dõi",
+      "add": "Thêm thư mục",
+      "remove": "Xóa bỏ",
+      "mode": "Chế độ",
+      "silent": "Tự động",
+      "suggest": "Gợi ý",
+      "placeholder": "C:/Users/.../Downloads",
+      "modeSilent": "Tự động (ngầm)",
+      "modeManual": "Thủ công (chỉ thu thập)",
+      "modePaused": "Tạm dừng",
+      "modeDesc": "Chọn cách Mouzi xử lý các tệp trong thư mục này."
+    },
+    "rules": {
+      "title": "Quy tắc",
+      "add": "Thêm quy tắc",
+      "edit": "Sửa",
+      "delete": "Xóa",
+      "name": "Tên",
+      "extensions": "Đuôi tệp",
+      "destination": "Đích đến",
+      "pattern": "Mẫu",
+      "priority": "Độ ưu tiên",
+      "action": "Hành động",
+      "enabled": "Kích hoạt",
+      "export": "Xuất quy tắc",
+      "import": "Nhập quy tắc",
+      "exportSuccess": "Đã xuất các quy tắc",
+      "importSuccess": "Đã nhập {{count}} quy tắc",
+      "importError": "Lỗi khi nhập quy tắc",
+      "exportError": "Lỗi khi xuất quy tắc",
+      "replaceOnImport": "Thay thế các quy tắc hiện có (nếu không sẽ thêm nối tiếp)"
+    },
+    "history": {
+      "title": "Lịch sử",
+      "clear": "Xóa lịch sử",
+      "undo": "Hoàn tác",
+      "undone": "Đã hoàn tác",
+      "empty": "Không có lịch sử",
+      "revertAll": "Khôi phục tất cả",
+      "revertAllDisabled": "Không có hành động nào để khôi phục"
+    },
+    "general": {
+      "title": "Chung",
+      "language": "Ngôn ngữ",
+      "theme": "Giao diện",
+      "themeSystem": "Hệ thống",
+      "themeLight": "Sáng",
+      "themeDark": "Tối",
+      "telemetry": "Bật thu thập dữ liệu chẩn đoán",
+      "startWithSystem": "Khởi động cùng hệ thống",
+      "gracePeriod": "Thời gian chờ",
+      "gracePeriodDesc": "Thời gian chờ trước khi di chuyển tệp sau lần chỉnh sửa cuối cùng. 0 = tức thì.",
+      "checkFileLock": "Kiểm tra tệp đang khóa",
+      "checkFileLockDesc": "Bỏ qua các tệp hiện đang được sử dụng bởi tiến trình khác",
+      "gracePeriodSeconds": "Giây",
+      "gracePeriodMinutes": "Phút",
+      "gracePeriodHours": "Giờ",
+      "gracePeriodCustom": "Tùy chỉnh",
+      "gracePeriodMaxError": "Thời gian chờ không được quá 7 ngày"
+    },
+    "ignore": {
+      "title": "Bỏ qua",
+      "rulesTitle": "Quy tắc bỏ qua",
+      "description": "Chọn một thư mục theo dõi và thiết lập các mẫu tệp mà Mouzi nên bỏ qua. Các mẫu này được lưu thành tệp .mouziignore trong thư mục đó.",
+      "folder": "Thư mục",
+      "selectFolder": "Chọn một thư mục...",
+      "patterns": "Mẫu",
+      "noRules": "Chưa có quy tắc bỏ qua nào. Hãy thêm một quy tắc bên dưới.",
+      "placeholder": "Ví dụ: *.tmp hoặc node_modules/",
+      "add": "Thêm",
+      "tips": "Mẹo:",
+      "save": "Lưu .mouziignore",
+      "saved": "Đã lưu!",
+      "remove": "Xóa bỏ"
+    },
+    "about": {
+      "title": "Giới thiệu",
+      "tagline": "Quản lý tệp tải về của bạn.",
+      "description": "Mouzi là một công cụ sắp xếp tệp tinh tế và chạy ngầm, nằm ở khay hệ thống và tự động giữ cho thư mục Tải về (và bất kỳ thư mục nào khác) luôn gọn gàng. Ứng dụng chạy lặng lẽ dưới nền, theo dõi các thư mục được chọn, rồi di chuyển, đổi tên hoặc phân loại các tệp dựa trên các quy tắc tùy chỉnh.",
+      "checkUpdates": "Kiểm tra cập nhật",
+      "support": "Ủng hộ Mouzi trên Ko-fi",
+      "supportDesc": "Sự ủng hộ của bạn giúp Mouzi ngày càng hoàn thiện hơn. Xin cảm ơn! 🙏",
+      "builtBy": "Được phát triển tận tâm bởi hsr"
+    },
+    "scheduler": {
+      "title": "Lịch trình",
+      "enable": "Bật dọn dẹp theo lịch trình",
+      "timesPerDay": "Số lần mỗi ngày",
+      "time": "Thời gian {{number}}",
+      "desc": "Tự động chạy Dọn dẹp ngay vào các khung giờ đã lên lịch.",
+      "once": "Một lần mỗi ngày",
+      "twice": "Hai lần mỗi ngày",
+      "thrice": "3 lần mỗi ngày",
+      "fourTimes": "4 lần mỗi ngày"
+    }
+  },
+  "notifications": {
+    "cleaned": "Đã sắp xếp {{count}} tệp"
+  },
+  "common": {
+    "cancel": "Hủy",
+    "off": "TẮT"
+  }
+}
