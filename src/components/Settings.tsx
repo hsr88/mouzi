@@ -984,7 +984,7 @@ function IgnoreTab() {
             <button
               onClick={handleAdd}
               disabled={!newPattern.trim()}
-              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-bg hover:bg-primary/90 disabled:opacity-40 transition-colors"
+              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover disabled:opacity-40 transition-colors"
             >
               {t("settings.ignore.add")}
             </button>
@@ -1004,7 +1004,7 @@ function IgnoreTab() {
 
           <button
             onClick={handleSave}
-            className="flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-bg hover:bg-primary/90 transition-colors"
+            className="flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-hover transition-colors"
           >
             <Save size={16} />
             {saved ? t("settings.ignore.saved") : t("settings.ignore.save")}
