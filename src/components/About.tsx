@@ -31,7 +31,7 @@ export default function About() {
             path: "https://mouzi.cc/#download",
           })
         }
-        className="flex w-full items-center gap-2 rounded-lg border border-border bg-surface px-4 py-2.5 text-sm font-medium text-text hover:bg-surface-hover transition-colors"
+        className="flex w-full items-center gap-2 rounded-lg border border-border bg-surface px-4 py-2.5 text-sm font-medium text-text hover:bg-border transition-colors"
       >
         <Download size={16} className="text-primary" />
         {t("settings.about.checkUpdates")}
