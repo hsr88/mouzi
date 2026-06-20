@@ -438,11 +438,10 @@ export default function Settings() {
               </label>
               {ruleToast && (
                 <div
-                  className={`text-xs px-3 py-2 rounded-md ${
-                    ruleToast.type === "success"
+                  className={`text-xs px-3 py-2 rounded-md ${ruleToast.type === "success"
                       ? "bg-green-50 text-green-700 border border-green-200"
                       : "bg-red-50 text-red-700 border border-red-200"
-                  }`}
+                    }`}
                 >
                   {ruleToast.message}
                 </div>
@@ -609,9 +608,8 @@ export default function Settings() {
                 {logs.map((log) => (
                   <div
                     key={log.id}
-                    className={`flex items-center justify-between rounded-lg border px-4 py-3 ${
-                      log.undone ? "border-border bg-surface-dark opacity-50" : "border-border"
-                    }`}
+                    className={`flex items-center justify-between rounded-lg border px-4 py-3 ${log.undone ? "border-border bg-surface-dark opacity-50" : "border-border"
+                      }`}
                   >
                     <div>
                       <div className="text-sm">{log.file_name}</div>
@@ -679,6 +677,7 @@ export default function Settings() {
                   <option value="fr">Français</option>
                   <option value="ru">Русский</option>
                   <option value="ja">日本語</option>
+                  <option value="es">Español</option>
                 </select>
               </div>
               <div>
@@ -703,14 +702,12 @@ export default function Settings() {
                 </label>
                 <button
                   onClick={() => setAutostart(!settings?.autostart)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    settings?.autostart ? "bg-primary" : "bg-surface-dark"
-                  }`}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings?.autostart ? "bg-primary" : "bg-surface-dark"
+                    }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      settings?.autostart ? "translate-x-6" : "translate-x-1"
-                    }`}
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings?.autostart ? "translate-x-6" : "translate-x-1"
+                      }`}
                   />
                 </button>
               </div>
@@ -780,14 +777,12 @@ export default function Settings() {
                     const updated = { ...settings, lock_check_enabled: !settings.lock_check_enabled };
                     saveSettings(updated);
                   }}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    settings?.lock_check_enabled ? "bg-primary" : "bg-surface-dark"
-                  }`}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings?.lock_check_enabled ? "bg-primary" : "bg-surface-dark"
+                    }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      settings?.lock_check_enabled ? "translate-x-6" : "translate-x-1"
-                    }`}
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings?.lock_check_enabled ? "translate-x-6" : "translate-x-1"
+                      }`}
                   />
                 </button>
               </div>
@@ -807,14 +802,12 @@ export default function Settings() {
                 </label>
                 <button
                   onClick={() => handleScheduleChange({ schedule_enabled: !localSchedule.schedule_enabled })}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    localSchedule.schedule_enabled ? "bg-primary" : "bg-surface-dark"
-                  }`}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${localSchedule.schedule_enabled ? "bg-primary" : "bg-surface-dark"
+                    }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      localSchedule.schedule_enabled ? "translate-x-6" : "translate-x-1"
-                    }`}
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${localSchedule.schedule_enabled ? "translate-x-6" : "translate-x-1"
+                      }`}
                   />
                 </button>
               </div>
@@ -1037,11 +1030,10 @@ function SidebarButton({
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-        active
+      className={`w-full flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ${active
           ? "bg-primary/10 text-primary"
           : "text-text-muted hover:bg-border hover:text-text"
-      }`}
+        }`}
     >
       {icon}
       {label}

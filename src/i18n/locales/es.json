@@ -1,0 +1,128 @@
+{
+  "app": {
+    "name": "Mouzi",
+    "tagline": "Descarga, olvida – Mouzi lo recuerda",
+    "loading": "Mouzi..."
+  },
+  "popup": {
+    "title": "Mouzi",
+    "cleanNow": "Limpiar ahora",
+    "openDownloads": "Abrir Descargas",
+    "recentActions": "Acciones recientes",
+    "noActions": "Sin acciones aún",
+    "weeklyStats": "Esta semana",
+    "undo": "Deshacer",
+    "settings": "Configuración",
+    "quit": "Salir",
+    "organized": "Organizado: {{file}}",
+    "openFolder": "Clic para abrir → {{folder}}",
+    "pendingFiles": "{{count}} archivos esperando",
+    "cleanManual": "Limpiar ahora"
+  },
+  "settings": {
+    "title": "Configuración Mouzi",
+    "folders": {
+      "title": "Carpetas monitorizadas",
+      "add": "Agregar carpeta",
+      "remove": "Eliminar",
+      "mode": "Modo",
+      "silent": "Silencioso",
+      "suggest": "Sugerir",
+      "placeholder": "C:/Users/.../Downloads",
+      "modeSilent": "Silencioso (auto)",
+      "modeManual": "Manual (solo recolectar)",
+      "modePaused": "Pausado",
+      "modeDesc": "Elige cómo Mouzi maneja los archivos en esta carpeta."
+    },
+    "rules": {
+      "title": "Reglas",
+      "add": "Agregar regla",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "name": "Nombre",
+      "extensions": "Extensiones",
+      "destination": "Destino",
+      "pattern": "Patrón",
+      "priority": "Prioridad",
+      "action": "Acción",
+      "enabled": "Activado",
+      "export": "Exportar reglas",
+      "import": "Importar reglas",
+      "exportSuccess": "Reglas exportadas",
+      "importSuccess": "{{count}} reglas importadas",
+      "importError": "Error al importar reglas",
+      "exportError": "Error al exportar reglas",
+      "replaceOnImport": "Reemplazar reglas existentes (de lo contrario agregar)"
+    },
+    "history": {
+      "title": "Historial",
+      "clear": "Limpiar historial",
+      "undo": "Deshacer",
+      "undone": "Revertido",
+      "empty": "Sin historial",
+      "revertAll": "Deshacer todo",
+      "revertAllDisabled": "Sin acciones para deshacer"
+    },
+    "general": {
+      "title": "General",
+      "language": "Idioma",
+      "theme": "Tema",
+      "themeSystem": "Sistema",
+      "themeLight": "Claro",
+      "themeDark": "Oscuro",
+      "telemetry": "Activar telemetría",
+      "startWithSystem": "Iniciar con el sistema",
+      "gracePeriod": "Período de gracia",
+      "gracePeriodDesc": "Tiempo de espera antes de mover un archivo después de su última modificación. 0 = instantáneo.",
+      "checkFileLock": "Verificar bloqueo de archivo",
+      "checkFileLockDesc": "Omitir archivos en uso por otro proceso",
+      "gracePeriodSeconds": "Segundos",
+      "gracePeriodMinutes": "Minutos",
+      "gracePeriodHours": "Horas",
+      "gracePeriodCustom": "Personalizado",
+      "gracePeriodMaxError": "El período de gracia no puede exceder los 7 días"
+    },
+    "ignore": {
+      "title": "Ignorar",
+      "rulesTitle": "Reglas de ignorar",
+      "description": "Elige una carpeta vigilada y establece patrones para archivos que Mouzi debe omitir. Los patrones se guardan como archivo .mouziignore en esa carpeta.",
+      "folder": "Carpeta",
+      "selectFolder": "Selecciona una carpeta...",
+      "patterns": "Patrones",
+      "noRules": "Aún sin reglas de ignorar. Agrega una abajo.",
+      "placeholder": "ej. *.tmp o node_modules/",
+      "add": "Agregar",
+      "tips": "Consejos:",
+      "save": "Guardar .mouziignore",
+      "saved": "¡Guardado!",
+      "remove": "Eliminar"
+    },
+    "about": {
+      "title": "Acerca de",
+      "tagline": "Tus descargas, bajo control.",
+      "description": "Mouzi es un organizador de archivos silencioso y elegante que vive en tu bandeja del sistema y mantiene tu carpeta de Descargas (y cualquier otra carpeta) automáticamente ordenada. Se ejecuta silenciosamente en segundo plano, monitorea las carpetas seleccionadas y mueve, renombra u organiza archivos según reglas personalizables.",
+      "checkUpdates": "Buscar actualizaciones",
+      "support": "Apoya a Mouzi en Ko-fi",
+      "supportDesc": "Tu apoyo mantiene a Mouzi mejorando. ¡Gracias! 🙏",
+      "builtBy": "Hecho con cariño por hsr"
+    },
+    "scheduler": {
+      "title": "Programador",
+      "enable": "Activar limpieza programada",
+      "timesPerDay": "Veces por día",
+      "time": "Hora {{number}}",
+      "desc": "Ejecutar Limpiar ahora automáticamente en horarios programados.",
+      "once": "Una vez al día",
+      "twice": "Dos veces al día",
+      "thrice": "3 veces al día",
+      "fourTimes": "4 veces al día"
+    }
+  },
+  "notifications": {
+    "cleaned": "{{count}} archivo(s) organizado(s)"
+  },
+  "common": {
+    "cancel": "Cancelar",
+    "off": "DESACTIVADO"
+  }
+}

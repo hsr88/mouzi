@@ -74,6 +74,17 @@ impl TrayI18n {
                 strings.insert("settings_title", "Mouziの設定");
                 strings.insert("organized", "{}個のファイルを整理しました");
             }
+            "es" => {
+                strings.insert("quit", "Salir");
+                strings.insert("settings", "Configuración");
+                strings.insert("clean_now", "Limpiar ahora");
+                strings.insert("tooltip", "Mouzi");
+                strings.insert("tooltip_one_pending", "Mouzi – {} archivo esperando");
+                strings.insert("tooltip_many_pending", "Mouzi – {} archivos esperando");
+                strings.insert("popup_title", "Mouzi");
+                strings.insert("settings_title", "Configuración de Mouzi");
+                strings.insert("organized", "{} archivo(s) organizado(s)");
+            }
             _ => {
                 strings.insert("quit", "Quit");
                 strings.insert("settings", "Settings");
