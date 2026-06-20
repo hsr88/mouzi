@@ -363,7 +363,7 @@ export default function Settings() {
                       <select
                         value={f.mode || "silent"}
                         onChange={(e) => f.id && updateFolderMode(f.id, e.target.value)}
-                        className="w-full max-w-xs rounded-md border border-border bg-surface px-2 py-1.5 text-sm outline-none focus:border-primary"
+                        className="appearance-none w-full max-w-xs rounded-md border border-border bg-surface px-2 py-1.5 text-sm outline-none focus:border-primary"
                       >
                         <option value="silent">{t("settings.folders.modeSilent")}</option>
                         <option value="manual">{t("settings.folders.modeManual")}</option>
@@ -438,11 +438,10 @@ export default function Settings() {
               </label>
               {ruleToast && (
                 <div
-                  className={`text-xs px-3 py-2 rounded-md ${
-                    ruleToast.type === "success"
-                      ? "bg-green-50 text-green-700 border border-green-200"
-                      : "bg-red-50 text-red-700 border border-red-200"
-                  }`}
+                  className={`text-xs px-3 py-2 rounded-md ${ruleToast.type === "success"
+                    ? "bg-green-50 text-green-700 border border-green-200"
+                    : "bg-red-50 text-red-700 border border-red-200"
+                    }`}
                 >
                   {ruleToast.message}
                 </div>
@@ -609,9 +608,8 @@ export default function Settings() {
                 {logs.map((log) => (
                   <div
                     key={log.id}
-                    className={`flex items-center justify-between rounded-lg border px-4 py-3 ${
-                      log.undone ? "border-border bg-surface-dark opacity-50" : "border-border"
-                    }`}
+                    className={`flex items-center justify-between rounded-lg border px-4 py-3 ${log.undone ? "border-border bg-surface-dark opacity-50" : "border-border"
+                      }`}
                   >
                     <div>
                       <div className="text-sm">{log.file_name}</div>
@@ -670,7 +668,7 @@ export default function Settings() {
                 <select
                   value={settings?.language || "en"}
                   onChange={(e) => handleChangeLanguage(e.target.value)}
-                  className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
+                  className="appearance-none w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
                 >
                   <option value="en">English</option>
                   <option value="pl">Polski</option>
@@ -690,7 +688,7 @@ export default function Settings() {
                   onChange={(e) =>
                     settings && saveSettings({ ...settings, theme: e.target.value })
                   }
-                  className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
+                  className="appearance-none w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
                 >
                   <option value="system">{t("settings.general.themeSystem")}</option>
                   <option value="light">{t("settings.general.themeLight")}</option>
@@ -703,14 +701,12 @@ export default function Settings() {
                 </label>
                 <button
                   onClick={() => setAutostart(!settings?.autostart)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    settings?.autostart ? "bg-primary" : "bg-surface-dark"
-                  }`}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings?.autostart ? "bg-primary" : "bg-surface-dark"
+                    }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      settings?.autostart ? "translate-x-6" : "translate-x-1"
-                    }`}
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings?.autostart ? "translate-x-6" : "translate-x-1"
+                      }`}
                   />
                 </button>
               </div>
@@ -732,7 +728,7 @@ export default function Settings() {
                   step={1}
                   value={sliderIndex}
                   onChange={(e) => handleGraceSliderChange(parseInt(e.target.value, 10))}
-                  className="w-full accent-primary"
+                  className="w-full"
                 />
                 <div className="flex items-center gap-2">
                   <input
@@ -749,7 +745,7 @@ export default function Settings() {
                     onChange={(e) =>
                       handleGraceNumberChange(graceValue, e.target.value as GraceUnit)
                     }
-                    className="rounded-md border border-border bg-surface px-2 py-1.5 text-sm outline-none focus:border-primary"
+                    className="appearance-none rounded-md border border-border bg-surface px-2 py-1.5 text-sm outline-none focus:border-primary"
                   >
                     <option value="seconds">{t("settings.general.gracePeriodSeconds")}</option>
                     <option value="minutes">{t("settings.general.gracePeriodMinutes")}</option>
@@ -780,14 +776,12 @@ export default function Settings() {
                     const updated = { ...settings, lock_check_enabled: !settings.lock_check_enabled };
                     saveSettings(updated);
                   }}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    settings?.lock_check_enabled ? "bg-primary" : "bg-surface-dark"
-                  }`}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings?.lock_check_enabled ? "bg-primary" : "bg-surface-dark"
+                    }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      settings?.lock_check_enabled ? "translate-x-6" : "translate-x-1"
-                    }`}
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings?.lock_check_enabled ? "translate-x-6" : "translate-x-1"
+                      }`}
                   />
                 </button>
               </div>
@@ -807,14 +801,12 @@ export default function Settings() {
                 </label>
                 <button
                   onClick={() => handleScheduleChange({ schedule_enabled: !localSchedule.schedule_enabled })}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    localSchedule.schedule_enabled ? "bg-primary" : "bg-surface-dark"
-                  }`}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${localSchedule.schedule_enabled ? "bg-primary" : "bg-surface-dark"
+                    }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      localSchedule.schedule_enabled ? "translate-x-6" : "translate-x-1"
-                    }`}
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${localSchedule.schedule_enabled ? "translate-x-6" : "translate-x-1"
+                      }`}
                   />
                 </button>
               </div>
@@ -828,7 +820,7 @@ export default function Settings() {
                   onChange={(e) =>
                     handleScheduleChange({ schedule_times_per_day: parseInt(e.target.value, 10) })
                   }
-                  className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
+                  className="appearance-none w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
                 >
                   <option value={1}>{t("settings.scheduler.once")}</option>
                   <option value={2}>{t("settings.scheduler.twice")}</option>
@@ -941,7 +933,7 @@ function IgnoreTab() {
         <select
           value={selectedFolder}
           onChange={(e) => setSelectedFolder(e.target.value)}
-          className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
+          className="appearance-none w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
         >
           <option value="">{t("settings.ignore.selectFolder")}</option>
           {folders.map((f) => (
@@ -1037,11 +1029,10 @@ function SidebarButton({
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-        active
-          ? "bg-primary/10 text-primary"
-          : "text-text-muted hover:bg-border hover:text-text"
-      }`}
+      className={`w-full flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ${active
+        ? "bg-primary/10 text-primary"
+        : "text-text-muted hover:bg-border hover:text-text"
+        }`}
     >
       {icon}
       {label}
