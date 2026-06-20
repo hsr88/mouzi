@@ -439,8 +439,8 @@ export default function Settings() {
               {ruleToast && (
                 <div
                   className={`text-xs px-3 py-2 rounded-md ${ruleToast.type === "success"
-                      ? "bg-green-50 text-green-700 border border-green-200"
-                      : "bg-red-50 text-red-700 border border-red-200"
+                    ? "bg-green-50 text-green-700 border border-green-200"
+                    : "bg-red-50 text-red-700 border border-red-200"
                     }`}
                 >
                   {ruleToast.message}
@@ -1031,8 +1031,8 @@ function SidebarButton({
     <button
       onClick={onClick}
       className={`w-full flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ${active
-          ? "bg-primary/10 text-primary"
-          : "text-text-muted hover:bg-border hover:text-text"
+        ? "bg-primary/10 text-primary"
+        : "text-text-muted hover:bg-border hover:text-text"
         }`}
     >
       {icon}
