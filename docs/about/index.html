@@ -759,6 +759,7 @@
             <li><a href="#getting-started">Getting Started</a></li>
             <li><a href="#features">Features</a></li>
             <li><a href="#configuration">Configuration</a></li>
+            <li><a href="#google-takeout">Google Takeout</a></li>
             <li><a href="#ignore-rules">Ignore Rules</a></li>
             <li><a href="#privacy">Privacy & Security</a></li>
             <li><a href="#faq">FAQ</a></li>
@@ -837,6 +838,17 @@ sudo apt-get install -f</code></pre>
             <li><code>{filename}</code> - original file name without extension</li>
           </ul>
           <p><strong>General</strong> - Change language, theme, and autostart behavior.</p>
+
+          <h3 id="google-takeout">Google Takeout Import</h3>
+          <p>Mouzi can import a <strong>Google Takeout</strong> archive directly, so you don't have to extract and sort files manually.</p>
+          <ol>
+            <li>Download your Google Takeout archive (usually a <code>.zip</code>, <code>.tgz</code>, or <code>.tar.gz</code> file).</li>
+            <li>Open Mouzi and go to <strong>Settings → Folders</strong>.</li>
+            <li>Click <strong>Import archive</strong> and select the Takeout file.</li>
+            <li>Mouzi extracts the archive to a temporary staging folder and runs your existing rules on the extracted files.</li>
+            <li>Files are moved to their destinations based on your rules. The staging folder is left behind so you can review it, and you can delete it afterward.</li>
+          </ol>
+          <p>The archive can be stored anywhere, including a remote or network drive — Mouzi only needs temporary local space for extraction. Large Takeouts may take a minute or two.</p>
 
           <h3 id="ignore-rules">Ignore Rules</h3>
           <p>Mouzi can skip specific files or folders using <strong>ignore rules</strong>. You can set them up in

@@ -231,31 +231,6 @@ Output will be in `src-tauri/target/release/bundle/`.
 
 ---
 
-## 🆕 What's New in 0.1.3
-
-### Bug Fixes
-- Clean Now no longer processes folders set to Paused mode.
-- Scheduled clean now skips Manual-mode folders.
-- Clean Now bypasses the grace period so manual cleanup is immediate.
-- Empty (0 B) files are now sorted correctly.
-- `.mouziignore` patterns with multiple wildcards and spaces now work reliably.
-- Folders are scanned for existing files when added or refreshed.
-- NSIS installer now closes a running Mouzi instance before installing.
-
-### UI / UX
-- New warm color theme matching [mouzi.cc](https://mouzi.cc).
-- Added dedicated About tab in Settings.
-- Added Manual mode for folders — collect files and clean them only on demand.
-- Tray tooltip now shows the number of pending files.
-- Added Open folder buttons in Recent Actions and History.
-- Improved empty states with icons.
-- Revert All button is disabled when there's nothing to revert.
-
-### Localization
-- Fixed missing translations in German, French, Italian, Russian, and Japanese.
-
----
-
 ## 📋 Roadmap
 
 ### Already implemented
