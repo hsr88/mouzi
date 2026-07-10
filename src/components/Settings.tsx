@@ -363,7 +363,7 @@ export default function Settings() {
                       <select
                         value={f.mode || "silent"}
                         onChange={(e) => f.id && updateFolderMode(f.id, e.target.value)}
-                        className="w-full max-w-xs rounded-md border border-border bg-surface px-2 py-1.5 text-sm outline-none focus:border-primary"
+                        className="appearance-none w-full max-w-xs rounded-md border border-border bg-surface px-2 py-1.5 text-sm outline-none focus:border-primary"
                       >
                         <option value="silent">{t("settings.folders.modeSilent")}</option>
                         <option value="manual">{t("settings.folders.modeManual")}</option>
@@ -668,7 +668,7 @@ export default function Settings() {
                 <select
                   value={settings?.language || "en"}
                   onChange={(e) => handleChangeLanguage(e.target.value)}
-                  className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
+                  className="appearance-none w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
                 >
                   <option value="en">English</option>
                   <option value="pl">Polski</option>
@@ -689,7 +689,7 @@ export default function Settings() {
                   onChange={(e) =>
                     settings && saveSettings({ ...settings, theme: e.target.value })
                   }
-                  className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
+                  className="appearance-none w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
                 >
                   <option value="system">{t("settings.general.themeSystem")}</option>
                   <option value="light">{t("settings.general.themeLight")}</option>
@@ -729,7 +729,7 @@ export default function Settings() {
                   step={1}
                   value={sliderIndex}
                   onChange={(e) => handleGraceSliderChange(parseInt(e.target.value, 10))}
-                  className="w-full accent-primary"
+                  className="w-full"
                 />
                 <div className="flex items-center gap-2">
                   <input
@@ -746,7 +746,7 @@ export default function Settings() {
                     onChange={(e) =>
                       handleGraceNumberChange(graceValue, e.target.value as GraceUnit)
                     }
-                    className="rounded-md border border-border bg-surface px-2 py-1.5 text-sm outline-none focus:border-primary"
+                    className="appearance-none rounded-md border border-border bg-surface px-2 py-1.5 text-sm outline-none focus:border-primary"
                   >
                     <option value="seconds">{t("settings.general.gracePeriodSeconds")}</option>
                     <option value="minutes">{t("settings.general.gracePeriodMinutes")}</option>
@@ -821,7 +821,7 @@ export default function Settings() {
                   onChange={(e) =>
                     handleScheduleChange({ schedule_times_per_day: parseInt(e.target.value, 10) })
                   }
-                  className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
+                  className="appearance-none w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
                 >
                   <option value={1}>{t("settings.scheduler.once")}</option>
                   <option value={2}>{t("settings.scheduler.twice")}</option>
@@ -934,7 +934,7 @@ function IgnoreTab() {
         <select
           value={selectedFolder}
           onChange={(e) => setSelectedFolder(e.target.value)}
-          className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
+          className="appearance-none w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
         >
           <option value="">{t("settings.ignore.selectFolder")}</option>
           {folders.map((f) => (
@@ -985,7 +985,7 @@ function IgnoreTab() {
             <button
               onClick={handleAdd}
               disabled={!newPattern.trim()}
-              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-bg hover:bg-primary/90 disabled:opacity-40 transition-colors"
+              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover disabled:opacity-40 transition-colors"
             >
               {t("settings.ignore.add")}
             </button>
@@ -1005,7 +1005,7 @@ function IgnoreTab() {
 
           <button
             onClick={handleSave}
-            className="flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-bg hover:bg-primary/90 transition-colors"
+            className="flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-hover transition-colors"
           >
             <Save size={16} />
             {saved ? t("settings.ignore.saved") : t("settings.ignore.save")}
