@@ -64,6 +64,11 @@ Each watched folder can run in one of three modes:
 - **Manual** - collect files and only process them when you click **Clean Now**
 - **Paused** - watch the folder but don't move anything
 
+### 📦 Google Takeout Import
+- Import `.zip`, `.tgz`, or `.tar.gz` archives directly from Google Takeout
+- Files are extracted to a staging folder and sorted using your existing rules
+- No need to manually unzip and reorganize everything
+
 ### 📜 History & Undo
 - Every action is logged locally in SQLite
 - Undo any single move with one click
