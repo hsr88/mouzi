@@ -78,6 +78,8 @@ Auto-detects your system language. Supported:
 - 🇫🇷 French
 - 🇷🇺 Russian
 - 🇯🇵 Japanese
+- 🇻🇳 Vietnamese
+- 🇪🇸 Spanish
 
 *(Falls back to English if system language is not supported)*
 
@@ -99,9 +101,9 @@ Auto-detects your system language. Supported:
 
 | Installer | Size | Best For |
 |-----------|------|----------|
-| [`Mouzi_0.1.3_x64-setup.exe`](https://mouzi.cc/download) | ~3.3 MB | Regular users (auto-installer) |
-| [`Mouzi_0.1.3_x64_en-US.msi`](https://mouzi.cc/download) | ~4.7 MB | Enterprise / Active Directory |
-| [`Mouzi_0.1.3_x64-portable.exe`](https://mouzi.cc/download) | ~14 MB | Power users (no install) |
+| [`Mouzi_0.1.4_x64-setup.exe`](https://mouzi.cc/download) | ~3.3 MB | Regular users (auto-installer) |
+| [`Mouzi_0.1.4_x64_en-US.msi`](https://mouzi.cc/download) | ~4.7 MB | Enterprise / Active Directory |
+| [`Mouzi_0.1.4_x64-portable.exe`](https://mouzi.cc/download) | ~14 MB | Power users (no install) |
 
 > ⚠️ **Windows 10/11.** Requires the [Microsoft Edge WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (pre-installed on most systems).
 
@@ -109,19 +111,19 @@ Auto-detects your system language. Supported:
 
 | Package | Size | Best For |
 |---------|------|----------|
-| [`Mouzi_0.1.3_amd64.AppImage`](https://mouzi.cc/download/linux) | ~86 MB | Universal — works on most distros |
-| [`Mouzi_0.1.3_amd64.deb`](https://mouzi.cc/download/linux) | ~6.9 MB | Debian, Ubuntu, Mint, Pop!_OS |
-| [`Mouzi-0.1.3-1.x86_64.rpm`](https://mouzi.cc/download/linux) | ~6.9 MB | Fedora, openSUSE, RHEL |
+| [`Mouzi_0.1.4_amd64.AppImage`](https://mouzi.cc/download/linux) | ~86 MB | Universal — works on most distros |
+| [`Mouzi_0.1.4_amd64.deb`](https://mouzi.cc/download/linux) | ~6.9 MB | Debian, Ubuntu, Mint, Pop!_OS |
+| [`Mouzi-0.1.4-1.x86_64.rpm`](https://mouzi.cc/download/linux) | ~6.9 MB | Fedora, openSUSE, RHEL |
 
 > 🐧 **Linux requirements:** `libwebkit2gtk-4.1` and `libayatana-appindicator3`. Most modern distros have these pre-installed.
 
 **SHA-256 Checksums**
 
 ```
-Mouzi_0.1.3_x64-setup.exe:   (see release page)
-Mouzi_0.1.3_amd64.AppImage:  (see release page)
-Mouzi_0.1.3_amd64.deb:       (see release page)
-Mouzi-0.1.3-1.x86_64.rpm:    (see release page)
+Mouzi_0.1.4_x64-setup.exe:   (see release page)
+Mouzi_0.1.4_amd64.AppImage:  (see release page)
+Mouzi_0.1.4_amd64.deb:       (see release page)
+Mouzi-0.1.4-1.x86_64.rpm:    (see release page)
 ```
 
 ---
@@ -208,6 +210,22 @@ Output will be in `src-tauri/target/release/bundle/`.
 
 ---
 
+## 🆕 What's New in 0.1.4
+
+### Bug Fixes
+- Fixed Wayland protocol error on Linux by disabling the DMABuf renderer.
+- Cross-drive file moves now work correctly.
+
+### New Features
+- Native Google Takeout archive import (extract + sort).
+- Spanish and Vietnamese translations.
+
+### UI / UX
+- Improved input styles and theme consistency, especially on macOS.
+- Fixed invalid Tailwind classes.
+
+---
+
 ## 🆕 What's New in 0.1.3
 
 ### Bug Fixes
@@ -237,7 +255,7 @@ Output will be in `src-tauri/target/release/bundle/`.
 
 ### Already implemented
 
-MVP with default rules, multi-language support, dark mode, history & undo, start with Windows, custom folders with local rules, folder modes (silent / manual / paused), system files ignored, check for updates, `.mouziignore`, portable version, browser temp files ignored, grace period option, file lock check, single-instance guard, first-run popup visibility, clickable toast, skip 0 KB placeholder files, Linux port.
+MVP with default rules, multi-language support, dark mode, history & undo, start with Windows, custom folders with local rules, folder modes (silent / manual / paused), system files ignored, check for updates, `.mouziignore`, portable version, browser temp files ignored, grace period option, file lock check, single-instance guard, first-run popup visibility, clickable toast, skip 0 KB placeholder files, Linux port, Google Takeout archive import, Wayland crash workaround.
 
 ### Upcoming
 
