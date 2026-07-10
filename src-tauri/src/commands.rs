@@ -23,6 +23,7 @@ pub fn get_system_language() -> String {
         "fr" => "fr".to_string(),
         "ru" => "ru".to_string(),
         "ja" => "ja".to_string(),
+        "es" => "es".to_string(),
         _ => "en".to_string(),
     }
 }
@@ -211,8 +212,12 @@ pub fn open_folder_cmd(path: String) -> Result<(), String> {
             // Normalize to backslashes - Windows Explorer requires them
             let win_path = path.replace('/', "\\");
             std::process::Command::new("powershell")
-                .args(["-NoProfile", "-NonInteractive",
-                       "-Command", &format!("explorer '{}'", win_path)])
+                .args([
+                    "-NoProfile",
+                    "-NonInteractive",
+                    "-Command",
+                    &format!("explorer '{}'", win_path),
+                ])
                 .spawn()
                 .map_err(|e| e.to_string())?;
         }
@@ -264,32 +269,22 @@ pub fn close_settings(app: AppHandle) {
 
 #[tauri::command]
 pub fn show_notification(app: AppHandle, title: String, body: String) {
-    let _ = app.notification()
-        .builder()
-        .title(title)
-        .body(body)
-        .show();
+    let _ = app.notification().builder().title(title).body(body).show();
 }
 
 #[tauri::command]
 pub fn enable_autostart_cmd(app: AppHandle) -> Result<(), String> {
-    app.autolaunch()
-        .enable()
-        .map_err(|e| e.to_string())
+    app.autolaunch().enable().map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 pub fn disable_autostart_cmd(app: AppHandle) -> Result<(), String> {
-    app.autolaunch()
-        .disable()
-        .map_err(|e| e.to_string())
+    app.autolaunch().disable().map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 pub fn is_autostart_enabled_cmd(app: AppHandle) -> Result<bool, String> {
-    app.autolaunch()
-        .is_enabled()
-        .map_err(|e| e.to_string())
+    app.autolaunch().is_enabled().map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -316,7 +311,9 @@ pub fn show_popup_cmd(app: AppHandle) {
 
 /// Return files detected in manual-mode folders that are waiting for Clean Now.
 #[tauri::command]
-pub fn get_pending_files_cmd(state: tauri::State<AppState>) -> Result<Vec<(String, String)>, String> {
+pub fn get_pending_files_cmd(
+    state: tauri::State<AppState>,
+) -> Result<Vec<(String, String)>, String> {
     let watcher = state.watcher.lock().unwrap();
     Ok(watcher.get_pending_files())
 }
