@@ -2,6 +2,8 @@ use crate::db::*;
 use crate::ignore::{load_mouziignore, save_mouziignore};
 use crate::rules::manual_scan_folder;
 use crate::AppState;
+use serde::Serialize;
+use std::path::Path;
 use std::time::Instant;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_autostart::ManagerExt;
@@ -193,6 +195,29 @@ pub fn scan_folder_cmd(path: String) -> Result<Vec<(String, String, String)>, St
         return Ok(vec![]);
     }
     manual_scan_folder(&path)
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ArchiveImportSummary {
+    pub extracted_count: usize,
+    pub sorted_count: usize,
+    pub staging_path: String,
+    pub results: Vec<(String, String, String)>,
+}
+
+#[tauri::command]
+pub fn import_archive_cmd(path: String) -> Result<ArchiveImportSummary, String> {
+    let extraction = crate::archive::extract_archive(Path::new(&path))?;
+    let staging_path = extraction.staging_dir.to_string_lossy().to_string();
+    let results = manual_scan_folder(&staging_path)?;
+
+    Ok(ArchiveImportSummary {
+        extracted_count: extraction.extracted_files,
+        sorted_count: results.len(),
+        staging_path,
+        results,
+    })
 }
 
 #[tauri::command]

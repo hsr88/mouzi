@@ -30,6 +30,9 @@ log = "0.4"
 sys-locale = "0.3"
 tauri-plugin-autostart = "2.5.1"
 tauri-plugin-single-instance = "2"
+flate2 = "1"
+tar = { version = "=0.4.44", default-features = false }
+zip = { version = "=0.6.6", default-features = false, features = ["deflate"] }
 
 [target.'cfg(target_os = "windows")'.dependencies]
 tauri-winrt-notification = "0.7.2"

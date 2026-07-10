@@ -34,6 +34,16 @@
       "modePaused": "In pausa",
       "modeDesc": "Scegli come Mouzi gestisce i file in questa cartella."
     },
+    "archive": {
+      "title": "Importa archivio",
+      "description": "Scegli un archivio Google Takeout .zip, .tgz o .tar.gz. Mouzi lo estrae, rinomina in modo sicuro i duplicati annidati ed esegue le tue regole.",
+      "import": "Importa archivio",
+      "importing": "Importazione archivio...",
+      "importingShort": "Importazione...",
+      "importSuccess": "{{extracted}} file estratti e {{count}} file organizzati.",
+      "importError": "Impossibile importare l'archivio: {{error}}",
+      "openImportFolder": "Apri cartella di importazione"
+    },
     "rules": {
       "title": "Regole",
       "add": "Aggiungi regola",

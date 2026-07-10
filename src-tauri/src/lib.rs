@@ -1,3 +1,4 @@
+pub mod archive;
 pub mod commands;
 pub mod db;
 pub mod i18n;
@@ -157,6 +158,7 @@ pub fn run() {
             is_autostart_enabled_cmd,
             clear_logs_cmd,
             scan_folder_cmd,
+            import_archive_cmd,
             open_folder_cmd,
             get_downloads_folder,
             initialize_defaults_cmd,
