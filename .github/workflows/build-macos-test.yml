@@ -40,6 +40,6 @@ jobs:
             Not signed or notarized — right-click the app and choose "Open" on first launch.
 
             This is a draft/prerelease intended for testing only.
-          releaseDraft: true
+          releaseDraft: false
           prerelease: true
           args: '--target aarch64-apple-darwin'
