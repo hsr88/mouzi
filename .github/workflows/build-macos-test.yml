@@ -1,6 +1,9 @@
 name: Build macOS Test
 
 on:
+  push:
+    tags:
+      - 'v*-macos*'
   workflow_dispatch:
 
 jobs:
@@ -30,11 +33,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: macos-test
-          releaseName: 'Mouzi macOS Test Build'
+          tagName: ${{ github.ref_name }}
+          releaseName: 'Mouzi ${{ github.ref_name }} (macOS test)'
           releaseBody: |
-            Unofficial macOS test build. Notarized / signed: no.
-            Right-click the app and choose "Open" on first launch.
+            Unofficial macOS test build for the current Mouzi release.
+            Not signed or notarized — right-click the app and choose "Open" on first launch.
+
+            This is a draft/prerelease intended for testing only.
           releaseDraft: true
           prerelease: true
           args: '--target aarch64-apple-darwin'
