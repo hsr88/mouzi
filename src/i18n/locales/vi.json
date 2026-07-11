@@ -40,6 +40,16 @@
       "modePaused": "Tạm dừng",
       "modeDesc": "Chọn cách Mouzi xử lý các tệp trong thư mục này."
     },
+    "archive": {
+      "title": "Nhập kho lưu trữ",
+      "description": "Chọn một kho lưu trữ Google Takeout .zip, .tgz, hoặc .tar.gz. Mouzi sẽ giải nén nó, sắp xếp các tên lồng trùng nhau một cách an toàn và thực hiện các quy tắc của bạn.",
+      "import": "Nhập kho lưu trữ",
+      "importing": "Đang nhập kho lưu trữ...",
+      "importingShort": "Đang nhập...",
+      "importSuccess": "Đã giải nén {{extracted}} tệp và sắp xếp {{count}} tệp.",
+      "importError": "Không thể nhập kho lưu trữ: {{error}}",
+      "openImportFolder": "Mở thư mục nhập"
+    },
     "rules": {
       "title": "Quy tắc",
       "add": "Thêm quy tắc",
