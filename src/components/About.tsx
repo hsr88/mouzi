@@ -1,9 +1,22 @@
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { invoke } from "@tauri-apps/api/core";
 import { Download, ExternalLink, Heart } from "lucide-react";
 
+interface VersionInfo {
+  version: string;
+  releaseDate: string;
+}
+
 export default function About() {
   const { t } = useTranslation();
+  const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
+
+  useEffect(() => {
+    invoke<[string, string]>("get_version_cmd")
+      .then(([version, releaseDate]) => setVersionInfo({ version, releaseDate }))
+      .catch((err) => console.error("[About] failed to get version:", err));
+  }, []);
 
   return (
     <div className="space-y-6 max-w-md">
@@ -23,6 +36,20 @@ export default function About() {
       <p className="text-sm text-text-muted leading-relaxed">
         {t("settings.about.description")}
       </p>
+
+      {/* Version & release date */}
+      {versionInfo && (
+        <div className="rounded-lg border border-border bg-surface px-4 py-3 text-sm text-text-muted">
+          <div className="flex justify-between">
+            <span>{t("settings.about.versionLabel")}</span>
+            <span className="font-medium text-text">{versionInfo.version}</span>
+          </div>
+          <div className="flex justify-between mt-1">
+            <span>{t("settings.about.releaseDateLabel")}</span>
+            <span className="font-medium text-text">{versionInfo.releaseDate}</span>
+          </div>
+        </div>
+      )}
 
       {/* Check for Updates */}
       <button

@@ -120,6 +120,8 @@
       "checkUpdates": "Kiểm tra cập nhật",
       "support": "Ủng hộ Mouzi trên Ko-fi",
       "supportDesc": "Sự ủng hộ của bạn giúp Mouzi ngày càng hoàn thiện hơn. Xin cảm ơn! 🙏",
+      "versionLabel": "Phiên bản",
+      "releaseDateLabel": "Ngày phát hành",
       "builtBy": "Được phát triển tận tâm bởi hsr"
     },
     "scheduler": {

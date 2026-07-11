@@ -114,6 +114,8 @@
       "checkUpdates": "Nach Updates suchen",
       "support": "Mouzi auf Ko-fi unterstützen",
       "supportDesc": "Deine Unterstützung hilft, Mouzi weiter zu verbessern. Danke! 🙏",
+      "versionLabel": "Version",
+      "releaseDateLabel": "Veröffentlicht am",
       "builtBy": "Mit Liebe gemacht von hsr"
     },
     "scheduler": {

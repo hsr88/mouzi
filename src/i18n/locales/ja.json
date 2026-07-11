@@ -114,6 +114,8 @@
       "checkUpdates": "アップデートを確認",
       "support": "Ko-fiでMouziを支援する",
       "supportDesc": "皆様のご支援により、Mouziは日々進化し続けています。支援していただき、ありがとうございます！ 🙏",
+      "versionLabel": "バージョン",
+      "releaseDateLabel": "リリース日",
       "builtBy": "hsrが心を込めて作りました"
     },
     "scheduler": {
