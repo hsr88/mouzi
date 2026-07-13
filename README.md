@@ -242,6 +242,7 @@ MVP with default rules, multi-language support, dark mode, history & undo, start
 - [ ] Confirmation dialog for "Delete History" button
 - [ ] Batch group selected files
 - [ ] Suggest mode (modal confirmation per file)
+- [ ] Extension normalization rule (per-rule toggle + custom mappings, e.g. `.jpeg` → `.jpg`)
 - [ ] Local AI tagging (ONNX runtime for content classification)
 - [ ] Rule learning from user manual moves
 - [ ] macOS port
