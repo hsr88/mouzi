@@ -243,6 +243,9 @@ MVP with default rules, multi-language support, dark mode, history & undo, start
 - [ ] Batch group selected files
 - [ ] Suggest mode (modal confirmation per file)
 - [ ] Extension normalization rule (per-rule toggle + custom mappings, e.g. `.jpeg` → `.jpg`)
+- [ ] Auto-update via Tauri updater
+- [ ] Windows Explorer context menu ("Add to Mouzi")
+- [ ] npm wrapper (`npm install -g mouzi`) for cross-platform CLI install
 - [ ] Local AI tagging (ONNX runtime for content classification)
 - [ ] Rule learning from user manual moves
 - [ ] macOS port
