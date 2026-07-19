@@ -243,9 +243,11 @@ MVP with default rules, multi-language support, dark mode, history & undo, start
 - [ ] Confirmation dialog for "Delete History" button
 - [ ] Batch group selected files
 - [ ] Suggest mode (modal confirmation per file)
+- [ ] Custom notification / popup after intercepting files (e.g. "Dangerous file moved by Mouzi")
 - [ ] Extension normalization rule (per-rule toggle + custom mappings, e.g. `.jpeg` → `.jpg`)
 - [ ] Rename "Edit" button to "Save" in rule editor
 - [ ] Better error messages for invalid rules / input
+- [ ] Move files to Recycle Bin instead of permanent move
 - [ ] Auto-update via Tauri updater
 - [ ] Windows Explorer context menu ("Add to Mouzi")
 - [ ] npm wrapper (`npm install -g mouzi`) for cross-platform CLI install
