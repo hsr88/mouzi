@@ -245,6 +245,7 @@ MVP with default rules, multi-language support, dark mode, history & undo, start
 - [ ] Suggest mode (modal confirmation per file)
 - [ ] Extension normalization rule (per-rule toggle + custom mappings, e.g. `.jpeg` → `.jpg`)
 - [ ] Rename "Edit" button to "Save" in rule editor
+- [ ] Better error messages for invalid rules / input
 - [ ] Auto-update via Tauri updater
 - [ ] Windows Explorer context menu ("Add to Mouzi")
 - [ ] npm wrapper (`npm install -g mouzi`) for cross-platform CLI install
