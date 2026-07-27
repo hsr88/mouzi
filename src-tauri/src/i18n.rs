@@ -96,6 +96,17 @@ impl TrayI18n {
                 strings.insert("settings_title", "Configuración de Mouzi");
                 strings.insert("organized", "{} archivo(s) organizado(s)");
             }
+            "uk" => {
+                strings.insert("quit", "Вийти");
+                strings.insert("settings", "Налаштування");
+                strings.insert("clean_now", "Прибрати зараз");
+                strings.insert("tooltip", "Mouzi");
+                strings.insert("tooltip_one_pending", "Mouzi — очікує {} файл");
+                strings.insert("tooltip_many_pending", "Mouzi — очікує файлів: {}");
+                strings.insert("popup_title", "Mouzi");
+                strings.insert("settings_title", "Налаштування Mouzi");
+                strings.insert("organized", "Впорядковано файлів: {}");
+            }
             _ => {
                 strings.insert("quit", "Quit");
                 strings.insert("settings", "Settings");
