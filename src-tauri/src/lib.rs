@@ -52,6 +52,12 @@ pub fn run() {
                             .args(["/c", "start", "", &path])
                             .spawn();
                     }
+                    #[cfg(target_os = "macos")]
+                    {
+                        let _ = std::process::Command::new("open")
+                            .arg(&path)
+                            .spawn();
+                    }
                     #[cfg(not(target_os = "windows"))]
                     {
                         let _ = std::process::Command::new("xdg-open")
