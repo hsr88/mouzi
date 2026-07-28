@@ -17,6 +17,7 @@ use std::time::Instant;
 use tauri::Manager;
 use tauri_plugin_autostart::ManagerExt;
 use watcher::FolderWatcher;
+use tauri::ActivationPolicy;
 
 pub struct AppState {
     pub watcher: Arc<Mutex<FolderWatcher>>,
@@ -78,6 +79,10 @@ pub fn run() {
             scheduler: scheduler::Scheduler::new(),
         })
         .setup(|app| {
+            // Hid app from dock on macOS
+            #[cfg(target_os = "macos")]
+            app.set_activation_policy(ActivationPolicy::Accessory);
+
             let app_handle = app.handle().clone();
 
             // Initialize database
