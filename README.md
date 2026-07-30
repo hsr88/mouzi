@@ -162,6 +162,16 @@ Downloads/Documents/{year}/{month}/
 
 ---
 
+## 🛡️ Community Use Case
+
+A computer repair technician uses Mouzi to automatically move ScreenConnect installers out of the Downloads folder before less-technical users can open them—adding an extra layer of friction against remote-access scams.
+
+[Read the case study: How Mouzi is being used to reduce ScreenConnect scam risk →](https://straycode.dev/blog/how-a-simple-downloads-organizer-is-being-used-to-stop-screenconnect-scams)
+
+> Mouzi is a file organizer, not antivirus or endpoint security software. Filename-based rules should be used as an additional safeguard, not as a replacement for security software and user education.
+
+---
+
 ## 📐 Architecture
 
 ```
