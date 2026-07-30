@@ -240,6 +240,8 @@ MVP with default rules, multi-language support, dark mode, history & undo, start
 
 ### Upcoming
 
+- [ ] Rename "Clean Downloads" to "Organize Downloads" to avoid implying that files will be deleted ([#51](https://github.com/hsr88/mouzi/issues/51))
+- [ ] Detect extensionless files by magic bytes and route them through the existing rules engine ([#49](https://github.com/hsr88/mouzi/issues/49))
 - [ ] Confirmation dialog for "Delete History" button
 - [ ] Batch group selected files
 - [ ] Suggest mode (modal confirmation per file)
