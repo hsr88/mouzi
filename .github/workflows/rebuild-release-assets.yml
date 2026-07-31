@@ -1,46 +1,60 @@
-name: Test Linux AppImage
+name: Rebuild Release Assets
 
 on:
   workflow_dispatch:
 
 jobs:
-  appimage:
-    runs-on: ubuntu-22.04
+  windows:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - run: npm ci
+      - run: npm run tauri build
+      - name: Prepare portable executable
+        shell: pwsh
+        run: |
+          $version = (Get-Content src-tauri/tauri.conf.json | ConvertFrom-Json).version
+          Copy-Item src-tauri/target/release/mouzi.exe "Mouzi_${version}_x64-portable.exe"
+      - name: Upload Windows bundles
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouzi-windows-release-assets
+          path: |
+            src-tauri/target/release/bundle/msi/*.msi
+            src-tauri/target/release/bundle/nsis/*-setup.exe
+            Mouzi_*_x64-portable.exe
+          if-no-files-found: error
 
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-
+  linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
       - name: Install Linux dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf xauth xvfb
-
-      - name: Install frontend dependencies
-        run: npm ci
-
+      - run: npm ci
       - name: Build Linux bundles
         run: npm run tauri build
-
       - name: Repair and validate AppImage symlinks
         run: |
           APPIMAGE=$(find src-tauri/target/release/bundle/appimage -maxdepth 1 -name '*.AppImage' -print -quit)
           test -n "$APPIMAGE"
           bash .github/scripts/fix-appimage-symlinks.sh "$APPIMAGE"
           echo "APPIMAGE_PATH=$APPIMAGE" >> "$GITHUB_ENV"
-
-      - name: Install with AppManager 3.7.3
+      - name: Install AppImage with AppManager 3.7.3
         run: |
-          curl -fsSL \
-            https://github.com/kem-a/AppManager/releases/download/v3.7.3/AppManager-3.7.3-anylinux-x86_64.AppImage \
-            -o "$RUNNER_TEMP/AppManager.AppImage"
+          curl -fsSL https://github.com/kem-a/AppManager/releases/download/v3.7.3/AppManager-3.7.3-anylinux-x86_64.AppImage -o "$RUNNER_TEMP/AppManager.AppImage"
           chmod +x "$RUNNER_TEMP/AppManager.AppImage"
           export HOME="$RUNNER_TEMP/appmanager-home"
           export XDG_CONFIG_HOME="$HOME/.config"
@@ -48,11 +62,10 @@ jobs:
           mkdir -p "$HOME" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME"
           cp "$APPIMAGE_PATH" "$RUNNER_TEMP/Mouzi-AppManager-test.AppImage"
           xvfb-run -a "$RUNNER_TEMP/AppManager.AppImage" install "$RUNNER_TEMP/Mouzi-AppManager-test.AppImage"
-
       - name: Upload tested Linux bundles
         uses: actions/upload-artifact@v4
         with:
-          name: mouzi-linux-bundles-tested-with-appmanager
+          name: mouzi-linux-release-assets
           path: |
             ${{ env.APPIMAGE_PATH }}
             src-tauri/target/release/bundle/deb/*.deb

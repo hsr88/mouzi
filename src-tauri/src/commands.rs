@@ -173,7 +173,7 @@ pub fn undo_all_cmd(state: tauri::State<AppState>) -> Result<i32, String> {
 #[tauri::command]
 pub fn get_version_cmd(app: AppHandle) -> Result<(String, String), String> {
     let version = app.package_info().version.to_string();
-    let release_date = "2026-07-11".to_string();
+    let release_date = "2026-07-31".to_string();
     Ok((version, release_date))
 }
 
