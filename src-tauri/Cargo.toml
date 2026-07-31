@@ -1,6 +1,6 @@
 [package]
 name = "mouzi"
-version = "0.1.4"
+version = "1.4.1"
 description = "Mouzi - Intelligent file organizer for Windows"
 authors = ["mouzi"]
 edition = "2021"
