@@ -86,6 +86,7 @@ Auto-detects your system language. Supported:
 - 🇯🇵 Japanese
 - 🇻🇳 Vietnamese
 - 🇪🇸 Spanish
+- 🇺🇦 Ukrainian
 
 *(Falls back to English if system language is not supported)*
 
