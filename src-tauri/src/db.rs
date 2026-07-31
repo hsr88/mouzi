@@ -248,7 +248,7 @@ pub fn insert_default_rules(_folder_path: &str) -> SqliteResult<()> {
     let defaults = vec![
         ("Images", 1, vec!["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg", "ico", "heic", "heif"], "Images"),
         ("Documents", 2, vec!["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "rtf", "odt"], "Documents"),
-        ("Archives", 3, vec!["zip", "rar", "7z", "tar", "gz", "bz2", "xz", "tar"], "Archives"),
+        ("Archives", 3, vec!["zip", "rar", "7z", "tar", "gz", "bz2", "xz"], "Archives"),
         ("Installers", 4, vec!["exe", "msi", "msix", "appx"], "Installers"),
         ("Music", 5, vec!["mp3", "wav", "flac", "aac", "ogg", "wma", "m4a"], "Music"),
         ("Videos", 6, vec!["mp4", "avi", "mkv", "mov", "wmv", "flv", "webm"], "Videos"),
