@@ -2207,7 +2207,7 @@ dependencies = [
 
 [[package]]
 name = "mouzi"
-version = "1.4.1"
+version = "0.1.5"
 dependencies = [
  "chrono",
  "directories",
