@@ -36,7 +36,7 @@ jobs:
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf xauth xvfb
 
       - name: Install frontend dependencies
         run: npm install
@@ -56,9 +56,40 @@ jobs:
             ## Download
             - **Windows**: `.msi` (enterprise/IT) or `-setup.exe` (regular install)
             - **Linux**: `.AppImage` (universal), `.deb` (Debian/Ubuntu), `.rpm` (Fedora/openSUSE)
-          releaseDraft: false
+          releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
+
+      - name: Repair and validate AppImage symlinks
+        if: matrix.platform == 'ubuntu-22.04'
+        shell: bash
+        run: |
+          APPIMAGE=$(find src-tauri/target/release/bundle/appimage -maxdepth 1 -name '*.AppImage' -print -quit)
+          test -n "$APPIMAGE"
+          bash .github/scripts/fix-appimage-symlinks.sh "$APPIMAGE"
+          echo "APPIMAGE_PATH=$APPIMAGE" >> "$GITHUB_ENV"
+
+      - name: Install AppImage with AppManager 3.7.3
+        if: matrix.platform == 'ubuntu-22.04'
+        shell: bash
+        run: |
+          curl -fsSL \
+            https://github.com/kem-a/AppManager/releases/download/v3.7.3/AppManager-3.7.3-anylinux-x86_64.AppImage \
+            -o "$RUNNER_TEMP/AppManager.AppImage"
+          chmod +x "$RUNNER_TEMP/AppManager.AppImage"
+          export HOME="$RUNNER_TEMP/appmanager-home"
+          export XDG_CONFIG_HOME="$HOME/.config"
+          export XDG_DATA_HOME="$HOME/.local/share"
+          mkdir -p "$HOME" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME"
+          cp "$APPIMAGE_PATH" "$RUNNER_TEMP/Mouzi-AppManager-test.AppImage"
+          xvfb-run -a "$RUNNER_TEMP/AppManager.AppImage" install "$RUNNER_TEMP/Mouzi-AppManager-test.AppImage"
+
+      - name: Replace release AppImage with validated artifact
+        if: matrix.platform == 'ubuntu-22.04'
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "$GITHUB_REF_NAME" "$APPIMAGE_PATH" --clobber
 
       - name: Upload portable executable
         if: matrix.platform == 'windows-latest'
@@ -69,3 +100,15 @@ jobs:
           VERSION="${GITHUB_REF_NAME#v}"
           cp src-tauri/target/release/mouzi.exe "Mouzi_${VERSION}_x64-portable.exe"
           gh release upload "${GITHUB_REF_NAME}" "Mouzi_${VERSION}_x64-portable.exe" --clobber
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    permissions:
+      contents: write
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Publish validated release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft=false

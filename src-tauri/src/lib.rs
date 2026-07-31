@@ -17,6 +17,7 @@ use std::time::Instant;
 use tauri::Manager;
 use tauri_plugin_autostart::ManagerExt;
 use watcher::FolderWatcher;
+#[cfg(target_os = "macos")]
 use tauri::ActivationPolicy;
 
 pub struct AppState {

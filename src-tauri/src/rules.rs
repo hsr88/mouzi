@@ -287,12 +287,15 @@ pub fn manual_scan_folder(folder: &str) -> Result<Vec<(String, String, String)>,
 mod tests {
     use super::*;
     use std::fs;
-    use std::path::PathBuf;
 
     #[test]
     fn test_move_file_cross_device() {
-        let src_dir = PathBuf::from("E:\\_PROJEKTY\\tidytray\\target\\test_src");
-        let dst_dir = PathBuf::from("C:\\temp\\mouzi_test_dst");
+        let test_root = std::env::temp_dir().join(format!(
+            "mouzi-move-test-{}",
+            std::process::id()
+        ));
+        let src_dir = test_root.join("src");
+        let dst_dir = test_root.join("dst");
         fs::create_dir_all(&src_dir).unwrap();
         fs::create_dir_all(&dst_dir).unwrap();
 
@@ -312,5 +315,6 @@ mod tests {
         // cleanup
         let _ = fs::remove_file(&dst);
         let _ = fs::remove_file(&src);
+        let _ = fs::remove_dir_all(&test_root);
     }
 }
