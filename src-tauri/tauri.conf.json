@@ -40,6 +40,9 @@
       "nsis": {
         "installerHooks": "./installer.nsh"
       }
+    },
+    "macOS": {
+      "infoPlist": "Info.plist"
     }
   }
 }

@@ -17,6 +17,7 @@ use std::time::Instant;
 use tauri::Manager;
 use tauri_plugin_autostart::ManagerExt;
 use watcher::FolderWatcher;
+use tauri::ActivationPolicy;
 
 pub struct AppState {
     pub watcher: Arc<Mutex<FolderWatcher>>,
@@ -51,7 +52,13 @@ pub fn run() {
                             .args(["/c", "start", "", &path])
                             .spawn();
                     }
-                    #[cfg(not(target_os = "windows"))]
+                    #[cfg(target_os = "macos")]
+                    {
+                        let _ = std::process::Command::new("open")
+                            .arg(&path)
+                            .spawn();
+                    }
+                    #[cfg(target_os = "linux")]
                     {
                         let _ = std::process::Command::new("xdg-open")
                             .arg(&path)
@@ -78,6 +85,10 @@ pub fn run() {
             scheduler: scheduler::Scheduler::new(),
         })
         .setup(|app| {
+            // Hid app from dock on macOS
+            #[cfg(target_os = "macos")]
+            app.set_activation_policy(ActivationPolicy::Accessory);
+
             let app_handle = app.handle().clone();
 
             // Initialize database
