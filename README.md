@@ -108,9 +108,9 @@ Auto-detects your system language. Supported:
 
 | Installer | Size | Best For |
 |-----------|------|----------|
-| [`Mouzi_0.1.4_x64-setup.exe`](https://mouzi.cc/download) | ~3.3 MB | Regular users (auto-installer) |
-| [`Mouzi_0.1.4_x64_en-US.msi`](https://mouzi.cc/download) | ~4.7 MB | Enterprise / Active Directory |
-| [`Mouzi_0.1.4_x64-portable.exe`](https://mouzi.cc/download) | ~14 MB | Power users (no install) |
+| [`Mouzi_0.1.5_x64-setup.exe`](https://mouzi.cc/download) | ~3.7 MB | Regular users (auto-installer) |
+| [`Mouzi_0.1.5_x64_en-US.msi`](https://mouzi.cc/download) | ~5.3 MB | Enterprise / Active Directory |
+| [`Mouzi_0.1.5_x64-portable.exe`](https://mouzi.cc/download) | ~14.7 MB | Power users (no install) |
 
 > ⚠️ **Windows 10/11.** Requires the [Microsoft Edge WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (pre-installed on most systems).
 
@@ -118,19 +118,19 @@ Auto-detects your system language. Supported:
 
 | Package | Size | Best For |
 |---------|------|----------|
-| [`Mouzi_0.1.4_amd64.AppImage`](https://mouzi.cc/download/linux) | ~86 MB | Universal — works on most distros |
-| [`Mouzi_0.1.4_amd64.deb`](https://mouzi.cc/download/linux) | ~6.9 MB | Debian, Ubuntu, Mint, Pop!_OS |
-| [`Mouzi-0.1.4-1.x86_64.rpm`](https://mouzi.cc/download/linux) | ~6.9 MB | Fedora, openSUSE, RHEL |
+| [`Mouzi_0.1.5_amd64.AppImage`](https://mouzi.cc/download/linux) | ~84.4 MB | Universal — works on most distros |
+| [`Mouzi_0.1.5_amd64.deb`](https://mouzi.cc/download/linux) | ~7.1 MB | Debian, Ubuntu, Mint, Pop!_OS |
+| [`Mouzi-0.1.5-1.x86_64.rpm`](https://mouzi.cc/download/linux) | ~7.1 MB | Fedora, openSUSE, RHEL |
 
 > 🐧 **Linux requirements:** `libwebkit2gtk-4.1` and `libayatana-appindicator3`. Most modern distros have these pre-installed.
 
 **SHA-256 Checksums**
 
 ```
-Mouzi_0.1.4_x64-setup.exe:   (see release page)
-Mouzi_0.1.4_amd64.AppImage:  (see release page)
-Mouzi_0.1.4_amd64.deb:       (see release page)
-Mouzi-0.1.4-1.x86_64.rpm:    (see release page)
+Mouzi_0.1.5_x64-setup.exe:   7004f94c8b17815bd2f4cbda739577db9a57d3d31d00a54c66ad2aaca18901ab
+Mouzi_0.1.5_amd64.AppImage:  14e618acdf7870657b33c85d0d8002301269aa29aee84d7e3db5cf6659329558
+Mouzi_0.1.5_amd64.deb:       19f649999998c712b67cd976edbb6a3fea6d2a3e4a69c357df002e6c3a89bf68
+Mouzi-0.1.5-1.x86_64.rpm:    9651e59fb27466582ee4469e192665a2fbaf923110e51f39b77df1c3dcf5b924
 ```
 
 ---
@@ -227,19 +227,18 @@ Output will be in `src-tauri/target/release/bundle/`.
 
 ---
 
-## 🆕 What's New in 0.1.4
+## 🆕 What's New in 0.1.5
 
 ### Bug Fixes
-- Fixed Wayland protocol error on Linux by disabling the DMABuf renderer.
-- Cross-drive file moves now work correctly.
+- Fixed AppImage installation in AppManager by repairing broken icon symlinks.
+- Mouzi no longer appears in the macOS Dock after its first launch.
 
 ### New Features
-- Native Google Takeout archive import (extract + sort).
-- Spanish and Vietnamese translations.
+- Added Ukrainian translation.
+- Added HEIC, HEIF, and XZ to the default file extensions.
 
-### UI / UX
-- Improved input styles and theme consistency, especially on macOS.
-- Fixed invalid Tailwind classes.
+### Linux
+- AppImage artifacts are now validated and tested with AppManager before a release is published.
 
 ---
 
