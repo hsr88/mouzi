@@ -127,10 +127,10 @@ Auto-detects your system language. Supported:
 **SHA-256 Checksums**
 
 ```
-Mouzi_0.1.5_x64-setup.exe:   7004f94c8b17815bd2f4cbda739577db9a57d3d31d00a54c66ad2aaca18901ab
-Mouzi_0.1.5_amd64.AppImage:  14e618acdf7870657b33c85d0d8002301269aa29aee84d7e3db5cf6659329558
-Mouzi_0.1.5_amd64.deb:       19f649999998c712b67cd976edbb6a3fea6d2a3e4a69c357df002e6c3a89bf68
-Mouzi-0.1.5-1.x86_64.rpm:    9651e59fb27466582ee4469e192665a2fbaf923110e51f39b77df1c3dcf5b924
+Mouzi_0.1.5_x64-setup.exe:   ee9b173aaa10c03fac5c201345cb388115bbb0c78e2e294a92d18fad454e99a2
+Mouzi_0.1.5_amd64.AppImage:  6801341766201a7a2a6c45fb3217757567b27507bef74b5e7bf6d847fdbfc5bb
+Mouzi_0.1.5_amd64.deb:       73301c563a7c00dd4a68d143550d953ca8644c206a7603b4f3f8be066e0efe6a
+Mouzi-0.1.5-1.x86_64.rpm:    62a2e565f4dcd3e6a19c19122d4399b77684c07826419d2515a1e1aa532f56d6
 ```
 
 ---
