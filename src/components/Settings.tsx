@@ -649,7 +649,7 @@ export default function Settings() {
                       type="button"
                       role="switch"
                       aria-checked={r.enabled}
-                      aria-label={`${r.name}: ${t("settings.rules.enabled")}`}
+                      aria-label={`${r.name}: ${r.enabled ? t("settings.rules.enabled") : t("common.off")}`}
                       onClick={() => updateRule({ ...r, enabled: !r.enabled })}
                       className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${r.enabled ? "bg-primary" : "bg-border"
                         }`}
