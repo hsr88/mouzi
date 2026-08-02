@@ -10,9 +10,26 @@ pub fn load_mouziignore(folder_path: &str) -> Vec<String> {
     match fs::read_to_string(&path) {
         Ok(content) => content
             .lines()
-            .map(|l| l.trim())
+            .map(|l| {
+                let l = l.trim();
+                let mut escaped = false;
+                let mut end = l.len();
+
+                for (i, c) in l.char_indices() {
+                    match c {
+                        '\\' => escaped = !escaped,
+                        '#' if !escaped => {
+                            end = i;
+                            break;
+                        }
+                        _ => escaped = false,
+                    }
+                }
+
+                l[..end].trim().to_string()
+            })
             .filter(|l| !l.is_empty() && !l.starts_with('#'))
-            .map(|l| l.to_string())
+            .map(|l| l.replace(r"\#", "#"))
             .collect(),
         Err(_) => Vec::new(),
     }
