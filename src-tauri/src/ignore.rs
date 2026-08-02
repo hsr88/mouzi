@@ -41,7 +41,7 @@ pub fn save_mouziignore(folder_path: &str, patterns: &[String]) -> Result<(), St
     let path = Path::new(folder_path).join(".mouziignore");
     let mut content = String::from("# Mouzi ignore rules\n# https://mouzi.cc/docs\n\n");
     for p in patterns {
-        content.push_str(p);
+        content.push_str(&p.replace('#', r"\#"));
         content.push('\n');
     }
     fs::write(&path, content).map_err(|e| e.to_string())
