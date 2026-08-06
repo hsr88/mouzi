@@ -1,0 +1,89 @@
+name: SignPath Test Signing
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  sign-portable:
+    name: Build and test-sign Windows portable
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application without installers
+        run: npm run tauri build -- --no-bundle --ci
+
+      - name: Prepare portable executable
+        id: prepare
+        shell: pwsh
+        run: |
+          $version = (Get-Content src-tauri/tauri.conf.json | ConvertFrom-Json).version
+          $fileName = "Mouzi_${version}_x64-portable.exe"
+          Copy-Item src-tauri/target/release/mouzi.exe $fileName
+          "file-name=$fileName" >> $env:GITHUB_OUTPUT
+
+      # SignPath must receive the original PE file, not a ZIP archive.
+      - name: Upload unsigned executable
+        id: upload-unsigned
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ steps.prepare.outputs.file-name }}
+          archive: false
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Submit SignPath test-signing request
+        id: signpath
+        uses: signpath/github-action-submit-signing-request@v2
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: a37db202-f3ad-408e-a505-9f70ba021150
+          project-slug: mouzi
+          signing-policy-slug: test-signing
+          github-artifact-id: ${{ steps.upload-unsigned.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: signed
+          skip-decompress: true
+
+      - name: Verify returned Authenticode signature
+        shell: pwsh
+        run: |
+          $signedFile = Get-ChildItem signed -File -Filter *.exe
+          if ($signedFile.Count -ne 1) {
+            throw "Expected exactly one signed executable, found $($signedFile.Count)."
+          }
+
+          $signature = Get-AuthenticodeSignature $signedFile.FullName
+          $signature | Format-List Status, StatusMessage, SignerCertificate, TimeStamperCertificate
+
+          if ($null -eq $signature.SignerCertificate -or $signature.Status -eq 'NotSigned') {
+            throw "SignPath returned an executable without an Authenticode signature."
+          }
+
+          Get-FileHash -Algorithm SHA256 $signedFile.FullName
+
+      - name: Upload signed test artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: mouzi-signpath-test-signed
+          path: signed/*.exe
+          if-no-files-found: error
+          retention-days: 7
