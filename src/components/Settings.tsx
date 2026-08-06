@@ -646,6 +646,20 @@ export default function Settings() {
                   </div>
                   <div className="flex items-center gap-1">
                     <button
+                      type="button"
+                      role="switch"
+                      aria-checked={r.enabled}
+                      aria-label={`${r.name}: ${r.enabled ? t("settings.rules.enabled") : t("common.off")}`}
+                      onClick={() => updateRule({ ...r, enabled: !r.enabled })}
+                      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${r.enabled ? "bg-primary" : "bg-border"
+                        }`}
+                    >
+                      <span
+                        className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${r.enabled ? "translate-x-5" : "translate-x-1"
+                          }`}
+                      />
+                    </button>
+                    <button
                       onClick={() => setEditingRule({ ...r })}
                       className="p-1.5 rounded-md hover:bg-border text-text-muted"
                     >
