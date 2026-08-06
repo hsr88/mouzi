@@ -125,6 +125,44 @@ fn glob_match(name: &str, pat: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    fn temporary_folder() -> std::path::PathBuf {
+        let unique = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let path = std::env::temp_dir().join(format!("mouzi-ignore-test-{unique}"));
+        fs::create_dir_all(&path).unwrap();
+        path
+    }
+
+    #[test]
+    fn loads_inline_comments_and_escaped_hashes() {
+        let folder = temporary_folder();
+        fs::write(
+            folder.join(".mouziignore"),
+            "*.tmp # temporary files\nreport\\#final.pdf # literal hash\n# full comment\n",
+        )
+        .unwrap();
+
+        let patterns = load_mouziignore(folder.to_str().unwrap());
+        assert_eq!(patterns, vec!["*.tmp", "report#final.pdf"]);
+
+        fs::remove_dir_all(folder).unwrap();
+    }
+
+    #[test]
+    fn save_escapes_literal_hashes() {
+        let folder = temporary_folder();
+        save_mouziignore(folder.to_str().unwrap(), &["report#final.pdf".to_string()]).unwrap();
+
+        let saved = fs::read_to_string(folder.join(".mouziignore")).unwrap();
+        assert!(saved.contains("report\\#final.pdf"));
+        assert_eq!(load_mouziignore(folder.to_str().unwrap()), vec!["report#final.pdf"]);
+
+        fs::remove_dir_all(folder).unwrap();
+    }
 
     #[test]
     #[cfg(windows)]

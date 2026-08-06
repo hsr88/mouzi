@@ -1,4 +1,4 @@
-name: Build & Release
+name: Build, Sign & Release
 
 on:
   push:
@@ -6,20 +6,15 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+'
   workflow_dispatch:
 
-jobs:
-  build:
-    permissions:
-      contents: write
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: 'windows-latest'
-            args: ''
-          - platform: 'ubuntu-22.04'
-            args: ''
+permissions:
+  actions: read
+  contents: read
 
-    runs-on: ${{ matrix.platform }}
+jobs:
+  windows:
+    name: Build and production-sign Windows
+    runs-on: windows-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -27,41 +22,178 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: npm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application without installers
+        run: npm run tauri build -- --no-bundle --ci
+
+      - name: Prepare unsigned portable executable
+        id: portable
+        shell: pwsh
+        run: |
+          $version = (Get-Content src-tauri/tauri.conf.json | ConvertFrom-Json).version
+          $fileName = "Mouzi_${version}_x64-portable.exe"
+          Copy-Item src-tauri/target/release/mouzi.exe $fileName
+          "file-name=$fileName" >> $env:GITHUB_OUTPUT
+
+      - name: Upload unsigned application executable
+        id: upload-app
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ steps.portable.outputs.file-name }}
+          archive: false
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Sign application executable with SignPath
+        uses: signpath/github-action-submit-signing-request@v2
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: a37db202-f3ad-408e-a505-9f70ba021150
+          project-slug: mouzi
+          signing-policy-slug: release-signing
+          github-artifact-id: ${{ steps.upload-app.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: signed-app
+          skip-decompress: true
+
+      - name: Install signed executable and verify signature
+        shell: pwsh
+        run: |
+          $signedFile = Get-ChildItem signed-app -File -Filter *.exe
+          if ($signedFile.Count -ne 1) {
+            throw "Expected exactly one signed application executable, found $($signedFile.Count)."
+          }
+          $signature = Get-AuthenticodeSignature $signedFile.FullName
+          $signature | Format-List Status, StatusMessage, SignerCertificate, TimeStamperCertificate
+          if ($signature.Status -ne 'Valid') {
+            throw "Application signature is not valid: $($signature.Status)."
+          }
+          Copy-Item $signedFile.FullName src-tauri/target/release/mouzi.exe -Force
+          Copy-Item $signedFile.FullName "${{ steps.portable.outputs.file-name }}" -Force
+
+      - name: Build installers around the signed application
+        run: npm run tauri -- bundle --bundles nsis,msi --ci
+
+      - name: Locate Windows installers
+        id: installers
+        shell: pwsh
+        run: |
+          $nsis = Get-ChildItem src-tauri/target/release/bundle/nsis -File -Filter *.exe
+          $msi = Get-ChildItem src-tauri/target/release/bundle/msi -File -Filter *.msi
+          if ($nsis.Count -ne 1 -or $msi.Count -ne 1) {
+            throw "Expected one NSIS installer and one MSI installer."
+          }
+          "nsis=$($nsis.FullName)" >> $env:GITHUB_OUTPUT
+          "msi=$($msi.FullName)" >> $env:GITHUB_OUTPUT
+
+      - name: Upload unsigned NSIS installer
+        id: upload-nsis
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ steps.installers.outputs.nsis }}
+          archive: false
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Sign NSIS installer with SignPath
+        uses: signpath/github-action-submit-signing-request@v2
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: a37db202-f3ad-408e-a505-9f70ba021150
+          project-slug: mouzi
+          signing-policy-slug: release-signing
+          github-artifact-id: ${{ steps.upload-nsis.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: signed-nsis
+          skip-decompress: true
+
+      - name: Upload unsigned MSI installer
+        id: upload-msi
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ steps.installers.outputs.msi }}
+          archive: false
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Sign MSI installer with SignPath
+        uses: signpath/github-action-submit-signing-request@v2
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: a37db202-f3ad-408e-a505-9f70ba021150
+          project-slug: mouzi
+          signing-policy-slug: release-signing
+          artifact-configuration-slug: windows-msi
+          github-artifact-id: ${{ steps.upload-msi.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: signed-msi
+          skip-decompress: true
+
+      - name: Verify signed installers
+        shell: pwsh
+        run: |
+          $files = @(
+            (Get-ChildItem signed-nsis -File -Filter *.exe),
+            (Get-ChildItem signed-msi -File -Filter *.msi)
+          )
+          foreach ($file in $files) {
+            $signature = Get-AuthenticodeSignature $file.FullName
+            $signature | Format-List Path, Status, StatusMessage, SignerCertificate, TimeStamperCertificate
+            if ($signature.Status -ne 'Valid') {
+              throw "Installer signature is not valid for $($file.Name): $($signature.Status)."
+            }
+          }
+
+      - name: Collect signed Windows artifacts
+        shell: pwsh
+        run: |
+          New-Item release-windows -ItemType Directory
+          Copy-Item "${{ steps.portable.outputs.file-name }}" release-windows/
+          Copy-Item signed-nsis/*.exe release-windows/
+          Copy-Item signed-msi/*.msi release-windows/
+
+      - name: Upload signed Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-windows
+          path: release-windows/*
+          if-no-files-found: error
+
+  linux:
+    name: Build and validate Linux
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install Linux dependencies
-        if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf xauth xvfb
 
-      - name: Install frontend dependencies
-        run: npm install
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Build & Upload to Release
-        id: tauri
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tagName: ${{ github.ref_name }}
-          releaseName: 'Mouzi ${{ github.ref_name }}'
-          releaseBody: |
-            ## What's Changed
-            See the commit history for full details.
-
-            ## Download
-            - **Windows**: `.msi` (enterprise/IT) or `-setup.exe` (regular install)
-            - **Linux**: `.AppImage` (universal), `.deb` (Debian/Ubuntu), `.rpm` (Fedora/openSUSE)
-          releaseDraft: true
-          prerelease: false
-          args: ${{ matrix.args }}
+      - name: Build Linux packages
+        run: npm run tauri build -- --ci
 
       - name: Repair and validate AppImage symlinks
-        if: matrix.platform == 'ubuntu-22.04'
         shell: bash
         run: |
           APPIMAGE=$(find src-tauri/target/release/bundle/appimage -maxdepth 1 -name '*.AppImage' -print -quit)
@@ -70,7 +202,6 @@ jobs:
           echo "APPIMAGE_PATH=$APPIMAGE" >> "$GITHUB_ENV"
 
       - name: Install AppImage with AppManager 3.7.3
-        if: matrix.platform == 'ubuntu-22.04'
         shell: bash
         run: |
           curl -fsSL \
@@ -84,31 +215,43 @@ jobs:
           cp "$APPIMAGE_PATH" "$RUNNER_TEMP/Mouzi-AppManager-test.AppImage"
           xvfb-run -a "$RUNNER_TEMP/AppManager.AppImage" install "$RUNNER_TEMP/Mouzi-AppManager-test.AppImage"
 
-      - name: Replace release AppImage with validated artifact
-        if: matrix.platform == 'ubuntu-22.04'
+      - name: Collect Linux artifacts
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload "$GITHUB_REF_NAME" "$APPIMAGE_PATH" --clobber
-
-      - name: Upload portable executable
-        if: matrix.platform == 'windows-latest'
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          cp src-tauri/target/release/mouzi.exe "Mouzi_${VERSION}_x64-portable.exe"
-          gh release upload "${GITHUB_REF_NAME}" "Mouzi_${VERSION}_x64-portable.exe" --clobber
+          mkdir release-linux
+          cp src-tauri/target/release/bundle/appimage/*.AppImage release-linux/
+          cp src-tauri/target/release/bundle/deb/*.deb release-linux/
+          cp src-tauri/target/release/bundle/rpm/*.rpm release-linux/
+
+      - name: Upload validated Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-linux
+          path: release-linux/*
+          if-no-files-found: error
 
   publish:
+    name: Publish release
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: build
+    needs: [windows, linux]
     permissions:
       contents: write
     runs-on: ubuntu-22.04
+
     steps:
-      - name: Publish validated release
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          path: release
+          merge-multiple: true
+
+      - name: Create GitHub release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft=false
+        run: |
+          gh release create "$GITHUB_REF_NAME" release/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Mouzi $GITHUB_REF_NAME" \
+            --generate-notes \
+            --verify-tag

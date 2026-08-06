@@ -227,18 +227,11 @@ Output will be in `src-tauri/target/release/bundle/`.
 
 ---
 
-## 🆕 What's New in 0.1.5
-
-### Bug Fixes
-- Fixed AppImage installation in AppManager by repairing broken icon symlinks.
-- Mouzi no longer appears in the macOS Dock after its first launch.
+## 🆕 What's New in 0.1.6
 
 ### New Features
-- Added Ukrainian translation.
-- Added HEIC, HEIF, and XZ to the default file extensions.
-
-### Linux
-- AppImage artifacts are now validated and tested with AppManager before a release is published.
+- Added a quick enable/disable switch directly to every rule row.
+- `.mouziignore` now supports inline comments. Escape a literal `#` as `\#`.
 
 ---
 
