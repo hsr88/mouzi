@@ -52,6 +52,7 @@
       "name": "Название",
       "extensions": "Расширения",
       "destination": "Папка назначения",
+      "selectDestination": "Выбрать папку назначения",
       "pattern": "Pattern",
       "priority": "Приоритет",
       "action": "Действие",
