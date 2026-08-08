@@ -227,7 +227,7 @@ Output will be in `src-tauri/target/release/bundle/`.
 
 ---
 
-## 🆕 What's New in 0.1.6
+## 🆕 Coming in 0.1.6
 
 ### New Features
 - Added a quick enable/disable switch directly to every rule row.
@@ -267,6 +267,8 @@ MVP with default rules, multi-language support, dark mode, history & undo, start
 If Mouzi saves you time and keeps your Downloads folder sane, consider supporting its development:
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/hsr)
+
+You can also support Mouzi through [GitHub Sponsors](https://github.com/sponsors/hsr88).
 
 Or visit the project homepage: **[mouzi.cc](https://mouzi.cc)**
 
