@@ -206,7 +206,7 @@ A computer repair technician uses Mouzi to automatically move ScreenConnect inst
 
 ```bash
 # Clone the repo
-git clone https://github.com/yourusername/mouzi.git
+git clone https://github.com/hsr88/mouzi.git
 cd mouzi
 
 # Install frontend dependencies
