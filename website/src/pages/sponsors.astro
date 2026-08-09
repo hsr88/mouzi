@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { site } from '../config/site';
+import { getRepoStats, formatCount } from '../lib/github';
+
+const stats = await getRepoStats();
+---
+
+<BaseLayout
+  title="Sponsors — Mouzi"
+  description="Sponsor Mouzi, the open-source privacy-first file organizer. Sponsorship tiers, how funds are used and the project's editorial policy."
+  canonical="/sponsors"
+>
+  <div class="mx-auto max-w-4xl px-5 py-16">
+    <SectionHeading
+      kicker="Sponsorship"
+      title="Sponsor Mouzi"
+      lead="Mouzi is free software maintained by one independent developer. Sponsorship buys development time and keeps the project independent of any single company."
+    />
+
+    <section class="prose mt-12">
+      <h2>Why Mouzi accepts sponsorship</h2>
+      <p>
+        The app will always be free and MIT licensed. What sponsorship changes is how much time can go into it:
+        code signing, testing across platforms, documentation, translations and the long tail of user-requested
+        features all cost hours. Sponsors fund those hours without gaining any control over user data, because there
+        is no user data to gain control over.
+      </p>
+
+      <h2>Current reach</h2>
+      <p>
+        The verifiable numbers live on the <a href="/impact">impact page</a> and update live from the GitHub API:
+        currently <span data-gh-stars>{formatCount(stats.stars)}</span> stars and{' '}
+        <span data-gh-forks>{formatCount(stats.forks)}</span> forks on{' '}
+        <a href={site.github.url} rel="noopener">the repository</a>, with the app translated into{' '}
+        {site.metrics.supportedLanguages} languages.
+      </p>
+
+      <h2>How funds are used</h2>
+      <ul>
+        <li>maintainer development time</li>
+        <li>release infrastructure: signing, build minutes, testing hardware</li>
+        <li>documentation and localization work</li>
+        <li>domain and hosting costs</li>
+      </ul>
+
+      <h2>Editorial and privacy policy</h2>
+      <p>
+        Sponsors never influence the roadmap beyond the same public channels everyone uses, never receive user data
+        (none exists) and never place tracking scripts on this site. Sponsorship is accepted only from products
+        relevant to privacy, productivity, security, file management, desktop software or the open-source ecosystem.
+        A sponsorship can be declined or ended if the fit stops making sense.
+      </p>
+    </section>
+
+    <h2 class="mt-14 text-xl font-semibold tracking-tight">Tiers</h2>
+    <div class="mt-6 grid gap-5 md:grid-cols-3">
+      {
+        site.sponsorTiers.map((tier) => (
+          <div class="flex flex-col rounded-card border border-line bg-surface p-5">
+            <h3 class="font-semibold">{tier.name}</h3>
+            <p class="mt-1 font-mono text-sm text-amber">{tier.price ?? 'In kind'}</p>
+            <p class="mt-3 flex-1 text-sm leading-relaxed text-muted">{tier.description}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <h2 class="mt-14 text-xl font-semibold tracking-tight">Technical partners</h2>
+    <ul role="list" class="mt-5 space-y-3">
+      <li class="rounded-card border border-line bg-surface p-5">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="font-semibold">SignPath Foundation</span>
+          <span class="rounded border border-line px-1.5 py-0.5 font-mono text-[10px] tracking-[0.1em] text-muted uppercase">Code signing</span>
+        </div>
+        <p class="mt-2 text-sm text-muted">Sponsored code signing for open-source projects. Mouzi's approval is in progress.</p>
+      </li>
+    </ul>
+
+    <h2 class="mt-14 text-xl font-semibold tracking-tight">Available placements</h2>
+    <div class="mt-5 rounded-card border border-dashed border-line p-8 text-center">
+      <p class="font-mono text-[11px] tracking-[0.18em] text-muted uppercase">Header placement · Sponsors page · GitHub README</p>
+      <p class="mt-2 text-sm text-muted">All placements are currently open. The founding sponsor slot is first come, first served.</p>
+    </div>
+
+    <div class="mt-12 flex flex-wrap gap-3 border-t border-line pt-8">
+      <a href={site.funding.githubSponsors} rel="noopener" class="rounded-btn bg-amber px-5 py-2.5 text-sm font-semibold text-[#151004] hover:opacity-90">Sponsor on GitHub</a>
+      <a href={site.funding.kofi} rel="noopener" class="rounded-btn border border-line px-5 py-2.5 text-sm text-cream hover:bg-surface-2">Support on Ko-fi</a>
+      <a href={`mailto:${site.funding.contactEmail}?subject=Mouzi%20sponsorship`} class="rounded-btn border border-line px-5 py-2.5 text-sm text-cream hover:bg-surface-2">Contact about partnership</a>
+    </div>
+  </div>
+</BaseLayout>

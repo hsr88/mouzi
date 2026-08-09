@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { site } from '../config/site';
+
+const channels = [
+  {
+    title: 'Documentation',
+    body: 'Installation, rules, exclusions and platform guides. Start here for how-to questions.',
+    href: '/docs',
+    label: 'Browse the docs',
+  },
+  {
+    title: 'Troubleshooting',
+    body: 'Files not moving, tray icon issues, unexpected destinations and resets.',
+    href: '/docs/troubleshooting',
+    label: 'Common fixes',
+  },
+  {
+    title: 'GitHub issues',
+    body: 'Bugs and feature requests. Include your OS, Mouzi version and steps to reproduce.',
+    href: site.github.newIssue,
+    label: 'Open an issue',
+  },
+  {
+    title: 'Security reports',
+    body: 'Vulnerabilities go through private advisories, never public issues.',
+    href: `${site.github.url}/security/advisories/new`,
+    label: 'Report privately',
+  },
+  {
+    title: 'Community',
+    body: 'Questions and discussion on Reddit at r/Mouzi.',
+    href: site.maintainer.reddit,
+    label: 'Visit r/Mouzi',
+  },
+  {
+    title: 'Email',
+    body: 'For anything that does not fit the channels above, including sponsorship.',
+    href: `mailto:${site.funding.contactEmail}`,
+    label: site.funding.contactEmail,
+  },
+];
+---
+
+<BaseLayout
+  title="Support — Mouzi"
+  description="Where to get help with Mouzi: documentation, troubleshooting, GitHub issues, security reports and community channels."
+  canonical="/support"
+>
+  <div class="mx-auto max-w-4xl px-5 py-16">
+    <SectionHeading
+      kicker="Help"
+      title="Support"
+      lead="Mouzi is a one-person project, so response times vary, but every issue gets read. Pick the channel that fits."
+    />
+    <div class="mt-12 grid gap-5 sm:grid-cols-2">
+      {
+        channels.map((c) => (
+          <div class="flex flex-col rounded-card border border-line bg-surface p-5">
+            <h2 class="font-semibold">{c.title}</h2>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-muted">{c.body}</p>
+            <a href={c.href} rel={c.href.startsWith('http') ? 'noopener' : undefined} class="mt-4 text-sm text-amber hover:underline">
+              {c.label} →
+            </a>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

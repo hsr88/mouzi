@@ -1,0 +1,58 @@
+---
+import { site, type DownloadArtifact } from '../config/site';
+
+interface Props {
+  platform: 'windows' | 'linux';
+  compact?: boolean;
+}
+const { platform, compact = false } = Astro.props;
+const artifacts: readonly DownloadArtifact[] = site.downloads[platform];
+---
+
+<ul role="list" class="space-y-3">
+  {
+    artifacts.map((a) => (
+      <li
+        class:list={[
+          'rounded-card border bg-surface p-4',
+          a.recommended ? 'border-amber/50' : 'border-line',
+        ]}
+      >
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="text-[15px] font-semibold">{a.label}</span>
+              {a.recommended && (
+                <span class="rounded border border-amber/50 px-1.5 py-0.5 font-mono text-[10px] tracking-[0.1em] text-amber uppercase">
+                  Recommended
+                </span>
+              )}
+            </div>
+            {!compact && a.note && <p class="mt-1 text-[13px] text-muted">{a.note}</p>}
+          </div>
+          <a
+            href={a.url}
+            rel="noopener"
+            class:list={[
+              'ml-auto shrink-0 rounded-btn px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-90',
+              a.recommended ? 'bg-amber text-[#151004]' : 'border border-line text-cream hover:bg-surface-2',
+            ]}
+          >
+            Download
+          </a>
+        </div>
+        <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
+          <span>{a.file}</span>
+          <span>{a.arch}</span>
+          <span>v{site.version}</span>
+          <span>{a.size ?? '—'}</span>
+        </div>
+        {!compact && (
+          <div class="mt-2 font-mono text-[11px] text-muted">
+            SHA-256: {a.sha256 ?? <span title="Checksum published with each GitHub release">see release notes</span>}
+          </div>
+        )}
+      </li>
+    ))
+  }
+</ul>

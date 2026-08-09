@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { site } from '../config/site';
+
+const faqs = [
+  {
+    q: 'Is Mouzi really free?',
+    a: 'Yes. Mouzi is MIT-licensed open source. There is no paid tier, no trial and no feature gating. Sponsorship exists to fund development time, not to unlock anything.',
+  },
+  {
+    q: 'Does Mouzi upload my files anywhere?',
+    a: 'No. Mouzi has no server side. Rules run locally and history is stored in a local SQLite database. The only optional network request is an update check against GitHub\u2019s public releases feed.',
+  },
+  {
+    q: 'What happens if a rule moves a file I needed in Downloads?',
+    a: 'Open History and click undo on that entry. Every move Mouzi makes is recorded and reversible. Then adjust the rule, or add the file to .mouziignore.',
+  },
+  {
+    q: 'Will Mouzi move a file that is still downloading?',
+    a: 'No. Mouzi waits out a grace period, skips browser temp files like .crdownload and .part, ignores zero-byte placeholders and never touches files locked by another process.',
+  },
+  {
+    q: 'Why does Windows SmartScreen warn about the installer?',
+    a: 'Code signing approval is in progress with SignPath Foundation. Until it completes, Windows may warn about downloads from a new publisher. Verify the SHA-256 checksum against the release notes if you want certainty, then choose More info \u2192 Run anyway.',
+  },
+  {
+    q: 'Which platforms are supported?',
+    a: 'Windows 10 and 11 (x64) and Linux (x86_64, as AppImage, DEB and RPM). A macOS build exists experimentally but is not yet supported.',
+  },
+  {
+    q: 'Can I watch folders other than Downloads?',
+    a: 'Yes. Any folder can be watched, and you can watch several at once, each with its own rules.',
+  },
+  {
+    q: 'Does Mouzi work with OneDrive / Google Drive folders?',
+    a: 'Mouzi moves files with normal file-system operations, so folders synced by cloud clients generally work, with the sync client picking up the change. Test with non-critical files first.',
+  },
+  {
+    q: 'How do I completely remove Mouzi?',
+    a: 'Uninstall the app, then delete the configuration folder: %APPDATA%\\Mouzi on Windows or ~/.config/mouzi on Linux. That removes all rules and history. The portable build only needs its file deleted.',
+  },
+  {
+    q: 'How can I contribute?',
+    a: 'Code, translations, documentation and bug reports are all welcome. Start at the GitHub repository; the issue tracker has the current priorities.',
+  },
+];
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<BaseLayout
+  title="FAQ — Mouzi"
+  description="FAQ about Mouzi, the Downloads folder organizer: pricing, privacy, download safety, SmartScreen warnings, Windows and Linux support, and how to uninstall."
+  canonical="/faq"
+  jsonLd={[faqLd]}
+>
+  <div class="mx-auto max-w-3xl px-5 py-16">
+    <SectionHeading kicker="Questions" title="Frequently asked questions" />
+    <div class="mt-10 divide-y divide-line border-y border-line">
+      {
+        faqs.map((f) => (
+          <details class="group py-5">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 text-[16px] font-medium">
+              {f.q}
+              <svg
+                class="shrink-0 text-muted transition-transform group-open:rotate-45"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+              </svg>
+            </summary>
+            <p class="mt-3 max-w-2xl leading-relaxed text-muted">{f.a}</p>
+          </details>
+        ))
+      }
+    </div>
+    <p class="mt-8 text-sm text-muted">
+      Something missing? <a href={site.github.newIssue} rel="noopener" class="text-amber hover:underline">Ask on GitHub</a> or check the <a href="/docs" class="text-amber hover:underline">documentation</a>.
+    </p>
+  </div>
+</BaseLayout>

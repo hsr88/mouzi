@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import { getCollection } from 'astro:content';
+import { site } from '../../config/site';
+
+const sectionOrder = ['Start here', 'Rules', 'Platforms', 'Reference'] as const;
+const all = (await getCollection('docs')).sort((a, b) => a.data.order - b.data.order);
+const groups = sectionOrder
+  .map((section) => ({ section, entries: all.filter((d) => d.data.section === section) }))
+  .filter((g) => g.entries.length > 0);
+---
+
+<BaseLayout
+  title="Documentation — Mouzi"
+  description="Complete Mouzi documentation for setup, watched folders, rules, scheduling, history, platforms, local data and security."
+  canonical="/docs"
+>
+  <div class="mx-auto max-w-6xl px-5 py-16">
+    <SectionHeading
+      kicker={`Mouzi v${site.version}`}
+      title="Documentation"
+      lead="Install Mouzi, learn exactly how it moves files and find platform, safety and troubleshooting details. Written against the public release and current source."
+    />
+    <p class="mt-5 max-w-3xl rounded-md border border-line bg-surface px-4 py-3 text-sm leading-relaxed text-muted">
+      These pages target public version <strong class="text-cream">{site.version}</strong>. Features already merged for a later release are labelled explicitly, so unreleased behavior is never presented as available today.
+    </p>
+    <div id="docs-search" class="mt-8 max-w-xl"></div>
+    <div class="mt-12 space-y-12">
+      {
+        groups.map((group) => (
+          <section>
+            <h2 class="font-mono text-xs tracking-[0.18em] text-muted uppercase">{group.section}</h2>
+            <div class="mt-4 grid gap-4 sm:grid-cols-2">
+              {group.entries.map((d) => (
+                <a
+                  href={`/docs/${d.id}`}
+                  class="rounded-card border border-line bg-surface p-5 transition-colors hover:border-amber/40"
+                >
+                  <h3 class="font-semibold">{d.data.title}</h3>
+                  <p class="mt-1.5 text-sm leading-relaxed text-muted">{d.data.description}</p>
+                  <div class="mt-3 flex gap-1.5">
+                    {d.data.platforms.map((p) => (
+                      <span class="rounded border border-line px-1.5 py-0.5 font-mono text-[10px] tracking-[0.1em] text-muted uppercase">
+                        {p}
+                      </span>
+                    ))}
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const mount = document.getElementById('docs-search');
+  if (mount) {
+    import(/* @vite-ignore */ '/pagefind/pagefind-ui.js')
+      .then(() => {
+        // @ts-expect-error global from pagefind-ui
+        const search = new PagefindUI({
+          element: '#docs-search',
+          showImages: false,
+          showSubResults: true,
+          focusOnSlash: true,
+          translations: { placeholder: 'Search Mouzi docs…' },
+        });
+        search.triggerFilters({ section: ['docs'] });
+      })
+      .catch(() => {
+        mount.style.display = 'none';
+      });
+  }
+</script>
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css" onerror="this.remove()" />

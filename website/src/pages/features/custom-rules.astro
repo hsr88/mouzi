@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import RuleDemo from '../../components/RuleDemo.astro';
+import { breadcrumbLd } from '../../lib/seo';
+---
+
+<BaseLayout
+  title="Custom rules — Mouzi features"
+  description="Mouzi rules match files by extension, name or regex and move them to destinations with dynamic placeholders like {year} and {month}."
+  canonical="/features/custom-rules"
+  jsonLd={[breadcrumbLd([{ name: 'Features', url: '/features' }, { name: 'Custom rules', url: '/features/custom-rules' }])]}
+>
+  <div class="mx-auto max-w-4xl px-5 py-16">
+    <SectionHeading
+      kicker="Features"
+      title="Custom rules"
+      lead="A rule is a condition and a destination. Simple ones take seconds; precise ones use full regular expressions."
+    />
+
+    <div class="mt-10">
+      <RuleDemo />
+    </div>
+
+    <section class="prose mt-12">
+      <h2>Match the way you think</h2>
+      <p>
+        Most rules match extensions: PDFs to Documents, images to Images, archives to Archives. When extensions are not
+        enough, match on the file name, or switch the rule to regex mode and match exactly what you mean, like every
+        file starting with <code>Screenshot</code> or every invoice with a number in its name.
+      </p>
+
+      <h2>Destinations that build themselves</h2>
+      <p>
+        Destinations accept placeholders: <code>{'{year}'}</code>, <code>{'{month}'}</code>, <code>{'{day}'}</code>,
+        <code>{'{extension}'}</code> and <code>{'{filename}'}</code>. One rule like
+        <code>Documents/{'{year}'}/{'{month}'}</code> maintains a dated archive forever, creating folders as needed.
+        Relative paths resolve inside the watched folder; absolute paths can point at any drive.
+      </p>
+
+      <h2>Priority and quick toggles</h2>
+      <p>
+        Rules run in list order and the first match wins, so specific rules sit above general ones. Every rule row has
+        an enable toggle, letting you pause one behavior without deleting anything.
+      </p>
+
+      <h2>Exclusions</h2>
+      <p>
+        A <code>.mouziignore</code> file in any watched folder keeps chosen files and subfolders out of Mouzi's reach,
+        with wildcard support and comments. See the <a href="/docs/exclusions">exclusions documentation</a>.
+      </p>
+    </section>
+
+    <div class="mt-12 flex gap-3">
+      <a href="/docs/rules" class="rounded-btn bg-amber px-5 py-2.5 text-sm font-semibold text-[#151004] hover:opacity-90">Rules documentation</a>
+      <a href="/docs/dynamic-paths" class="rounded-btn border border-line px-5 py-2.5 text-sm text-cream hover:bg-surface-2">Dynamic paths</a>
+    </div>
+  </div>
+</BaseLayout>

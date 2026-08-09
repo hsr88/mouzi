@@ -1,0 +1,95 @@
+---
+import { site } from '../config/site';
+
+const year = new Date().getFullYear();
+
+const columns = [
+  {
+    heading: 'Product',
+    links: [
+      { href: '/download', label: 'Download' },
+      { href: '/features', label: 'Features' },
+      { href: '/roadmap', label: 'Roadmap' },
+      { href: '/changelog', label: 'Changelog' },
+      { href: '/faq', label: 'FAQ' },
+    ],
+  },
+  {
+    heading: 'Resources',
+    links: [
+      { href: '/docs', label: 'Documentation' },
+      { href: '/blog', label: 'Blog' },
+      { href: '/support', label: 'Support' },
+      { href: '/docs/troubleshooting', label: 'Troubleshooting' },
+    ],
+  },
+  {
+    heading: 'Project',
+    links: [
+      { href: '/about', label: 'About' },
+      { href: '/impact', label: 'Impact' },
+      { href: '/sponsors', label: 'Sponsors' },
+      { href: '/privacy', label: 'Privacy policy' },
+    ],
+  },
+  {
+    heading: 'Community',
+    links: [
+      { href: site.github.url, label: 'GitHub' },
+      { href: site.github.newIssue, label: 'Report a bug' },
+      { href: site.funding.githubSponsors, label: 'GitHub Sponsors' },
+      { href: site.funding.kofi, label: 'Ko-fi' },
+    ],
+  },
+];
+---
+
+<footer class="mt-24 border-t border-line">
+  <div class="mx-auto max-w-6xl px-5 py-14">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-6">
+      <div class="lg:col-span-2">
+        <a href="/" class="flex items-center gap-2.5">
+          <img src="/images/mouzi-logo.png" alt="Mouzi" width="34" height="26" class="h-7 w-auto" loading="lazy" />
+          <span class="font-semibold tracking-tight">Mouzi</span>
+        </a>
+        <p class="mt-3 max-w-xs text-sm leading-relaxed text-muted">
+          A free, open-source Downloads folder organizer for Windows and Linux. Mouzi sorts downloaded files
+          automatically with rules you control. Everything runs on your computer.
+        </p>
+        <p class="mt-4 font-mono text-[11px] tracking-[0.1em] text-muted uppercase">
+          v{site.version} · {site.license} License
+        </p>
+      </div>
+      {
+        columns.map((col) => (
+          <nav aria-label={col.heading}>
+            <h2 class="font-mono text-[11px] tracking-[0.15em] text-muted uppercase">{col.heading}</h2>
+            <ul class="mt-4 space-y-2.5" role="list">
+              {col.links.map((l) => (
+                <li>
+                  <a
+                    href={l.href}
+                    rel={l.href.startsWith('http') ? 'noopener' : undefined}
+                    class="text-sm text-cream/80 transition-colors hover:text-amber"
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+    </div>
+    <div class="tdivider mt-12"></div>
+    <div class="mt-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+      <p class="text-xs text-muted">
+        © {year} Mouzi. Released under the MIT License. Developed by{' '}
+        <a href={site.maintainer.github} rel="noopener" class="text-cream/80 transition-colors hover:text-amber">hsr</a>
+      </p>
+      <p class="font-mono text-[11px] text-muted">
+        Local-only · No telemetry · No accounts
+      </p>
+    </div>
+  </div>
+</footer>

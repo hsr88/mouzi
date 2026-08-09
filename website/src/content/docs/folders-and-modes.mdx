@@ -1,0 +1,55 @@
+---
+title: Watched folders and modes
+description: Add several folders, choose Silent, Manual or Paused behavior and understand Clean now.
+section: Start here
+order: 2
+platforms: [windows, linux]
+updated: 2026-08-09
+---
+
+Mouzi can watch several folders at once. It processes files directly inside each selected folder; recursive watching of nested subfolders is not available.
+
+## Rules are shared
+
+All watched folders use one global rule list. A relative destination is resolved inside the folder from which the file came.
+
+For example, `Documents` sends:
+
+- `C:\Users\You\Downloads\report.pdf` to `C:\Users\You\Downloads\Documents\report.pdf`
+- `D:\Scans\receipt.pdf` to `D:\Scans\Documents\receipt.pdf`
+
+Use an absolute destination only when several source folders should feed one central archive.
+
+## Folder modes
+
+Each watched folder has its own mode:
+
+| Mode | Watches new files | Organizes automatically | Included in Clean now |
+| --- | --- | --- | --- |
+| Silent | Yes | Yes, after the grace period | Yes |
+| Manual | Yes | No | Yes |
+| Paused | No | No | No |
+
+Manual mode collects arrivals and leaves them in place until you choose **Clean now**. Switching a Manual folder to Silent sends its pending files to the automatic queue using the current grace period.
+
+## Existing files
+
+When Mouzi starts watching a folder in Silent mode, it scans existing top-level files too. This is useful for cleaning an established Downloads folder, but it can produce many moves at once.
+
+For a folder you have not tested:
+
+1. add it in Manual mode
+2. review global rules and exclusions
+3. choose **Clean now**
+4. inspect History
+5. switch to Silent only when the result is correct
+
+## Clean now
+
+Clean now scans every active Silent and Manual folder. It ignores Paused folders and does not scan nested directories.
+
+It bypasses the grace period, so do not run it while a browser or another application is still writing a download. Built-in exclusions, `.mouziignore` and file-lock checking still apply.
+
+## Remove versus pause
+
+Pause a folder when you want to keep its configuration and resume later. Remove it when Mouzi should no longer manage it. Removing a watched folder does not delete the directory or any files inside it.

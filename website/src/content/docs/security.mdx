@@ -1,0 +1,55 @@
+---
+title: Security and release verification
+description: Understand Mouzi's local design, Windows signing status, release sources and responsible disclosure.
+section: Reference
+order: 4
+platforms: [windows, linux]
+updated: 2026-08-09
+---
+
+Mouzi stores settings, rules and history locally. The application does not require an account, upload your files or implement telemetry. Its **Check for updates** action opens mouzi.cc; it is not a background update service.
+
+## Official sources
+
+Download Mouzi only from:
+
+- [mouzi.cc](/download), whose download buttons point to the official release files
+- [GitHub Releases](https://github.com/hsr88/mouzi/releases)
+
+The source and release workflows are public in the [GitHub repository](https://github.com/hsr88/mouzi). Release artifacts are built by GitHub Actions from the release source.
+
+## Windows code signing
+
+Public version 0.1.5 is unsigned. SignPath production signing is being prepared for a future Windows release, but a pending integration does not retroactively sign older files.
+
+Check a downloaded EXE or MSI yourself:
+
+```powershell
+Get-AuthenticodeSignature .\Mouzi_*.exe | Format-List Status, StatusMessage, SignerCertificate
+```
+
+A signed production file should report `Valid` and show its signer certificate. A valid signature confirms the publisher and detects changes made after signing. It is not, by itself, proof that software contains no bugs or malicious behavior.
+
+SmartScreen reputation is separate from Authenticode. A newly signed application can still show a reputation warning until Microsoft has seen enough trusted downloads.
+
+## SHA-256 checksums
+
+You can calculate a file's SHA-256 value:
+
+```powershell
+Get-FileHash .\Mouzi_*.exe -Algorithm SHA256
+```
+
+```bash
+sha256sum Mouzi_*.AppImage
+```
+
+The current release process does not yet publish a checksum for every platform artifact. A locally calculated hash proves only that two copies are identical when you have a trusted value to compare it with. Never treat a hash shown by the same untrusted download source as independent verification.
+
+## File-system safety
+
+Mouzi moves files according to user-defined rules and creates destination directories. It avoids overwriting an existing destination file by adding a timestamp. Built-in exclusions, a grace period and optional file-lock checks reduce the chance of moving incomplete files, but users should test broad rules in Manual mode.
+
+## Report a vulnerability
+
+Use a private [GitHub security advisory](https://github.com/hsr88/mouzi/security/advisories/new) for path traversal, arbitrary code execution, privilege escalation, release-chain tampering or another exploitable issue. Do not publish proof-of-concept details in a public issue before a fix is available.

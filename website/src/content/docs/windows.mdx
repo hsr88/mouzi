@@ -1,0 +1,62 @@
+---
+title: Mouzi on Windows
+description: Choose an installer, understand SmartScreen, autostart, portable mode and data storage on Windows.
+section: Platforms
+order: 1
+platforms: [windows]
+updated: 2026-08-09
+---
+
+Mouzi supports 64-bit Windows 10 and Windows 11.
+
+## Choose a download
+
+| Build | Best for | Notes |
+| --- | --- | --- |
+| Setup EXE | Most users | Standard interactive installer |
+| MSI | Managed deployment | Useful with enterprise deployment tools |
+| Portable EXE | Testing or no-install use | Runs directly, but still uses your Windows profile for data |
+
+Mouzi does not currently include an automatic updater. Installing a newer build is a manual action.
+
+## SmartScreen and signatures
+
+The current public 0.1.5 Windows files are unsigned and may show **Windows protected your PC**. Only continue if the file came from [mouzi.cc](/download/windows) or the official [GitHub release](https://github.com/hsr88/mouzi/releases).
+
+Production signing through SignPath is being prepared for a future release. Do not assume a file is signed merely because it is newer; check it in PowerShell:
+
+```powershell
+Get-AuthenticodeSignature .\Mouzi_*.exe | Format-List Status, StatusMessage, SignerCertificate
+```
+
+For a signed release, `Status` should be `Valid`. See [Security](/docs/security) for the limits of signatures and checksums.
+
+## WebView2
+
+Mouzi uses Microsoft Edge WebView2 for its interface. It is normally present on supported Windows systems. If the window does not open, install or repair the WebView2 Runtime from Microsoft and launch Mouzi again.
+
+## Start with Windows
+
+**Start with system** is enabled on first run. Change it under **Settings → General**. Mouzi registers a per-user startup entry; it does not need administrator rights to start with your account.
+
+Before deleting a portable executable, disable **Start with system** if you previously left it enabled.
+
+## What portable means
+
+Portable means there is no installer. It does **not** mean Mouzi keeps its rules beside the executable or leaves no user data. Installed and portable builds use the same profile-based database and the same autostart setting.
+
+## Data location
+
+Rules, settings, watched folders and history are stored together in SQLite:
+
+```text
+%APPDATA%\mouzi\mouzi\data\mouzi.db
+```
+
+Archive imports are extracted under:
+
+```text
+%LOCALAPPDATA%\mouzi\mouzi\cache\archive-imports
+```
+
+Close Mouzi before backing up, moving or deleting its database. Removing `mouzi.db` resets settings, rules, folders and history on the next launch; it does not undo files already moved.

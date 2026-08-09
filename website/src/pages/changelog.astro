@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { getCollection, render } from 'astro:content';
+import { site } from '../config/site';
+
+const entries = (await getCollection('changelog')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const rendered = await Promise.all(
+  entries.map(async (e) => ({ entry: e, Content: (await render(e)).Content })),
+);
+---
+
+<BaseLayout
+  title="Changelog — Mouzi"
+  description="Release history for Mouzi, the open-source Downloads folder organizer for Windows and Linux."
+  canonical="/changelog"
+>
+  <div class="mx-auto max-w-3xl px-5 py-16">
+    <SectionHeading
+      kicker="Releases"
+      title="Changelog"
+      lead="What changed in each Mouzi release. Full artifacts and checksums live on GitHub releases."
+    />
+    <div class="mt-12 space-y-12">
+      {
+        rendered.map(({ entry, Content }) => (
+          <article class="relative border-l border-line pl-7">
+            <span class="absolute top-1.5 -left-[5px] h-2.5 w-2.5 rounded-full bg-amber" aria-hidden="true" />
+            <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h2 class="font-mono text-lg text-cream">v{entry.data.version}</h2>
+              <time datetime={entry.data.date.toISOString()} class="font-mono text-xs text-muted">
+                {entry.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </time>
+            </div>
+            <h3 class="mt-1 text-xl font-semibold tracking-tight">{entry.data.title}</h3>
+            <div class="prose mt-4 text-[15px]">
+              <Content />
+            </div>
+          </article>
+        ))
+      }
+    </div>
+    <p class="mt-12 border-t border-line pt-6 font-mono text-xs text-muted">
+      Older releases: <a href={site.github.releases} rel="noopener" class="text-amber hover:underline">github.com/{site.github.repo}/releases</a>
+    </p>
+  </div>
+</BaseLayout>

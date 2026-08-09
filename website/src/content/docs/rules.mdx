@@ -1,0 +1,75 @@
+---
+title: Rules
+description: Match files by extension and regular expression, set priorities and import or export your rule set.
+section: Rules
+order: 1
+platforms: [windows, linux]
+updated: 2026-08-09
+---
+
+A rule combines an extension condition, an optional regular expression and a destination. Mouzi checks enabled rules from the lowest priority number to the highest and uses the first match.
+
+Rules are global. The same list is applied to every watched folder.
+
+## Extension matching
+
+Enter extensions without a leading dot. Separate several values with commas:
+
+```text
+Extensions: pdf, docx, odt
+Destination: Documents
+```
+
+Extension matching is case-insensitive, so `Report.PDF` matches `pdf`. The special value `*` matches any extension and is useful as a final catch-all rule.
+
+## File-name patterns
+
+The optional **Pattern** field is a Rust regular expression matched against the complete file name, including its extension. There is no separate plain-text “contains” mode.
+
+```text
+Extensions: png, jpg
+Pattern: ^Screenshot.*\.(png|jpg)$
+Destination: Images/Screenshots/{year}
+```
+
+Patterns are case-sensitive unless you add `(?i)`:
+
+```text
+(?i)^invoice[-_ ].*\.pdf$
+```
+
+When both extensions and a pattern are present, both must match. An invalid regular expression will not match files, so test a new rule in Manual mode first.
+
+## Priority and first match
+
+Lower numbers run first. Set the numeric **Priority** field rather than relying on the visual position of a row.
+
+| Priority | Match | Destination |
+| --- | --- | --- |
+| `10` | `pdf` and `(?i)invoice` | `Documents/Invoices` |
+| `20` | `pdf` | `Documents/PDF` |
+| `999` | `*` | `Other` |
+
+An invoice reaches the first rule and stops there. Other PDFs reach the second rule. Everything else can fall through to the catch-all.
+
+## Enable and disable
+
+In public version 0.1.5, edit a rule and clear **Enabled** to disable it without deleting it.
+
+**Coming in 0.1.6:** every rule row has a quick enable/disable control.
+
+## Destinations and conflicts
+
+Relative destinations such as `Documents/PDF` are created inside the source watched folder. Absolute paths such as `D:\Archive` or `/mnt/archive` are also supported, including moves to another drive.
+
+Mouzi creates missing destination folders. If a file with the same name already exists, it keeps the existing file and adds a Unix timestamp to the file being moved.
+
+See [dynamic paths](/docs/dynamic-paths) for destination placeholders.
+
+## Import and export
+
+Use **Settings → Rules** to export all rules as JSON. Import can either append rules or replace the current set. Keep an export before using the replace option; replacing is intentional and cannot be undone from History.
+
+## Starter rules
+
+The first run includes categories for images, documents, archives, installers, music and videos, followed by an `*` catch-all. You can edit or delete every starter rule.

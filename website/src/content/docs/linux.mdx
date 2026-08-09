@@ -1,0 +1,67 @@
+---
+title: Mouzi on Linux
+description: Install the AppImage, DEB or RPM and solve common tray, Wayland and data-location questions.
+section: Platforms
+order: 2
+platforms: [linux]
+updated: 2026-08-09
+---
+
+Mouzi ships official x86_64 Linux builds as AppImage, DEB and RPM packages.
+
+## AppImage
+
+```bash
+chmod +x Mouzi_*.AppImage
+./Mouzi_*.AppImage
+```
+
+The current release workflow also tests AppImage integration with AppManager. If an older artifact fails to integrate, run it directly and download the newest public release before reporting the problem.
+
+## Debian, Ubuntu and Mint
+
+```bash
+sudo apt install ./Mouzi_*_amd64.deb
+```
+
+## Fedora
+
+```bash
+sudo dnf install ./Mouzi-*.x86_64.rpm
+```
+
+Other RPM-based distributions may use their own package manager.
+
+## Runtime libraries
+
+Mouzi relies on WebKitGTK 4.1 and Ayatana AppIndicator libraries. Package names vary by distribution; common names include `libwebkit2gtk-4.1` and `libayatana-appindicator3` or their distribution-specific equivalents.
+
+## Tray icon
+
+Mouzi is designed to stay in the system tray. GNOME commonly needs an AppIndicator/KStatusNotifierItem extension. Install the extension using your distribution's package manager or GNOME Extensions, then sign out and back in if the icon still does not appear.
+
+## Wayland
+
+Mouzi sets `WEBKIT_DISABLE_DMABUF_RENDERER=1` on Linux to avoid a known WebKitGTK/Wayland rendering failure. This is built into the application; you do not need to export it yourself.
+
+Tray support still depends on the desktop environment. A missing tray host is separate from the Wayland rendering workaround.
+
+## Data locations
+
+The SQLite database contains settings, rules, watched folders and history:
+
+```text
+$XDG_DATA_HOME/mouzi/mouzi.db
+```
+
+When `XDG_DATA_HOME` is not set, this is normally:
+
+```text
+~/.local/share/mouzi/mouzi.db
+```
+
+Archive imports use `$XDG_CACHE_HOME/mouzi/archive-imports`, normally `~/.cache/mouzi/archive-imports`.
+
+## macOS
+
+macOS is not an officially supported platform and no public macOS download is offered. Occasional private builds are used only for testing with volunteer users.

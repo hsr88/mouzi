@@ -1,0 +1,50 @@
+---
+title: Archive import
+description: Extract and organize ZIP, TGZ and TAR.GZ archives in a safe staging folder.
+section: Rules
+order: 4
+platforms: [windows, linux]
+updated: 2026-08-09
+---
+
+Archive import was designed for exports such as Google Takeout, but it works with any supported `.zip`, `.tgz` or `.tar.gz` file.
+
+## What import does
+
+1. Mouzi creates a unique staging folder in its cache.
+2. It extracts files from the archive and flattens the archive's directory structure.
+3. Duplicate names become `name (1).ext`, `name (2).ext` and so on.
+4. It applies your current global rules to the extracted files.
+5. It shows a summary and lets you open the staging folder.
+
+The original archive is not changed or deleted.
+
+## Where files end up
+
+Relative destinations are created inside the staging folder. Absolute rule destinations still point to their configured paths outside the cache. Files that match no rule remain at the top level of the staging folder.
+
+This means you should review absolute destinations before importing a large archive.
+
+## Safety behavior
+
+Mouzi rejects unsafe archive paths that try to escape the staging folder. It extracts files, not the archive's original empty directory tree.
+
+Archive import uses current rules immediately. It is separate from watched-folder modes, so setting Downloads to Manual does not turn an import into a preview.
+
+## Staging locations
+
+**Windows:**
+
+```text
+%LOCALAPPDATA%\mouzi\mouzi\cache\archive-imports
+```
+
+**Linux:**
+
+```text
+$XDG_CACHE_HOME/mouzi/archive-imports
+```
+
+The Linux default is normally `~/.cache/mouzi/archive-imports`.
+
+After verifying the organized result, move it to permanent storage or remove the staging folder yourself. Mouzi does not automatically delete imported data.

@@ -1,0 +1,67 @@
+---
+title: Dynamic paths
+description: Build destination folders with date, extension and file-name placeholders.
+section: Rules
+order: 2
+platforms: [windows, linux]
+updated: 2026-08-09
+---
+
+Destinations accept placeholders that are resolved when Mouzi moves a file.
+
+## Available placeholders
+
+| Placeholder | Resolves to | Example |
+| --- | --- | --- |
+| `{year}` | Four-digit UTC year at move time | `2026` |
+| `{month}` | Two-digit UTC month at move time | `08` |
+| `{day}` | Two-digit UTC day at move time | `09` |
+| `{extension}` | Lowercase extension without the dot | `pdf` |
+| `{filename}` | Complete file name, including its extension | `report.pdf` |
+
+The date is not read from file metadata and is not the file's creation date. Mouzi uses the current UTC date at the moment of the move.
+
+## Examples
+
+Sort documents by move date:
+
+```text
+Documents/{year}/{month}
+→ Documents/2026/08/report.pdf
+```
+
+Group files by extension:
+
+```text
+By type/{extension}
+→ By type/zip/backup.zip
+```
+
+Create a folder named after the complete file name:
+
+```text
+Archive items/{filename}
+→ Archive items/backup.zip/backup.zip
+```
+
+Combine placeholders:
+
+```text
+Media/{year}/{month}-{day}/{extension}
+```
+
+## Relative and absolute paths
+
+A relative destination is resolved inside the watched folder that supplied the file. This makes one global rule work across several watched folders without mixing their contents.
+
+An absolute destination may point outside the watched folder or to another drive:
+
+```text
+D:\Document archive\{year}
+```
+
+```text
+/mnt/archive/{year}/{month}
+```
+
+Missing directories are created automatically.

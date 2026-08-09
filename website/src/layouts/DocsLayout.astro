@@ -1,0 +1,233 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { site } from '../config/site';
+import { breadcrumbLd } from '../lib/seo';
+
+interface Props {
+  entry: CollectionEntry<'docs'>;
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+
+const sectionOrder = ['Start here', 'Rules', 'Platforms', 'Reference'] as const;
+const all = (await getCollection('docs')).sort((a, b) => a.data.order - b.data.order);
+
+const sidebar = sectionOrder
+  .map((section) => ({
+    section,
+    entries: all.filter((d) => d.data.section === section),
+  }))
+  .filter((s) => s.entries.length > 0);
+
+const flat = sidebar.flatMap((s) => s.entries);
+const idx = flat.findIndex((d) => d.id === entry.id);
+const prev = idx > 0 ? flat[idx - 1] : null;
+const next = idx < flat.length - 1 ? flat[idx + 1] : null;
+
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const editUrl = `${site.github.url}/edit/main/website/src/content/docs/${entry.id}.mdx`;
+
+const jsonLd = [
+  breadcrumbLd([
+    { name: 'Docs', url: '/docs' },
+    { name: entry.data.title, url: `/docs/${entry.id}` },
+  ]),
+];
+---
+
+<BaseLayout
+  title={`${entry.data.title} — Mouzi docs`}
+  description={entry.data.description}
+  canonical={`/docs/${entry.id}`}
+  jsonLd={jsonLd}
+>
+  <div class="mx-auto max-w-6xl px-5">
+    <div class="grid gap-10 py-10 lg:grid-cols-[220px_minmax(0,1fr)_180px]">
+      <!-- Sidebar -->
+      <aside class="lg:sticky lg:top-24 lg:h-[calc(100vh-8rem)] lg:overflow-y-auto">
+        <details class="group lg:open" open>
+          <summary class="flex cursor-pointer items-center justify-between rounded-md border border-line px-3 py-2 text-sm lg:hidden">
+            Documentation
+            <svg class="transition-transform group-open:rotate-180" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </summary>
+          <div class="mt-4 lg:mt-0">
+            <div id="docs-search" class="mb-6"></div>
+            <nav aria-label="Documentation">
+              {
+                sidebar.map((group) => (
+                  <div class="mb-6">
+                    <h2 class="mb-2 font-mono text-[10px] tracking-[0.18em] text-muted uppercase">{group.section}</h2>
+                    <ul role="list" class="space-y-0.5 border-l border-line">
+                      {group.entries.map((d) => (
+                        <li>
+                          <a
+                            href={`/docs/${d.id}`}
+                            aria-current={d.id === entry.id ? 'page' : undefined}
+                            class:list={[
+                              '-ml-px block border-l py-1.5 pl-3.5 text-[13.5px] transition-colors',
+                              d.id === entry.id
+                                ? 'border-amber text-amber'
+                                : 'border-transparent text-muted hover:border-cream/30 hover:text-cream',
+                            ]}
+                          >
+                            {d.data.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))
+              }
+            </nav>
+            <p class="mt-8 border-t border-line pt-4 font-mono text-[11px] text-muted">
+              Mouzi v{site.version}
+            </p>
+          </div>
+        </details>
+      </aside>
+
+      <!-- Article -->
+      <article data-pagefind-body data-pagefind-filter="section:docs">
+        <nav aria-label="Breadcrumb" class="mb-5 font-mono text-[11px] text-muted">
+          <ol class="flex flex-wrap gap-1.5" role="list">
+            <li><a href="/" class="hover:text-cream">Home</a></li>
+            <li aria-hidden="true">/</li>
+            <li><a href="/docs" class="hover:text-cream">Docs</a></li>
+            <li aria-hidden="true">/</li>
+            <li aria-current="page" class="text-cream/80">{entry.data.title}</li>
+          </ol>
+        </nav>
+
+        <div class="mb-2 flex gap-2">
+          {
+            entry.data.platforms.map((p) => (
+              <span class="rounded border border-line px-1.5 py-0.5 font-mono text-[10px] tracking-[0.1em] text-muted uppercase">
+                {p === 'windows' ? 'Windows' : 'Linux'}
+              </span>
+            ))
+          }
+        </div>
+        <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">{entry.data.title}</h1>
+        <p class="mt-3 text-[17px] leading-relaxed text-muted">{entry.data.description}</p>
+        <p class="mt-4 rounded-md border border-line bg-surface px-3 py-2 font-mono text-[11px] leading-relaxed text-muted">
+          Public release: Mouzi v{site.version}. Features planned for a later version are labelled on the page.
+        </p>
+        <div class="tdivider my-8"></div>
+
+        <div class="prose">
+          <Content />
+        </div>
+
+        <div class="mt-12 flex flex-wrap items-center gap-4 border-t border-line pt-6">
+          <a href={editUrl} rel="noopener" class="text-sm text-muted transition-colors hover:text-amber">
+            Edit this page on GitHub
+          </a>
+          <div class="ml-auto flex items-center gap-2 text-sm text-muted" data-feedback>
+            <span>Was this page helpful?</span>
+            <button type="button" data-feedback-btn="yes" class="rounded-md border border-line px-2.5 py-1 hover:text-cream">Yes</button>
+            <button type="button" data-feedback-btn="no" class="rounded-md border border-line px-2.5 py-1 hover:text-cream">No</button>
+          </div>
+        </div>
+
+        <nav aria-label="Docs pagination" class="mt-8 grid gap-3 sm:grid-cols-2">
+          {
+            prev ? (
+              <a href={`/docs/${prev.id}`} class="rounded-card border border-line p-4 transition-colors hover:border-amber/40">
+                <span class="font-mono text-[10px] tracking-[0.15em] text-muted uppercase">← Previous</span>
+                <span class="mt-1 block text-sm font-medium">{prev.data.title}</span>
+              </a>
+            ) : (
+              <span />
+            )
+          }
+          {
+            next && (
+              <a href={`/docs/${next.id}`} class="rounded-card border border-line p-4 text-right transition-colors hover:border-amber/40">
+                <span class="font-mono text-[10px] tracking-[0.15em] text-muted uppercase">Next →</span>
+                <span class="mt-1 block text-sm font-medium">{next.data.title}</span>
+              </a>
+            )
+          }
+        </nav>
+      </article>
+
+      <!-- TOC -->
+      <aside class="hidden lg:block">
+        {
+          toc.length > 0 && (
+            <nav aria-label="On this page" class="sticky top-24">
+              <h2 class="mb-3 font-mono text-[10px] tracking-[0.18em] text-muted uppercase">On this page</h2>
+              <ul role="list" class="space-y-2 border-l border-line text-[13px]">
+                {toc.map((h) => (
+                  <li>
+                    <a
+                      href={`#${h.slug}`}
+                      class:list={[
+                        '-ml-px block border-l border-transparent pl-3.5 text-muted transition-colors hover:text-cream',
+                        h.depth === 3 && 'pl-6',
+                      ]}
+                    >
+                      {h.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )
+        }
+      </aside>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Copy buttons on code blocks.
+  document.querySelectorAll('article pre').forEach((pre) => {
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.type = 'button';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy code to clipboard');
+    btn.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(pre.querySelector('code')?.textContent ?? '');
+      btn.textContent = 'Copied';
+      setTimeout(() => (btn.textContent = 'Copy'), 1500);
+    });
+    pre.appendChild(btn);
+  });
+
+  // Lightweight feedback widget (stores locally, no tracking).
+  document.querySelectorAll<HTMLElement>('[data-feedback]').forEach((box) => {
+    box.querySelectorAll<HTMLButtonElement>('[data-feedback-btn]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        box.innerHTML = '<span>Thanks for the feedback.</span>';
+      });
+    });
+  });
+
+  // Pagefind search (available after `npm run build`; hidden in dev if missing).
+  const mount = document.getElementById('docs-search');
+  if (mount) {
+    import(/* @vite-ignore */ '/pagefind/pagefind-ui.js')
+      .then(() => {
+        // @ts-expect-error global from pagefind-ui
+        const search = new PagefindUI({
+          element: '#docs-search',
+          showImages: false,
+          showSubResults: true,
+          focusOnSlash: true,
+          translations: { placeholder: 'Search Mouzi docs…' },
+        });
+        search.triggerFilters({ section: ['docs'] });
+      })
+      .catch(() => {
+        mount.style.display = 'none';
+      });
+  }
+</script>
+
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css" onerror="this.remove()" />

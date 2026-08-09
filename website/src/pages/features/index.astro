@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+
+const featurePages = [
+  {
+    href: '/features/automatic-organization',
+    title: 'Automatic organization',
+    body: 'Watch folders, apply rules, move files. Silent, manual or scheduled.',
+    img: '/screenshots/kar1.png',
+  },
+  {
+    href: '/features/custom-rules',
+    title: 'Custom rules',
+    body: 'Extensions, name patterns, regex, dynamic paths and priorities.',
+    img: '/screenshots/kar2.png',
+  },
+  {
+    href: '/features/privacy',
+    title: 'Privacy',
+    body: 'No cloud, no account, no telemetry. Everything stays on your machine.',
+    img: '/screenshots/kar3.png',
+  },
+  {
+    href: '/features/security',
+    title: 'Security',
+    body: 'Public CI builds, checksums and code signing through SignPath Foundation.',
+    img: '/screenshots/kar4.png',
+  },
+];
+
+const details = [
+  ['History and one-click undo', 'Every move is recorded locally and reversible.'],
+  ['Download-safe detection', 'Grace periods, lock checks and browser temp-file skips.'],
+  ['Multiple watched folders', 'Each folder gets its own rules and behavior.'],
+  ['Dynamic paths', 'Placeholders like {year} and {month} build dated folder trees.'],
+  ['.mouziignore exclusions', 'Wildcards, folder patterns and inline comments.'],
+  ['Scheduled cleans', 'Up to four automatic runs per day, or fully manual mode.'],
+  ['Google Takeout import', 'Unpack and sort Takeout archives in one step.'],
+  ['10 languages', 'English, Polish, German, French, Spanish, Italian and more.'],
+  ['Light on resources', 'Rust and Tauri; idles at near-zero CPU.'],
+];
+---
+
+<BaseLayout
+  title="Features — Mouzi, automatic Downloads folder organizer"
+  description="What Mouzi does: automatic Downloads folder organization, custom rules with regex and dynamic paths, local-only history with undo, and verifiable releases."
+  canonical="/features"
+>
+  <div class="mx-auto max-w-6xl px-5 py-16">
+    <SectionHeading
+      kicker="Features"
+      title="Everything Mouzi does."
+      lead="A tray app with one job: keep the folders you choose organized, on your terms, without your data going anywhere."
+    />
+
+    <div class="mt-12 grid gap-5 sm:grid-cols-2">
+      {
+        featurePages.map((f) => (
+          <a href={f.href} class="group overflow-hidden rounded-card border border-line bg-surface transition-colors hover:border-amber/40">
+            <img src={f.img} alt="" width="1200" height="750" loading="lazy" class="aspect-[16/10] w-full border-b border-line object-cover" />
+            <div class="p-5">
+              <h2 class="text-lg font-semibold tracking-tight transition-colors group-hover:text-amber">{f.title}</h2>
+              <p class="mt-1.5 text-sm leading-relaxed text-muted">{f.body}</p>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="tdivider mt-16"></div>
+
+    <h2 class="mt-14 text-2xl font-semibold tracking-tight">And the rest</h2>
+    <dl class="mt-8 grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        details.map(([title, body]) => (
+          <div class="border-t border-line pt-4">
+            <dt class="text-[15px] font-medium">{title}</dt>
+            <dd class="mt-1 text-sm text-muted">{body}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <div class="mt-16 flex flex-wrap gap-3">
+      <a href="/download" class="rounded-btn bg-amber px-6 py-3 text-[15px] font-semibold text-[#151004] hover:opacity-90">Download Mouzi</a>
+      <a href="/docs" class="rounded-btn border border-line px-6 py-3 text-[15px] text-cream hover:bg-surface-2">Read the docs</a>
+    </div>
+  </div>
+</BaseLayout>

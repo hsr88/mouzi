@@ -1,0 +1,60 @@
+---
+title: Troubleshooting
+description: Diagnose files that did not move, unexpected rule matches, missing tray icons and startup problems.
+section: Reference
+order: 1
+platforms: [windows, linux]
+updated: 2026-08-09
+---
+
+## A file did not move
+
+Check these in order:
+
+1. **Folder:** confirm the file is directly inside a watched folder. Nested subfolders are not scanned.
+2. **Mode:** Silent moves automatically; Manual waits for **Clean now**; Paused does neither.
+3. **Grace period:** Silent mode waits five minutes by default. Clean now bypasses this delay.
+4. **Rule:** the rule must be enabled, its extension must match and its optional regex must also match the complete file name.
+5. **Priority:** a lower-numbered rule may have matched first.
+6. **Exclusion:** check `.mouziignore`, temporary download suffixes, dot-prefixed names and Windows hidden/system attributes.
+7. **Lock check:** with file-lock checking enabled, a file still used by another process remains in place.
+
+An invalid regular expression does not match. Extension matching is case-insensitive, but regex patterns are case-sensitive unless they include `(?i)`.
+
+## A file moved somewhere unexpected
+
+Open **History** and try **Undo** before renaming, moving or deleting the destination file. Then inspect rule priority and remember that rules are shared by every watched folder.
+
+Relative destinations are created inside the source watched folder. Placeholders use the UTC date at move time, which can differ from your local date around midnight.
+
+## Undo failed
+
+Undo needs the destination file to remain at the recorded path and the original location to be available. Current releases may also fail to restore a move across file-system volumes. Move the file back manually if necessary, then verify the result before clearing history.
+
+## Mouzi organized old files immediately
+
+Starting a folder in Silent mode scans existing top-level files as well as watching new arrivals. Pause the folder, undo recent moves where possible, then switch to Manual mode while adjusting rules.
+
+## Windows says the app is unrecognized
+
+Public version 0.1.5 is unsigned and can trigger SmartScreen. Verify that the file came from [the official download page](/download/windows). Read [Mouzi on Windows](/docs/windows) before choosing **Run anyway**.
+
+## The Linux tray icon is missing
+
+Install an AppIndicator/KStatusNotifierItem extension or package for your desktop. On GNOME, sign out and back in after enabling the extension. Mouzi can be running even when the desktop has no tray host.
+
+## The window is blank or does not open
+
+On Windows, repair the Microsoft Edge WebView2 Runtime. On Linux, ensure WebKitGTK 4.1 is installed. The Linux build already applies its Wayland DMABUF workaround.
+
+## Start with system does not work
+
+Toggle **Settings → General → Start with system** off and on again. On Windows this refreshes the per-user startup entry. On Linux it refreshes the autostart desktop entry under `~/.config/autostart`.
+
+## Reset or back up Mouzi
+
+Close Mouzi first, then copy or remove `mouzi.db` from the path listed in [Settings and local data](/docs/settings-and-data). Removing the database resets rules, watched folders, settings and history. It does not move any organized files back.
+
+## Still stuck
+
+[Open a GitHub issue](https://github.com/hsr88/mouzi/issues/new/choose) and include the Mouzi version, operating system, package type, folder mode, relevant rule and exact file name. Do not attach private files.

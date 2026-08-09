@@ -1,0 +1,568 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroBackgroundVideo from '../components/HeroBackgroundVideo.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import OrganizeDemo from '../components/OrganizeDemo';
+import RuleDemo from '../components/RuleDemo.astro';
+import PrivacyDiagram from '../components/PrivacyDiagram.astro';
+import DownloadCards from '../components/DownloadCards.astro';
+import { site, signingMessage } from '../config/site';
+import { getRepoStats, formatCount } from '../lib/github';
+import { softwareApplicationLd, websiteLd } from '../lib/seo';
+import { getCollection } from 'astro:content';
+
+const stats = await getRepoStats();
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const metrics = [
+  { label: 'GitHub stars', value: formatCount(stats.stars), attr: 'data-gh-stars' },
+  { label: 'Forks', value: formatCount(stats.forks), attr: 'data-gh-forks' },
+  { label: 'Contributors', value: formatCount(stats.contributors), attr: 'data-gh-contributors' },
+  { label: 'Languages', value: String(site.metrics.supportedLanguages), attr: null },
+  { label: 'Platforms', value: String(site.metrics.supportedPlatforms), attr: null },
+];
+
+const features = [
+  {
+    title: 'Automatic organization',
+    body: 'Mouzi sits in your system tray and watches the folders you choose. When a new file lands, it applies your rules and moves it to the right place. You keep working; the folder stays clean.',
+    href: '/features/automatic-organization',
+    img: '/screenshots/kar1.png',
+    alt: 'Mouzi main window showing watched folders and organization status',
+  },
+  {
+    title: 'Custom rules, in your words',
+    body: 'Match files by extension, name or full regex. Set a destination, with placeholders like {year} and {month} that build dated folders on their own. A rule takes about thirty seconds to create and you can pause any of them with one click.',
+    href: '/features/custom-rules',
+    img: '/screenshots/kar2.png',
+    alt: 'Mouzi rule editor with extension and destination fields',
+  },
+  {
+    title: 'History and one-click undo',
+    body: 'Every move is recorded in a local SQLite database. If a rule sends a file somewhere unexpected, open History and undo it. Nothing is ever silently lost.',
+    href: '/docs/getting-started',
+    img: '/screenshots/screenshot4.png',
+    alt: 'History view listing moved files with undo buttons',
+  },
+  {
+    title: 'Privacy and security, by design',
+    body: 'No cloud, no account, no telemetry. Releases are built in public CI with published checksums, and download-safe detection means a half-finished download never gets moved mid-transfer.',
+    href: '/features/privacy',
+    img: '/screenshots/kar3.png',
+    alt: 'Mouzi settings showing local-only operation',
+  },
+];
+
+const docLinks = [
+  { label: 'Getting started', href: '/docs/getting-started' },
+  { label: 'Rules and patterns', href: '/docs/rules' },
+  { label: 'Dynamic paths', href: '/docs/dynamic-paths' },
+  { label: 'Windows setup', href: '/docs/windows' },
+  { label: 'Linux setup', href: '/docs/linux' },
+  { label: 'Troubleshooting', href: '/docs/troubleshooting' },
+];
+
+const contributions = [
+  { label: 'View source', href: site.github.url },
+  { label: 'Report a bug', href: site.github.newIssue },
+  { label: 'Request a feature', href: site.github.newIssue },
+  { label: 'Improve documentation', href: `${site.github.url}/tree/main/docs` },
+  { label: 'Help translate Mouzi', href: `${site.github.url}/tree/main/src/i18n/locales` },
+  { label: 'Read contributing guidelines', href: site.github.url },
+];
+---
+
+<BaseLayout
+  title={site.title}
+  description={site.description}
+  canonical="/"
+  jsonLd={[websiteLd(), softwareApplicationLd()]}
+  flush
+>
+  <!-- 1 · Hero -->
+  <section class="relative flex min-h-[92vh] items-center overflow-hidden">
+    <HeroBackgroundVideo />
+    <div class="relative z-10 mx-auto w-full max-w-6xl px-5 pt-32 pb-20">
+      <div class="max-w-2xl">
+        <p class="font-mono text-xs tracking-[0.2em] text-amber uppercase">Free · Open source · Local-only</p>
+        <h1 class="mt-5 text-4xl font-semibold tracking-tight text-balance sm:text-6xl">
+          Your Downloads folder, sorted before it becomes a problem.
+        </h1>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-cream/85">
+          Mouzi quietly organizes new files using rules you control. No cloud, no accounts, no telemetry.
+        </p>
+        <div class="mt-9 flex flex-wrap items-center gap-3">
+          <a
+            href="#download"
+            class="rounded-btn bg-amber px-6 py-3 text-[15px] font-semibold text-[#151004] transition-opacity hover:opacity-90"
+          >
+            Download
+          </a>
+          <a
+            href={site.github.url}
+            rel="noopener"
+            class="flex items-center gap-2 rounded-btn border border-cream/25 px-6 py-3 text-[15px] font-medium text-cream transition-colors hover:border-cream/50"
+          >
+            View on GitHub
+            {stats.stars !== null && (
+              <span class="rounded border border-cream/20 px-1.5 py-0.5 font-mono text-xs text-cream/80">
+                ★ <span data-gh-stars>{formatCount(stats.stars)}</span>
+              </span>
+            )}
+          </a>
+          <span
+            class="inline-flex items-center gap-1.5 px-1 font-mono text-[10px] tracking-[0.12em] text-cream/35 uppercase"
+            title="Open source · MIT License"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" class="opacity-80">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M12 7.5v5l3 1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            Open source
+          </span>
+        </div>
+        <ul role="list" class="mt-10 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[11px] tracking-[0.08em] text-cream/60 uppercase">
+          <li>Windows 10 & 11</li>
+          <li>Linux</li>
+          <li>MIT License</li>
+          <li>Local-only processing</li>
+        </ul>
+        <p class="mt-4 font-mono text-[11px] text-cream/50">{signingMessage()}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · Project metrics -->
+  <section aria-label="Project metrics" class="border-y border-line">
+    <div class="mx-auto max-w-6xl px-5">
+      <dl class="grid grid-cols-2 divide-line sm:grid-cols-3 lg:grid-cols-6 lg:divide-x">
+        {
+          metrics.map((m) => (
+            <div class="px-4 py-6 text-center">
+              <dd class="font-mono text-2xl text-cream" {...(m.attr ? { [m.attr]: true } : {})}>
+                {m.value}
+              </dd>
+              <dt class="mt-1 font-mono text-[10px] tracking-[0.15em] text-muted uppercase">{m.label}</dt>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- 3 · Interactive organize demo -->
+  <section class="mx-auto max-w-6xl px-5 py-24">
+    <SectionHeading
+      kicker="See Mouzi work"
+      title="From download chaos to quiet order."
+      lead="Run four ordinary rules and watch Mouzi put every file where it belongs. Everything happens locally."
+    />
+    <div class="mt-10">
+      <OrganizeDemo client:visible />
+    </div>
+  </section>
+
+  <!-- 4 · Core features -->
+  <section class="border-t border-line">
+    <div class="mx-auto max-w-6xl px-5 py-24">
+      <SectionHeading
+        kicker="What it does"
+        title="Small app, sharp behavior."
+        lead="Mouzi is a Rust and Tauri application. It starts with your system, idles at near-zero cost and does exactly what its rules say."
+      />
+      <div class="mt-16 space-y-20">
+        {
+          features.map((f, i) => (
+            <article class:list={['grid items-center gap-10 lg:grid-cols-2', i % 2 === 1 && 'lg:[direction:rtl]']}>
+              <div class="lg:[direction:ltr]">
+                <h3 class="text-xl font-semibold tracking-tight">{f.title}</h3>
+                <p class="mt-3 leading-relaxed text-muted">{f.body}</p>
+                <a href={f.href} class="mt-4 inline-flex items-center gap-1.5 text-sm text-amber hover:underline">
+                  Read the docs
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M5 12h14m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </a>
+              </div>
+              <div class="lg:[direction:ltr]">
+                <img
+                  src={f.img}
+                  alt={f.alt}
+                  loading="lazy"
+                  width="1200"
+                  height="750"
+                  class="w-full rounded-card border border-line"
+                />
+              </div>
+            </article>
+          ))
+        }
+      </div>
+      <div class="mt-14">
+        <a href="/features" class="inline-flex items-center gap-2 rounded-btn border border-line px-5 py-2.5 text-sm text-cream transition-colors hover:bg-surface-2">
+          See all features, from regex to scheduled cleans
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 12h14m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · Privacy -->
+  <section class="relative border-t border-line bg-surface/40 noise">
+    <div class="relative mx-auto max-w-6xl px-5 py-24">
+      <SectionHeading
+        kicker="Privacy"
+        title="Your files never leave your computer."
+        lead="Mouzi has no server side. There is nothing to sign up for, nothing to sync and nothing to leak."
+      />
+      <div class="mt-12 grid gap-12 lg:grid-cols-2">
+        <ul role="list" class="space-y-4">
+          {
+            [
+              ['No cloud processing', 'Every rule runs on your CPU, against your disk.'],
+              ['No account', 'Download, install, done. Mouzi never asks who you are.'],
+              ['No telemetry', 'The app sends nothing home. You can verify this in the source.'],
+              ['No file names transmitted', 'File names, paths and contents stay on your machine.'],
+              ['Rules and history stored locally', 'Configuration and history live in a local SQLite database you can delete anytime.'],
+              ['Open to inspection', 'The full source code is on GitHub under the MIT license.'],
+            ].map(([title, body]) => (
+              <li class="flex gap-3">
+                <svg class="mt-1 shrink-0 text-amber" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div>
+                  <p class="text-[15px] font-medium">{title}</p>
+                  <p class="mt-0.5 text-sm text-muted">{body}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="self-center">
+          <PrivacyDiagram />
+          <a href="/features/privacy" class="mt-5 inline-block text-sm text-amber hover:underline">
+            How Mouzi handles your data →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · Rules demonstration -->
+  <section class="mx-auto max-w-6xl px-5 py-24">
+    <SectionHeading
+      kicker="Rules"
+      title="One condition, one destination. That's a rule."
+      lead="These are real rules from real setups. Click through them to see how Mouzi resolves each destination."
+    />
+    <div class="mt-10 max-w-3xl">
+      <RuleDemo />
+      <a href="/docs/rules" class="mt-5 inline-block text-sm text-amber hover:underline">
+        Explore the rules documentation →
+      </a>
+    </div>
+  </section>
+
+  <!-- 6b · Documentation -->
+  <section class="border-t border-line bg-surface/40">
+    <div class="mx-auto max-w-6xl px-5 py-24">
+      <SectionHeading
+        kicker="Documentation"
+        title="Everything you need to make Mouzi yours."
+        lead="From your first rule to advanced regex patterns and managed deployments."
+        align="center"
+      />
+      <div class="mx-auto mt-10 max-w-2xl">
+        <div id="home-docs-search"></div>
+        <a
+          id="home-docs-search-fallback"
+          href="/docs"
+          class="flex items-center gap-3 rounded-card border border-line bg-surface px-5 py-4 text-muted transition-colors hover:border-amber/40 hover:text-cream"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m21 21-4.3-4.3" stroke-linecap="round"></path>
+          </svg>
+          <span class="text-[15px]">Search the documentation…</span>
+        </a>
+      </div>
+      <ul role="list" class="mx-auto mt-8 grid max-w-3xl gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          docLinks.map((l) => (
+            <li>
+              <a
+                href={l.href}
+                class="flex items-center justify-between rounded-card border border-line bg-surface px-4 py-3 text-sm text-cream transition-colors hover:border-amber/40 hover:text-amber"
+              >
+                {l.label}
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M5 12h14m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- 7 · Security & trusted releases -->
+  <section class="border-t border-line">
+    <div class="mx-auto max-w-6xl px-5 py-24">
+      <SectionHeading
+        kicker="Security"
+        title="Releases you can verify."
+        lead="Every Mouzi build comes from a public GitHub Actions pipeline. You can trace any installer back to the exact commit that produced it."
+      />
+      <div class="mt-12 grid gap-5 md:grid-cols-3">
+        {
+          [
+            {
+              title: 'GitHub Actions builds',
+              body: 'Releases are compiled in public CI from tagged commits. The workflow files are part of the repository.',
+            },
+            {
+              title: 'SignPath Foundation',
+              body: signingMessage(),
+            },
+            {
+              title: 'VirusTotal checks',
+              body: 'Release artifacts can be checked against VirusTotal. Scan links are published with releases as they become available.',
+            },
+          ].map((c) => (
+            <div class="rounded-card border border-line bg-surface p-5">
+              <h3 class="text-[15px] font-semibold">{c.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted">{c.body}</p>
+            </div>
+          ))
+        }
+      </div>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="/docs/security" class="rounded-btn border border-line px-4 py-2 text-sm text-cream hover:bg-surface-2">Read the security policy</a>
+        <a href={`${site.github.url}/security/advisories/new`} rel="noopener" class="rounded-btn border border-line px-4 py-2 text-sm text-cream hover:bg-surface-2">Report a vulnerability</a>
+        <a href={`${site.github.url}/actions`} rel="noopener" class="rounded-btn border border-line px-4 py-2 text-sm text-cream hover:bg-surface-2">View release checks</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · Downloads -->
+  <section id="download" class="border-t border-line bg-surface/40">
+    <div class="mx-auto max-w-6xl px-5 py-24">
+      <SectionHeading
+        kicker={`Version ${site.version}`}
+        title="Download Mouzi."
+        lead="Free, MIT licensed, around 4 MB for the Windows installer. Pick the build for your system."
+      />
+      <div class="mt-12 grid gap-10 lg:grid-cols-2">
+        <div>
+          <h3 class="mb-4 font-mono text-xs tracking-[0.18em] text-muted uppercase">Windows</h3>
+          <DownloadCards platform="windows" compact />
+          <a href="/download/windows" class="mt-4 inline-block text-sm text-amber hover:underline">Windows install guide →</a>
+        </div>
+        <div>
+          <h3 class="mb-4 font-mono text-xs tracking-[0.18em] text-muted uppercase">Linux</h3>
+          <DownloadCards platform="linux" compact />
+          <a href="/download/linux" class="mt-4 inline-block text-sm text-amber hover:underline">Linux install guide →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · Blog preview -->
+  {
+    posts.length > 0 && (
+      <section class="mx-auto max-w-6xl px-5 py-24">
+        <SectionHeading kicker="Writing" title="From the Mouzi blog." />
+        <div class="mt-10 divide-y divide-line border-y border-line">
+          {posts.map((post) => (
+            <article class="group grid gap-2 py-7 sm:grid-cols-[140px_1fr]">
+              <time datetime={post.data.pubDate.toISOString()} class="pt-0.5 font-mono text-xs text-muted">
+                {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+              </time>
+              <div>
+                <h3 class="text-lg font-semibold tracking-tight">
+                  <a href={`/blog/${post.id}`} class="transition-colors group-hover:text-amber">
+                    {post.data.title}
+                  </a>
+                </h3>
+                <p class="mt-1.5 max-w-2xl text-sm leading-relaxed text-muted">{post.data.description}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+        <a href="/blog" class="mt-8 inline-block rounded-btn border border-line px-4 py-2 text-sm text-cream hover:bg-surface-2">
+          Read the Mouzi blog
+        </a>
+      </section>
+    )
+  }
+
+  <!-- 10 · Roadmap preview -->
+  <section class="border-t border-line">
+    <div class="mx-auto max-w-6xl px-5 py-24">
+      <SectionHeading
+        kicker="Direction"
+        title="Where Mouzi is heading."
+        lead="Plans, not promises. Items move between columns as priorities shift."
+      />
+      <div class="mt-10 grid gap-5 md:grid-cols-3">
+        {
+          [
+            {
+              phase: 'Now',
+              items: ['Folder picker in the rule editor', 'Tooltips and accessibility labels', 'Quick enable/disable on every rule row'],
+            },
+            {
+              phase: 'Next',
+              items: ['History search and filters', 'AppImage icon fix for AppManager installs', 'Signed Windows releases via SignPath'],
+            },
+            {
+              phase: 'Later',
+              items: ['Recursive folder watching with loop protection', 'Rules based on file size and dates', 'More Linux packaging formats'],
+            },
+          ].map((col) => (
+            <div class="rounded-card border border-line bg-surface p-5">
+              <h3 class="font-mono text-xs tracking-[0.18em] text-amber uppercase">{col.phase}</h3>
+              <ul role="list" class="mt-4 space-y-2.5">
+                {col.items.map((item) => (
+                  <li class="border-b border-line pb-2.5 text-sm text-cream/85 last:border-0 last:pb-0">{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+      <a href="/roadmap" class="mt-8 inline-block text-sm text-amber hover:underline">Full roadmap →</a>
+    </div>
+  </section>
+
+  <!-- 11 · Open-source contribution -->
+  <section class="border-t border-line bg-surface/40">
+    <div class="mx-auto max-w-6xl px-5 py-24">
+      <SectionHeading
+        kicker="Community"
+        title="Built in public."
+        lead="Mouzi is developed in the open. Every issue, commit and release is visible on GitHub, and there are plenty of ways to help beyond writing Rust."
+      />
+      <ul role="list" class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          contributions.map((c) => (
+            <li>
+              <a
+                href={c.href}
+                rel="noopener"
+                class="flex items-center justify-between rounded-card border border-line bg-surface px-4 py-3.5 text-sm text-cream transition-colors hover:border-amber/40 hover:text-amber"
+              >
+                {c.label}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M7 17 17 7m0 0H8m9 0v9" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- 12 · Funding -->
+  <section class="mx-auto max-w-6xl px-5 py-24">
+    <div class="grid gap-12 lg:grid-cols-2">
+      <div>
+        <SectionHeading kicker="Funding" title="Help keep Mouzi independent." />
+        <p class="mt-5 max-w-xl leading-relaxed text-muted">
+          Mouzi is developed after hours by one independent developer. Sponsorship helps fund code signing, testing,
+          documentation, additional platform support and the time needed to maintain the project.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href={site.funding.githubSponsors} rel="noopener" class="rounded-btn bg-amber px-5 py-2.5 text-sm font-semibold text-[#151004] hover:opacity-90">
+            Sponsor on GitHub
+          </a>
+          <a href={site.funding.kofi} rel="noopener" class="rounded-btn border border-line px-5 py-2.5 text-sm text-cream hover:bg-surface-2">
+            Buy me a coffee
+          </a>
+          <a href="/sponsors" class="rounded-btn border border-line px-5 py-2.5 text-sm text-cream hover:bg-surface-2">
+            Become a project partner
+          </a>
+        </div>
+      </div>
+      <div class="flex items-center justify-center rounded-card border border-dashed border-amber/30 p-10 text-center">
+        {
+          site.activeSponsor ? (
+            <a href={site.activeSponsor.url} rel="sponsored noopener">
+              <img src={site.activeSponsor.logo} alt={site.activeSponsor.name} class="mx-auto max-h-12" />
+            </a>
+          ) : (
+            <div>
+              <p class="font-mono text-xs tracking-[0.25em] text-amber uppercase">Founding sponsor</p>
+              <p class="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-muted">
+                One exclusive placement for a company aligned with privacy, productivity or open source.
+              </p>
+              <a href="/sponsors" class="mt-4 inline-block rounded-btn border border-line px-4 py-2 text-sm text-cream transition-colors hover:bg-surface-2">
+                Claim this placement
+              </a>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 · Final CTA -->
+  <section class="border-t border-line">
+    <div class="mx-auto max-w-6xl px-5 py-28 text-center">
+      <img
+        src="/images/mouzi-mascot.png"
+        alt="Mouzi mascot, a low-poly mouse with a broom"
+        width="220"
+        height="180"
+        loading="lazy"
+        class="mx-auto mb-8 h-36 w-auto"
+      />
+      <h2 class="mx-auto max-w-xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+        A cleaner Downloads folder is one install away.
+      </h2>
+      <div class="mt-9 flex flex-wrap justify-center gap-3">
+        <a href="/download" class="rounded-btn bg-amber px-7 py-3 text-[15px] font-semibold text-[#151004] hover:opacity-90">
+          Download Mouzi
+        </a>
+        <a href={site.github.url} rel="noopener" class="rounded-btn border border-line px-7 py-3 text-[15px] text-cream hover:bg-surface-2">
+          View source
+        </a>
+      </div>
+      <p class="mt-6 font-mono text-[11px] text-muted">
+        v{site.version} · Windows 10/11 and Linux · MIT License
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // Homepage documentation search: mount Pagefind when the index exists
+  // (preview/production); otherwise keep the fallback link to /docs.
+  const mount = document.getElementById('home-docs-search');
+  const fallback = document.getElementById('home-docs-search-fallback');
+  if (mount && fallback) {
+    import(/* @vite-ignore */ '/pagefind/pagefind-ui.js')
+      .then(() => {
+        // @ts-expect-error global from pagefind-ui
+        new PagefindUI({
+          element: '#home-docs-search',
+          showImages: false,
+          showSubResults: true,
+          focusOnSlash: true,
+          translations: { placeholder: 'Search the documentation…' },
+        }).triggerFilters({ section: ['docs'] });
+        fallback.style.display = 'none';
+      })
+      .catch(() => {
+        /* dev mode: keep fallback link */
+      });
+  }
+</script>
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css" onerror="this.remove()" />

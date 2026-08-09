@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<BaseLayout
+  title="Blog — Mouzi"
+  description="Development stories, practical file organization tutorials, security notes and release explanations from the Mouzi project."
+  canonical="/blog"
+>
+  <div class="mx-auto max-w-4xl px-5 py-16">
+    <SectionHeading
+      kicker="Writing"
+      title="The Mouzi blog"
+      lead="Development notes, practical tutorials and security write-ups. No filler; posts appear when there is something worth saying."
+    />
+    <div class="mt-12 divide-y divide-line border-y border-line">
+      {
+        posts.map((post) => (
+          <article class="group py-8">
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] text-muted">
+              <time datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </time>
+              {post.data.tags.map((tag) => (
+                <span class="rounded border border-line px-1.5 py-0.5 uppercase tracking-[0.08em]">{tag}</span>
+              ))}
+            </div>
+            <h2 class="mt-3 text-2xl font-semibold tracking-tight">
+              <a href={`/blog/${post.id}`} class="transition-colors group-hover:text-amber">
+                {post.data.title}
+              </a>
+            </h2>
+            <p class="mt-2 leading-relaxed text-muted">{post.data.description}</p>
+            <a href={`/blog/${post.id}`} class="mt-3 inline-block text-sm text-amber hover:underline">
+              Read post →
+            </a>
+          </article>
+        ))
+      }
+    </div>
+    <p class="mt-8 font-mono text-xs text-muted">
+      Subscribe via <a href="/rss.xml" class="text-amber hover:underline">RSS</a>.
+    </p>
+  </div>
+</BaseLayout>

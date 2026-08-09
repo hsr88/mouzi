@@ -1,0 +1,294 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { site } from '../config/site';
+import { getRepoStats, formatCount } from '../lib/github';
+import {
+  communityReach,
+  communityReachNote,
+  formatPublished,
+  podcastListenLabel,
+  type CoverageReachCard,
+  type PodcastReachCard,
+  type RedditReachCard,
+} from '../config/community';
+
+const stats = await getRepoStats();
+
+const numbers = [
+  { label: 'GitHub stars', value: formatCount(stats.stars), source: 'GitHub API', note: null as string | null, attr: 'data-gh-stars' },
+  { label: 'Forks', value: formatCount(stats.forks), source: 'GitHub API', note: null, attr: 'data-gh-forks' },
+  { label: 'Contributors', value: formatCount(stats.contributors), source: 'GitHub API', note: null, attr: 'data-gh-contributors' },
+  ...(site.metrics.verifiedDownloads
+    ? [
+        {
+          label: 'Verified downloads',
+          value: site.metrics.verifiedDownloads.label,
+          source: `Source checked: ${site.metrics.verifiedDownloads.sourceChecked}`,
+          note: site.metrics.verifiedDownloads.note,
+          attr: null as string | null,
+        },
+      ]
+    : site.metrics.totalDownloads !== null
+      ? [
+          {
+            label: 'Total downloads',
+            value: formatCount(site.metrics.totalDownloads),
+            source: 'configured',
+            note: null as string | null,
+            attr: null as string | null,
+          },
+        ]
+      : []),
+  { label: 'Languages', value: String(site.metrics.supportedLanguages), source: 'locale files in repo', note: null, attr: null },
+  { label: 'Platforms', value: String(site.metrics.supportedPlatforms), source: 'Windows, Linux', note: null, attr: null },
+];
+
+const reachCards = communityReach.filter((c) => c.enabled);
+---
+
+<BaseLayout
+  title="Impact — Mouzi"
+  description="Project statistics, community reach, verified downloads, operating costs and what additional funding would enable for Mouzi. Written for sponsors and grant reviewers."
+  canonical="/impact"
+>
+  <div class="mx-auto max-w-6xl px-5 py-16">
+    <SectionHeading
+      kicker="For sponsors and reviewers"
+      title="Project impact"
+      lead="GitHub stars, forks and contributors refresh from the public API on every page load. Download figures are configured only when they have been verified."
+    />
+
+    <h2 class="mt-14 text-xl font-semibold tracking-tight">Mission</h2>
+    <p class="mt-3 max-w-2xl leading-relaxed text-muted">
+      Mouzi exists so that ordinary computer users can keep their file system organized without giving a cloud service
+      visibility into everything they download. It is free software in both senses, MIT licensed and priced at zero,
+      developed in public.
+    </p>
+
+    <h2 class="mt-12 text-xl font-semibold tracking-tight">Numbers</h2>
+    <dl class="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
+      {
+        numbers.map((n) => (
+          <div class="rounded-card border border-line bg-surface p-4">
+            <dd class="font-mono text-2xl" {...(n.attr ? { [n.attr]: true } : {})}>
+              {n.value}
+            </dd>
+            <dt class="mt-1 text-sm text-muted">{n.label}</dt>
+            {n.note && <p class="mt-2 text-[13px] leading-snug text-cream/75">{n.note}</p>}
+            <p class="mt-1 font-mono text-[10px] text-muted/70">{n.source.startsWith('Source') ? n.source : `source: ${n.source}`}</p>
+          </div>
+        ))
+      }
+    </dl>
+
+    {
+      reachCards.length > 0 && (
+        <section class="mt-14" aria-labelledby="community-reach">
+          <h2 id="community-reach" class="text-xl font-semibold tracking-tight">
+            Community reach
+          </h2>
+          <p class="mt-3 max-w-2xl leading-relaxed text-muted">
+            Mouzi has attracted attention beyond GitHub through community discussions, independent coverage and word of
+            mouth.
+          </p>
+
+          <div class="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+            {reachCards.map((card) => {
+              if (card.kind === 'reddit') {
+                const r = card as RedditReachCard;
+                const date = formatPublished(r.publishedAt);
+                return (
+                  <article class="group flex flex-col rounded-card border border-line bg-surface p-5 transition-transform duration-200 hover:-translate-y-0.5">
+                    <p class="font-mono text-[10px] tracking-[0.18em] text-amber uppercase">{r.label}</p>
+                    <h3 class="mt-3 text-[16px] font-semibold tracking-tight text-balance text-cream">{r.title}</h3>
+                    <p class="mt-2 font-mono text-[11px] text-muted">
+                      {r.community}
+                      {date && (
+                        <>
+                          <span class="mx-1.5 text-line">·</span>
+                          <time datetime={r.publishedAt!}>{date}</time>
+                        </>
+                      )}
+                    </p>
+
+                    {r.engagement && (
+                      <div class="mt-5">
+                        <p class="text-2xl font-semibold tracking-tight text-cream">{r.engagement.label}</p>
+                        <p class="mt-1 font-mono text-[10px] text-muted/70">
+                          Source checked: {r.engagement.sourceChecked}
+                        </p>
+                      </div>
+                    )}
+
+                    {r.secondaryEngagement && (
+                      <div class="mt-3">
+                        <p class="font-mono text-sm text-cream/90">{r.secondaryEngagement.label}</p>
+                        <p class="mt-0.5 font-mono text-[10px] text-muted/70">
+                          Source checked: {r.secondaryEngagement.sourceChecked}
+                        </p>
+                      </div>
+                    )}
+
+                    {typeof r.comments === 'number' && (
+                      <p class="mt-3 font-mono text-[12px] text-muted">{r.comments} comments</p>
+                    )}
+
+                    <p class="mt-4 flex-1 text-sm leading-relaxed text-muted">{r.summary}</p>
+
+                    {r.related && r.related.length > 0 && (
+                      <ul role="list" class="mt-4 space-y-1.5 border-t border-line pt-3">
+                        {r.related.map((link) => (
+                          <li>
+                            <a
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="flex items-baseline justify-between gap-2 font-mono text-[11px] text-muted transition-colors hover:text-amber"
+                            >
+                              <span>{link.label}</span>
+                              {link.views && <span class="shrink-0 text-cream/70">{link.views}</span>}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    <a
+                      href={r.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="mt-5 inline-flex items-center justify-center rounded-btn border border-line px-4 py-2 text-sm text-cream transition-colors group-hover:border-amber/40 hover:bg-surface-2"
+                    >
+                      {r.ctaLabel}
+                    </a>
+                  </article>
+                );
+              }
+
+              if (card.kind === 'coverage') {
+                const c = card as CoverageReachCard;
+                const date = formatPublished(c.publishedAt);
+                return (
+                  <article class="group flex flex-col rounded-card border border-line bg-surface p-5 transition-transform duration-200 hover:-translate-y-0.5">
+                    <p class="font-mono text-[10px] tracking-[0.18em] text-amber uppercase">{c.label}</p>
+                    <h3 class="mt-3 text-2xl font-semibold tracking-tight text-cream">{c.outlet}</h3>
+                    <p class="mt-2 text-[15px] font-medium text-cream/90">{c.title}</p>
+                    {date && (
+                      <p class="mt-2 font-mono text-[11px] text-muted">
+                        <time datetime={c.publishedAt!}>{date}</time>
+                      </p>
+                    )}
+
+                    {c.engagement && (
+                      <div class="mt-5">
+                        <p class="text-2xl font-semibold tracking-tight text-cream">{c.engagement.label}</p>
+                        <p class="mt-1 font-mono text-[10px] text-muted/70">
+                          Source checked: {c.engagement.sourceChecked}
+                        </p>
+                      </div>
+                    )}
+
+                    <p class="mt-4 flex-1 text-sm leading-relaxed text-muted">{c.summary}</p>
+                    <p class="mt-4 font-mono text-[10px] text-muted/70">Source checked: {c.sourceChecked}</p>
+
+                    <a
+                      href={c.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="mt-5 inline-flex items-center justify-center rounded-btn border border-line px-4 py-2 text-sm text-cream transition-colors group-hover:border-amber/40 hover:bg-surface-2"
+                    >
+                      {c.ctaLabel}
+                    </a>
+                  </article>
+                );
+              }
+
+              const p = card as PodcastReachCard;
+              const date = formatPublished(p.publishedAt);
+              return (
+                <article class="group flex flex-col rounded-card border border-line bg-surface p-5 transition-transform duration-200 hover:-translate-y-0.5">
+                  <p class="font-mono text-[10px] tracking-[0.18em] text-amber uppercase">{p.label}</p>
+                  <h3 class="mt-3 text-2xl font-semibold tracking-tight text-cream">{p.podcastName}</h3>
+                  <p class="mt-2 text-[15px] font-medium text-cream/90">
+                    {p.episodeNumber ? `Episode ${p.episodeNumber}: ` : ''}
+                    {p.episodeTitle}
+                  </p>
+                  {date && (
+                    <p class="mt-2 font-mono text-[11px] text-muted">
+                      <time datetime={p.publishedAt!}>{date}</time>
+                      {p.timestampSeconds !== null && (
+                        <>
+                          <span class="mx-1.5">·</span>
+                          <span>mention at {Math.floor(p.timestampSeconds / 60)}:{String(p.timestampSeconds % 60).padStart(2, '0')}</span>
+                        </>
+                      )}
+                    </p>
+                  )}
+
+                  <p class="mt-4 flex-1 text-sm leading-relaxed text-muted">{p.summary}</p>
+
+                  {p.quote && (
+                    <blockquote class="mt-4 border-l-2 border-amber pl-3 text-sm leading-relaxed text-cream/80">
+                      {p.quote}
+                    </blockquote>
+                  )}
+
+                  <p class="mt-4 font-mono text-[10px] text-muted/70">Source checked: {p.sourceChecked}</p>
+
+                  <a
+                    href={p.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mt-5 inline-flex items-center justify-center rounded-btn border border-line px-4 py-2 text-sm text-cream transition-colors group-hover:border-amber/40 hover:bg-surface-2"
+                  >
+                    {podcastListenLabel(p)}
+                  </a>
+                </article>
+              );
+            })}
+          </div>
+
+          <p class="mt-8 max-w-3xl text-sm leading-relaxed text-muted">{communityReachNote}</p>
+        </section>
+      )
+    }
+
+    <h2 class="mt-14 text-xl font-semibold tracking-tight">Community demand</h2>
+    <p class="mt-3 max-w-2xl leading-relaxed text-muted">
+      Feature direction comes from public GitHub issues: folder pickers, history filtering, recursive watching and
+      more are all user requests tracked in the{' '}
+      <a href={site.github.issues} rel="noopener" class="text-amber hover:underline">issue tracker</a>. Translations
+      into 10 languages were contributed by the community.
+    </p>
+
+    <h2 class="mt-12 text-xl font-semibold tracking-tight">Security relevance</h2>
+    <p class="mt-3 max-w-2xl leading-relaxed text-muted">
+      Downloads folders are a common delivery point for scams and malware, including fake-invoice remote-access
+      payloads. Mouzi's rule-based sorting helps users notice files that do not belong, and the project maintains a
+      verifiable release pipeline documented in the <a href="/docs/security" class="text-amber hover:underline">security docs</a>.
+    </p>
+
+    <h2 class="mt-12 text-xl font-semibold tracking-tight">Operating costs and funding</h2>
+    <div class="prose mt-3">
+      <p>
+        Current recurring costs are modest: domain, build minutes and testing hardware. The dominant cost is
+        maintainer time, currently unpaid, spent on development, issue triage, documentation and release engineering.
+      </p>
+      <p>Additional funding would directly enable:</p>
+      <ul>
+        <li>sustained code signing and release verification infrastructure</li>
+        <li>dedicated testing across more Linux distributions and desktop environments</li>
+        <li>professional documentation and localization review</li>
+        <li>macOS support, currently experimental</li>
+        <li>more maintainer hours on community-requested features</li>
+      </ul>
+    </div>
+
+    <div class="mt-12 flex flex-wrap gap-3 border-t border-line pt-8">
+      <a href={site.github.url} rel="noopener" class="rounded-btn border border-line px-5 py-2.5 text-sm text-cream hover:bg-surface-2">GitHub repository</a>
+      <a href="/blog" class="rounded-btn border border-line px-5 py-2.5 text-sm text-cream hover:bg-surface-2">Project blog</a>
+      <a href={`mailto:${site.funding.contactEmail}`} class="rounded-btn bg-amber px-5 py-2.5 text-sm font-semibold text-[#151004] hover:opacity-90">Contact the maintainer</a>
+    </div>
+  </div>
+</BaseLayout>

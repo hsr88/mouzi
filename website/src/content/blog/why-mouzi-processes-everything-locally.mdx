@@ -1,0 +1,61 @@
+---
+title: Why Mouzi processes every file locally
+description: Mouzi watches a folder that may contain invoices, photos and private documents. This is what the app reads, what it stores and why none of it leaves your computer.
+pubDate: 2026-07-20
+updatedDate: 2026-08-09
+tags: [privacy, architecture]
+related: [practical-downloads-folder-rules, building-a-trusted-release-pipeline]
+cover: /images/blog/local-processing.webp
+coverAlt: The Mouzi mouse organizing files inside a warm boundary that represents local processing
+---
+
+Mouzi watches the Downloads folder. That can include invoices, medical documents, tax forms, family photos and whatever else you saved five minutes ago. A file organizer has access to a surprisingly personal slice of your life.
+
+That is why Mouzi does its work locally. It has no account system, cloud service or telemetry endpoint. The application does not upload a file name to decide where a file belongs. It does not need to.
+
+## What happens when a file arrives
+
+Suppose you download `electricity-invoice-august.pdf` and have a rule that sends PDFs containing "invoice" to `Documents/Invoices/{year}`.
+
+Mouzi handles that rule on your computer:
+
+1. The folder watcher notices the new file.
+2. Mouzi waits for the configured grace period and checks that another program is not still writing to it.
+3. The rule engine reads the file name and extension.
+4. It matches the file against your enabled rules, in order.
+5. The operating system moves the file to the destination folder.
+6. Mouzi adds the move to History so you can undo it later.
+
+The file contents are not needed for a normal rule. Mouzi sorts by information such as the name, extension and the rule you created. Even regex matching runs against the file name, not the contents of the document.
+
+## What Mouzi stores
+
+Rules, watched folders, settings and move history live in a SQLite database inside your user profile. The history record contains enough information to show what happened and undo it: the original path, destination path, time, action and matched rule.
+
+You can inspect the database yourself with any SQLite browser. On Windows it is stored under `%APPDATA%\Mouzi\history.db`. On Linux it is under `~/.config/mouzi/history.db`.
+
+There is no remote copy. Uninstalling Mouzi and removing its local data directory removes what the application knows about your files.
+
+## No telemetry also has a cost
+
+Telemetry would make parts of development easier. I would know which Linux desktop environments have trouble with the tray icon. Crash reports could point to a broken feature before somebody takes the time to open an issue. Usage numbers could tell me whether a feature is used by hundreds of people or five.
+
+I chose not to collect that information. Mouzi is a small utility with broad access to the file system, and asking users to trust a second analytics system would make the privacy story worse for very little benefit.
+
+The downside is simple: bug reports matter. When something breaks, the useful report is the one a person sends through GitHub with their operating system, Mouzi version and a description of what happened. It is slower than an automatic crash dashboard, but it keeps the boundary clear.
+
+## How to check the claim
+
+You do not have to take the website's word for it. Mouzi is MIT licensed and the [source code is public](https://github.com/hsr88/mouzi).
+
+You can also watch the running process with Windows Resource Monitor, TCPView, Wireshark or the network monitor you already trust. Add a temporary rule, drop a few files into a test folder and watch Mouzi process them. The application should not create an outbound connection.
+
+If it does, save the destination address and the version you tested, then report it through a [private security advisory](https://github.com/hsr88/mouzi/security/advisories/new). An unexpected network connection is a security issue, not a harmless analytics bug.
+
+## What local-only does not mean
+
+Local software can still have bugs. A bad rule can move a file to the wrong folder. A compromised computer can interfere with any program running on it. Local processing does not replace backups, operating system updates or basic care with downloaded executables.
+
+It does remove one large category of risk: Mouzi cannot leak data to a server that does not exist. For an application that watches Downloads all day, that is the boundary I want.
+
+Read the [privacy and security documentation](/docs/security), or [download Mouzi](/download) and verify the behavior on your own machine.

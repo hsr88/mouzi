@@ -1,0 +1,63 @@
+---
+title: Settings and local data
+description: Reference for language, theme, startup, safety settings, storage paths, backup and reset.
+section: Reference
+order: 2
+platforms: [windows, linux]
+updated: 2026-08-09
+---
+
+Mouzi stores configuration and history locally in one SQLite database. There is no account or cloud synchronization.
+
+## General settings
+
+| Setting | Behavior |
+| --- | --- |
+| Language | Choose English, Polish, Italian, German, French, Russian, Japanese, Vietnamese, Spanish or Ukrainian |
+| Theme | Follow the system, use light or use dark |
+| Start with system | Launch Mouzi after the current user signs in; enabled on first run |
+| Grace period | Delay Silent-mode processing from 0 seconds to 7 days; default 5 minutes |
+| Check whether files are in use | Leave locked files in place; enabled by default |
+
+Changing the grace period affects newly queued work. Clean now and scheduled cleans bypass the delay.
+
+## Local database
+
+The `mouzi.db` file contains:
+
+- application settings
+- watched folders and their modes
+- the global rule list
+- movement history and statistics
+
+**Windows:**
+
+```text
+%APPDATA%\mouzi\mouzi\data\mouzi.db
+```
+
+**Linux:**
+
+```text
+$XDG_DATA_HOME/mouzi/mouzi.db
+```
+
+The usual Linux default is `~/.local/share/mouzi/mouzi.db`.
+
+## Back up or move settings
+
+1. Quit Mouzi from the tray so the database is closed.
+2. Copy `mouzi.db` to a private backup location.
+3. Restore it only while Mouzi is closed.
+
+The database contains full local paths and file names from History. Do not attach it to a public issue unless you have inspected and sanitized it.
+
+## Reset the application
+
+Quit Mouzi and remove or rename `mouzi.db`. The next launch creates fresh defaults, including the Downloads folder, starter rules and enabled autostart.
+
+Resetting the database does not delete organized files and does not undo earlier moves.
+
+## Updates
+
+Mouzi does not download or install updates automatically. The About screen shows the installed version and release date. **Check for updates** opens mouzi.cc, where you can compare the current public version and download it manually.
