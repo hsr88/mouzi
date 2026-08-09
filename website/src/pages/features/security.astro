@@ -7,7 +7,7 @@ import { breadcrumbLd } from '../../lib/seo';
 
 <BaseLayout
   title="Security — Mouzi features"
-  description="How Mouzi releases are built and verified: public GitHub Actions builds, SHA-256 checksums and code signing through SignPath Foundation."
+  description="How Mouzi releases are built and checked: public GitHub Actions workflows, local file inspection and code signing being prepared through SignPath Foundation."
   canonical="/features/security"
   jsonLd={[breadcrumbLd([{ name: 'Features', url: '/features' }, { name: 'Security', url: '/features/security' }])]}
 >
@@ -15,7 +15,7 @@ import { breadcrumbLd } from '../../lib/seo';
     <SectionHeading
       kicker="Features"
       title="Releases you can verify."
-      lead="Trust in a desktop app should not rest on the developer's word. Every step from source to installer is public and checkable."
+      lead="Trust in a desktop app should not rest on the developer's word. Mouzi publishes its source, release workflows and tagged release files for inspection."
     />
 
     <div class="mt-12 grid gap-5 sm:grid-cols-2">
@@ -23,19 +23,19 @@ import { breadcrumbLd } from '../../lib/seo';
         [
           {
             title: 'Built in public CI',
-            body: 'Every release is compiled by GitHub Actions from a tagged commit. The workflow files are part of the repository, so the recipe for each artifact is public.',
+            body: 'Public releases are compiled by GitHub Actions from tagged commits. The workflow files are part of the repository, so the build steps are open for inspection.',
           },
           {
             title: 'SignPath Foundation',
-            body: signingMessage() + ' The signing step runs inside CI against a release policy, followed by Authenticode verification.',
+            body: signingMessage() + ' Once the production certificate is active, CI will submit release files under a restricted policy and verify their Authenticode signatures before publication.',
           },
           {
-            title: 'Published checksums',
-            body: 'SHA-256 checksums accompany every release. The files served from mouzi.cc are the same artifacts published on GitHub.',
+            title: 'Direct GitHub artifacts',
+            body: 'The download buttons on mouzi.cc point to the files published on the official GitHub release rather than to a separate mirror.',
           },
           {
-            title: 'VirusTotal',
-            body: 'Release artifacts can be scanned on VirusTotal, and scan links are published with releases as they become available.',
+            title: 'Local verification',
+            body: 'You can inspect an Authenticode signature when one is present and calculate a SHA-256 hash locally. A hash needs a trusted comparison value to verify a download.',
           },
         ].map((c) => (
           <div class="rounded-card border border-line bg-surface p-5">
@@ -49,9 +49,9 @@ import { breadcrumbLd } from '../../lib/seo';
     <section class="prose mt-12">
       <h2>Why a file organizer cares this much</h2>
       <p>
-        Mouzi asks to watch your Downloads folder, which is exactly where malware and download scams operate. A tool in
-        this position should be more verifiable than average, not less. Public builds mean a compromised developer
-        machine cannot silently poison a release; checksums mean a tampered mirror cannot pass off a modified binary.
+        Mouzi asks to watch your Downloads folder, where browsers place files before you open them. That makes the
+        release path worth inspecting. Public workflows show how release artifacts are built, and mouzi.cc links
+        directly to the files published on GitHub instead of maintaining a separate binary mirror.
       </p>
 
       <h2>Reporting vulnerabilities</h2>

@@ -53,9 +53,9 @@ It is slower than putting a certificate into a repository secret and signing eve
 
 Linux packages do not use Windows Authenticode, but they still need release checks. Mouzi ships an AppImage, DEB and RPM from the same tagged source.
 
-The AppImage previously contained an icon link that pointed back to a temporary GitHub Actions runner path. The application could launch directly while installation through AppManager failed. That bug is now handled in the workflow: the AppImage is repaired, its links are checked and the finished artifact is installed through AppManager before it can reach a release.
+The AppImage in version 0.1.5 exposed a packaging problem: an icon link pointed back to a temporary GitHub Actions runner path. The application could launch directly while installation through AppManager failed. The next Linux release must repair the link, check the finished package and pass an AppManager installation test before publication.
 
-This is the kind of problem a successful compilation will not catch. A package needs to be used the way a user will use it.
+This is the kind of problem a successful compilation does not catch. The package has to be tested through the same installation path users follow.
 
 ## What a signature proves
 

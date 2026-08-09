@@ -3,7 +3,16 @@
   "framework": "astro",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://mouzi.cc/:path*",
+      "permanent": true,
+      "has": [{ "type": "host", "value": "www.mouzi.cc" }]
+    }
+  ],
   "headers": [
     {
       "source": "/videos/(.*)",

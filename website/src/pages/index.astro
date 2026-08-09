@@ -35,21 +35,21 @@ const features = [
   },
   {
     title: 'Custom rules, in your words',
-    body: 'Match files by extension, name or full regex. Set a destination, with placeholders like {year} and {month} that build dated folders on their own. A rule takes about thirty seconds to create and you can pause any of them with one click.',
+    body: 'Match files by extension and optionally narrow the match with a regular expression applied to the full file name. Destinations can use placeholders such as {year} and {month} to create dated folders.',
     href: '/features/custom-rules',
     img: '/screenshots/kar2.png',
     alt: 'Mouzi rule editor with extension and destination fields',
   },
   {
     title: 'History and one-click undo',
-    body: 'Every move is recorded in a local SQLite database. If a rule sends a file somewhere unexpected, open History and undo it. Nothing is ever silently lost.',
+    body: 'Every successful move is recorded in a local SQLite database. If a rule sends a file somewhere unexpected, open History and undo that entry.',
     href: '/docs/getting-started',
     img: '/screenshots/screenshot4.png',
     alt: 'History view listing moved files with undo buttons',
   },
   {
     title: 'Privacy and security, by design',
-    body: 'No cloud, no account, no telemetry. Releases are built in public CI with published checksums, and download-safe detection means a half-finished download never gets moved mid-transfer.',
+    body: 'No cloud, no account and no telemetry. Releases are built in public CI. Mouzi also uses a grace period, skips browser temporary files and checks for file locks before an automatic move.',
     href: '/features/privacy',
     img: '/screenshots/kar3.png',
     alt: 'Mouzi settings showing local-only operation',
@@ -69,9 +69,9 @@ const contributions = [
   { label: 'View source', href: site.github.url },
   { label: 'Report a bug', href: site.github.newIssue },
   { label: 'Request a feature', href: site.github.newIssue },
-  { label: 'Improve documentation', href: `${site.github.url}/tree/main/docs` },
+  { label: 'Improve documentation', href: `${site.github.url}/tree/main/website/src/content/docs` },
   { label: 'Help translate Mouzi', href: `${site.github.url}/tree/main/src/i18n/locales` },
-  { label: 'Read contributing guidelines', href: site.github.url },
+  { label: 'Read contributing guidelines', href: `${site.github.url}/blob/main/CONTRIBUTING.md` },
 ];
 ---
 
@@ -161,7 +161,7 @@ const contributions = [
       lead="Run four ordinary rules and watch Mouzi put every file where it belongs. Everything happens locally."
     />
     <div class="mt-10">
-      <OrganizeDemo client:visible />
+      <OrganizeDemo client:load />
     </div>
   </section>
 
@@ -171,7 +171,7 @@ const contributions = [
       <SectionHeading
         kicker="What it does"
         title="Small app, sharp behavior."
-        lead="Mouzi is a Rust and Tauri application. It starts with your system, idles at near-zero cost and does exactly what its rules say."
+        lead="Mouzi is a small Rust and Tauri tray application. It stays out of the way until a watched folder needs attention."
       />
       <div class="mt-16 space-y-20">
         {
@@ -317,7 +317,7 @@ const contributions = [
       <SectionHeading
         kicker="Security"
         title="Releases you can verify."
-        lead="Every Mouzi build comes from a public GitHub Actions pipeline. You can trace any installer back to the exact commit that produced it."
+        lead="Public Mouzi releases are built from tagged commits by workflows that anyone can inspect on GitHub."
       />
       <div class="mt-12 grid gap-5 md:grid-cols-3">
         {
@@ -331,8 +331,8 @@ const contributions = [
               body: signingMessage(),
             },
             {
-              title: 'VirusTotal checks',
-              body: 'Release artifacts can be checked against VirusTotal. Scan links are published with releases as they become available.',
+              title: 'Verify the file you received',
+              body: 'The security guide explains how to inspect Windows signatures and calculate a local SHA-256 hash. A trusted comparison value is required before a hash can verify a download.',
             },
           ].map((c) => (
             <div class="rounded-card border border-line bg-surface p-5">

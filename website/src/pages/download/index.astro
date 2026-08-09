@@ -46,9 +46,10 @@ import { softwareApplicationLd } from '../../lib/seo';
     <div class="mt-16 rounded-card border border-line bg-surface p-6">
       <h2 class="font-semibold">Verifying your download</h2>
       <p class="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-        All artifacts are built in public GitHub Actions from tagged commits. SHA-256 checksums are published with each{' '}
-        <a href={site.github.releases} rel="noopener" class="text-amber hover:underline">GitHub release</a>. See the{' '}
-        <a href="/docs/security" class="text-amber hover:underline">security documentation</a> for verification steps.
+        Public artifacts are built in GitHub Actions from tagged commits and published on the official{' '}
+        <a href={site.github.releases} rel="noopener" class="text-amber hover:underline">GitHub Releases page</a>. The{' '}
+        <a href="/docs/security" class="text-amber hover:underline">security guide</a> explains how to inspect a Windows
+        signature and calculate a local SHA-256 hash, including what those checks can and cannot prove.
       </p>
     </div>
   </div>

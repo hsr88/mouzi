@@ -30,9 +30,10 @@ export const roadmap: RoadmapItem[] = [
     issue: `${ISSUES}/52`,
   },
   {
-    title: 'Signed Windows releases',
-    description: 'Code signing through SignPath Foundation; approval is in progress.',
+    title: 'Quick enable/disable on rule rows',
+    description: 'Toggle any rule without opening the editor. Merged for v0.1.6 but not yet publicly released.',
     status: 'now',
+    target: 'v0.1.6',
   },
 
   // Next
@@ -48,6 +49,11 @@ export const roadmap: RoadmapItem[] = [
       'The AppImage contains a broken absolute icon symlink from the CI runner path, which breaks AppManager installs.',
     status: 'next',
     issue: `${ISSUES}/53`,
+  },
+  {
+    title: 'Signed Windows releases',
+    description: 'Production code signing through SignPath Foundation. Certificate issuance is in progress.',
+    status: 'next',
   },
 
   // Later
@@ -71,12 +77,6 @@ export const roadmap: RoadmapItem[] = [
   },
 
   // Shipped
-  {
-    title: 'Quick enable/disable on rule rows',
-    description: 'Toggle any rule without opening the editor.',
-    status: 'shipped',
-    target: 'v0.1.6',
-  },
   {
     title: 'Linux packages',
     description: 'AppImage, DEB and RPM builds for x86_64.',

@@ -36,16 +36,17 @@ import { breadcrumbLd } from '../../lib/seo';
 
       <h2>Safe with live downloads</h2>
       <p>
-        Downloads folders are hostile territory for automation: files appear half-written, browsers create temp files
-        and download managers hold locks. Mouzi skips <code>.crdownload</code>, <code>.part</code>,
-        <code>.download</code> and <code>.tmp</code> files, ignores zero-byte placeholders and never touches a file
-        that another process holds open. A large download moves only after it finishes.
+        Files may appear before a browser has finished writing them. In Silent mode, Mouzi waits through a grace
+        period and skips <code>.crdownload</code>, <code>.part</code>, <code>.download</code> and <code>.tmp</code>
+        files. It also ignores zero-byte placeholders and, when lock checking is enabled, skips files that another
+        process holds open. Manual and scheduled cleans do not wait through the grace period.
       </p>
 
-      <h2>Everything is reversible</h2>
+      <h2>History and undo</h2>
       <p>
-        Each move is written to a local SQLite history. Open History from the main window to see what moved, where and
-        which rule fired, and undo any entry with one click. Details in the{' '}
+        Each successful move is written to a local SQLite history. Open History from the main window to see what moved,
+        where and which rule fired. An entry can be undone while the file still exists at the recorded destination.
+        Details are in the{' '}
         <a href="/docs/getting-started">getting started guide</a>.
       </p>
     </section>

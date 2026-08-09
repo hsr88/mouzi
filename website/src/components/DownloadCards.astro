@@ -47,9 +47,9 @@ const artifacts: readonly DownloadArtifact[] = site.downloads[platform];
           <span>v{site.version}</span>
           <span>{a.size ?? '—'}</span>
         </div>
-        {!compact && (
+        {!compact && a.sha256 && (
           <div class="mt-2 font-mono text-[11px] text-muted">
-            SHA-256: {a.sha256 ?? <span title="Checksum published with each GitHub release">see release notes</span>}
+            SHA-256: {a.sha256}
           </div>
         )}
       </li>

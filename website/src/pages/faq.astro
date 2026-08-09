@@ -14,15 +14,15 @@ const faqs = [
   },
   {
     q: 'What happens if a rule moves a file I needed in Downloads?',
-    a: 'Open History and click undo on that entry. Every move Mouzi makes is recorded and reversible. Then adjust the rule, or add the file to .mouziignore.',
+    a: 'Open History and click undo on that entry. Mouzi records successful moves and can move the file back when it still exists at the recorded destination. Then adjust the rule, or add the file to .mouziignore.',
   },
   {
     q: 'Will Mouzi move a file that is still downloading?',
-    a: 'No. Mouzi waits out a grace period, skips browser temp files like .crdownload and .part, ignores zero-byte placeholders and never touches files locked by another process.',
+    a: 'Mouzi reduces that risk by waiting through a grace period, skipping browser temporary files such as .crdownload and .part, ignoring zero-byte placeholders and checking whether another process has locked the file. Manual and scheduled cleans process files immediately, so use them after downloads finish.',
   },
   {
     q: 'Why does Windows SmartScreen warn about the installer?',
-    a: 'Code signing approval is in progress with SignPath Foundation. Until it completes, Windows may warn about downloads from a new publisher. Verify the SHA-256 checksum against the release notes if you want certainty, then choose More info \u2192 Run anyway.',
+    a: 'Public version 0.1.5 is unsigned while production signing through SignPath Foundation is being prepared for a future release. Windows may therefore show an unknown-publisher warning. Download Mouzi only from mouzi.cc or the official GitHub release, and check the security guide before running it.',
   },
   {
     q: 'Which platforms are supported?',
