@@ -6,6 +6,7 @@ import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import GitHubStats from '../components/GitHubStats.astro';
+import AnalyticsConsent from '../components/AnalyticsConsent.astro';
 import { site } from '../config/site';
 
 interface Props {
@@ -86,5 +87,6 @@ const ogImageUrl = new URL(ogImage, site.url).href;
     </main>
     <Footer />
     <GitHubStats />
+    <AnalyticsConsent />
   </body>
 </html>

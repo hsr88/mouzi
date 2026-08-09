@@ -6,7 +6,7 @@ import { site } from '../config/site';
 
 <BaseLayout
   title="Privacy policy — Mouzi"
-  description="The Mouzi privacy policy: the app collects nothing, and this website uses no tracking scripts or analytics cookies."
+  description="The Mouzi privacy policy: the app collects no telemetry, while optional Google Analytics on mouzi.cc runs only after consent."
   canonical="/privacy"
 >
   <div class="mx-auto max-w-3xl px-5 py-16">
@@ -31,17 +31,32 @@ import { site } from '../config/site';
 
       <h2>This website</h2>
       <p>
-        mouzi.cc is a static site. It sets no analytics cookies and loads no tracking scripts. Fonts and assets are
-        self-hosted. Download links may point to GitHub releases, and GitHub's own policies apply when you download
-        from them. If a sponsor is displayed, the sponsor link is a plain link; sponsors never get to run scripts on
-        this site.
+        mouzi.cc is a static site. If you allow optional analytics, it loads Google Analytics 4 using measurement ID
+        <code>G-GMDTSE5DFS</code>. Google Analytics records page visits, session information, approximate location,
+        and browser and device details. It may store a first-party client identifier in cookies whose names begin with
+        <code>_ga</code>. It does not receive file names, paths, rules or other data from the Mouzi application.
+      </p>
+      <p>
+        Google Analytics does not load until you choose <strong>Allow analytics</strong>. Advertising storage, advertising
+        user data and advertising personalization remain disabled. Your choice is saved locally in your browser under
+        <code>mouzi-analytics-consent</code>. You can change it below. See{' '}
+        <a href="https://policies.google.com/privacy" rel="noopener">Google's privacy policy</a> for information about
+        Google's processing.
+      </p>
+      <p>
+        Fonts and site assets are self-hosted. Download links point to GitHub Releases, where GitHub's policies apply.
+        Sponsor links are ordinary links and sponsors cannot place tracking scripts on this site.
       </p>
 
       <h2>Your rights</h2>
       <p>
-        Since neither the app nor the site collects personal data, there is nothing to request, export or delete on
-        our side. Local application data is under your control at
+        The application does not send personal data to Mouzi. Local application data is under your control at
         <code>%APPDATA%\Mouzi</code> (Windows) or <code>~/.config/mouzi</code> (Linux).
+      </p>
+      <p>
+        <button type="button" data-manage-analytics class="text-amber underline hover:no-underline">
+          Change analytics preferences
+        </button>
       </p>
 
       <h2>Contact</h2>

@@ -1,0 +1,126 @@
+---
+const measurementId = 'G-GMDTSE5DFS';
+---
+
+<aside
+  id="analytics-consent"
+  class="fixed right-4 bottom-4 left-4 z-[120] mx-auto max-w-xl rounded-card border border-line bg-surface p-5 shadow-2xl sm:left-auto"
+  role="dialog"
+  aria-labelledby="analytics-consent-title"
+  aria-describedby="analytics-consent-description"
+  hidden
+>
+  <h2 id="analytics-consent-title" class="text-[15px] font-semibold text-cream">Optional website analytics</h2>
+  <p id="analytics-consent-description" class="mt-2 text-sm leading-relaxed text-muted">
+    The Mouzi app sends no telemetry. With your permission, this website uses Google Analytics to count visits and see
+    which pages are useful. <a href="/privacy" class="text-amber hover:underline">Privacy details</a>
+  </p>
+  <div class="mt-4 flex flex-wrap gap-3">
+    <button
+      id="analytics-accept"
+      type="button"
+      class="rounded-btn bg-amber px-4 py-2 text-sm font-semibold text-[#151004] hover:opacity-90"
+    >
+      Allow analytics
+    </button>
+    <button
+      id="analytics-decline"
+      type="button"
+      class="rounded-btn border border-line px-4 py-2 text-sm text-cream hover:bg-surface-2"
+    >
+      No thanks
+    </button>
+  </div>
+</aside>
+
+<script is:inline define:vars={{ measurementId }}>
+  (() => {
+    const storageKey = 'mouzi-analytics-consent';
+    const banner = document.getElementById('analytics-consent');
+    const acceptButton = document.getElementById('analytics-accept');
+    const declineButton = document.getElementById('analytics-decline');
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () {
+      window.dataLayer.push(arguments);
+    };
+
+    window.gtag('consent', 'default', {
+      analytics_storage: 'denied',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+    });
+
+    const loadAnalytics = () => {
+      if (document.querySelector('script[data-mouzi-analytics]')) return;
+
+      window.gtag('consent', 'update', {
+        analytics_storage: 'granted',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+      });
+      window.gtag('js', new Date());
+      window.gtag('config', measurementId);
+
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+      script.dataset.mouziAnalytics = 'true';
+      document.head.appendChild(script);
+    };
+
+    const clearAnalyticsCookies = () => {
+      const domains = [location.hostname, `.${location.hostname}`, '.mouzi.cc'];
+      document.cookie.split(';').forEach((cookie) => {
+        const name = cookie.split('=')[0].trim();
+        if (!name.startsWith('_ga')) return;
+        document.cookie = `${name}=; Max-Age=0; path=/`;
+        domains.forEach((domain) => {
+          document.cookie = `${name}=; Max-Age=0; path=/; domain=${domain}`;
+        });
+      });
+    };
+
+    const showBanner = () => {
+      if (banner) banner.hidden = false;
+    };
+
+    const hideBanner = () => {
+      if (banner) banner.hidden = true;
+    };
+
+    const savedConsent = localStorage.getItem(storageKey);
+    if (savedConsent === 'granted') {
+      loadAnalytics();
+    } else if (savedConsent !== 'denied') {
+      showBanner();
+    }
+
+    acceptButton?.addEventListener('click', () => {
+      localStorage.setItem(storageKey, 'granted');
+      loadAnalytics();
+      hideBanner();
+    });
+
+    declineButton?.addEventListener('click', () => {
+      localStorage.setItem(storageKey, 'denied');
+      window.gtag('consent', 'update', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+      });
+      clearAnalyticsCookies();
+      hideBanner();
+    });
+
+    document.querySelectorAll('[data-manage-analytics]').forEach((button) => {
+      button.addEventListener('click', () => {
+        localStorage.removeItem(storageKey);
+        showBanner();
+      });
+    });
+  })();
+</script>
