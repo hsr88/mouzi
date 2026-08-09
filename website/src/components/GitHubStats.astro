@@ -1,0 +1,103 @@
+---
+/**
+ * Client hydrator for GitHub stars / forks / contributors.
+ * Keeps every [data-gh-stars|forks|contributors] node in sync with the
+ * public GitHub API after load. Build-time values remain as the initial paint.
+ */
+import { site } from '../config/site';
+---
+
+<script define:vars={{ repo: site.github.repo }}>
+  (() => {
+    const CACHE_KEY = `mouzi-gh-stats:${repo}`;
+    const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+    function formatCount(n) {
+      if (n === null || n === undefined || Number.isNaN(n)) return '—';
+      if (n >= 1000) return `${(n / 1000).toFixed(1).replace(/\.0$/, '')}k`;
+      return String(n);
+    }
+
+    function apply(stats) {
+      document.querySelectorAll('[data-gh-stars]').forEach((el) => {
+        el.textContent = formatCount(stats.stars);
+      });
+      document.querySelectorAll('[data-gh-forks]').forEach((el) => {
+        el.textContent = formatCount(stats.forks);
+      });
+      document.querySelectorAll('[data-gh-contributors]').forEach((el) => {
+        el.textContent = formatCount(stats.contributors);
+      });
+
+      document.querySelectorAll('[data-gh-stars-label]').forEach((el) => {
+        const n = stats.stars;
+        el.setAttribute(
+          'aria-label',
+          n === null || n === undefined ? 'Mouzi on GitHub' : `Mouzi on GitHub, ${formatCount(n)} stars`,
+        );
+      });
+    }
+
+    async function fetchStats() {
+      try {
+        const cached = sessionStorage.getItem(CACHE_KEY);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Date.now() - parsed.ts < CACHE_TTL_MS) {
+            apply(parsed.data);
+            return;
+          }
+        }
+      } catch {
+        /* ignore storage errors */
+      }
+
+      try {
+        const res = await fetch(`https://api.github.com/repos/${repo}`, {
+          headers: { Accept: 'application/vnd.github+json' },
+        });
+        if (!res.ok) return;
+        const repoJson = await res.json();
+
+        let contributors = null;
+        try {
+          const cRes = await fetch(
+            `https://api.github.com/repos/${repo}/contributors?per_page=1&anon=true`,
+            { headers: { Accept: 'application/vnd.github+json' } },
+          );
+          if (cRes.ok) {
+            const link = cRes.headers.get('link');
+            const match = link && link.match(/&page=(\d+)>; rel="last"/);
+            if (match) contributors = Number(match[1]);
+            else {
+              const list = await cRes.json();
+              contributors = Array.isArray(list) ? list.length : null;
+            }
+          }
+        } catch {
+          /* optional */
+        }
+
+        const data = {
+          stars: typeof repoJson.stargazers_count === 'number' ? repoJson.stargazers_count : null,
+          forks: typeof repoJson.forks_count === 'number' ? repoJson.forks_count : null,
+          contributors,
+        };
+        apply(data);
+        try {
+          sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
+        } catch {
+          /* ignore */
+        }
+      } catch {
+        /* keep build-time values */
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fetchStats, { once: true });
+    } else {
+      fetchStats();
+    }
+  })();
+</script>

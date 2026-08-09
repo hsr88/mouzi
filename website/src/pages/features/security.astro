@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import { site, signingMessage } from '../../config/site';
+import { breadcrumbLd } from '../../lib/seo';
+---
+
+<BaseLayout
+  title="Security — Mouzi features"
+  description="How Mouzi releases are built and verified: public GitHub Actions builds, SHA-256 checksums and code signing through SignPath Foundation."
+  canonical="/features/security"
+  jsonLd={[breadcrumbLd([{ name: 'Features', url: '/features' }, { name: 'Security', url: '/features/security' }])]}
+>
+  <div class="mx-auto max-w-4xl px-5 py-16">
+    <SectionHeading
+      kicker="Features"
+      title="Releases you can verify."
+      lead="Trust in a desktop app should not rest on the developer's word. Every step from source to installer is public and checkable."
+    />
+
+    <div class="mt-12 grid gap-5 sm:grid-cols-2">
+      {
+        [
+          {
+            title: 'Built in public CI',
+            body: 'Every release is compiled by GitHub Actions from a tagged commit. The workflow files are part of the repository, so the recipe for each artifact is public.',
+          },
+          {
+            title: 'SignPath Foundation',
+            body: signingMessage() + ' The signing step runs inside CI against a release policy, followed by Authenticode verification.',
+          },
+          {
+            title: 'Published checksums',
+            body: 'SHA-256 checksums accompany every release. The files served from mouzi.cc are the same artifacts published on GitHub.',
+          },
+          {
+            title: 'VirusTotal',
+            body: 'Release artifacts can be scanned on VirusTotal, and scan links are published with releases as they become available.',
+          },
+        ].map((c) => (
+          <div class="rounded-card border border-line bg-surface p-5">
+            <h2 class="text-[15px] font-semibold">{c.title}</h2>
+            <p class="mt-2 text-sm leading-relaxed text-muted">{c.body}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <section class="prose mt-12">
+      <h2>Why a file organizer cares this much</h2>
+      <p>
+        Mouzi asks to watch your Downloads folder, which is exactly where malware and download scams operate. A tool in
+        this position should be more verifiable than average, not less. Public builds mean a compromised developer
+        machine cannot silently poison a release; checksums mean a tampered mirror cannot pass off a modified binary.
+      </p>
+
+      <h2>Reporting vulnerabilities</h2>
+      <p>
+        Please report security issues privately through{' '}
+        <a href={`${site.github.url}/security/advisories/new`} rel="noopener">GitHub security advisories</a> rather
+        than public issues. Scope and response expectations are described in the{' '}
+        <a href="/docs/security">security documentation</a>.
+      </p>
+    </section>
+
+    <div class="mt-12 flex flex-wrap gap-3">
+      <a href="/docs/security" class="rounded-btn bg-amber px-5 py-2.5 text-sm font-semibold text-[#151004] hover:opacity-90">Read the security policy</a>
+      <a href={`${site.github.url}/security/advisories/new`} rel="noopener" class="rounded-btn border border-line px-5 py-2.5 text-sm text-cream hover:bg-surface-2">Report a vulnerability</a>
+      <a href={`${site.github.url}/actions`} rel="noopener" class="rounded-btn border border-line px-5 py-2.5 text-sm text-cream hover:bg-surface-2">View release checks</a>
+    </div>
+  </div>
+</BaseLayout>

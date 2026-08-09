@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import PrivacyDiagram from '../../components/PrivacyDiagram.astro';
+import { site } from '../../config/site';
+import { breadcrumbLd } from '../../lib/seo';
+---
+
+<BaseLayout
+  title="Privacy — Mouzi features"
+  description="Mouzi is a privacy-first file organizer: no cloud processing, no account, no telemetry. Rules and history stay in a local SQLite database."
+  canonical="/features/privacy"
+  jsonLd={[breadcrumbLd([{ name: 'Features', url: '/features' }, { name: 'Privacy', url: '/features/privacy' }])]}
+>
+  <div class="mx-auto max-w-4xl px-5 py-16">
+    <SectionHeading
+      kicker="Features"
+      title="Your files never leave your computer."
+      lead="A file organizer sees everything you download. Mouzi is built so that seeing is all that ever happens, and only on your machine."
+    />
+
+    <div class="mt-10">
+      <PrivacyDiagram />
+    </div>
+
+    <section class="prose mt-12">
+      <h2>No server side</h2>
+      <p>
+        Mouzi has no backend. Rule evaluation, file moves and history all happen locally. There is no infrastructure
+        that could receive your data, which is a stronger guarantee than any privacy policy.
+      </p>
+
+      <h2>What is stored, and where</h2>
+      <p>
+        Your rules and settings live in a local configuration folder, and move history lives in a local SQLite
+        database (<code>%APPDATA%\Mouzi</code> on Windows, <code>~/.config/mouzi</code> on Linux). You can open the
+        database with any SQLite browser, and deleting the folder removes everything Mouzi knows.
+      </p>
+
+      <h2>Network activity</h2>
+      <p>
+        The only network request Mouzi makes is an optional check of GitHub's public releases feed for update
+        notifications, and you can turn it off. No file names, paths, contents or usage data are ever transmitted.
+        This claim is verifiable: the source is public and a network monitor will show you exactly what the process
+        does.
+      </p>
+
+      <h2>Open to inspection</h2>
+      <p>
+        The complete source code is available at{' '}
+        <a href={site.github.url} rel="noopener">github.com/{site.github.repo}</a> under the MIT license. If you find
+        behavior that contradicts this page, that is a security bug; please{' '}
+        <a href={`${site.github.url}/security/advisories/new`} rel="noopener">report it privately</a>.
+      </p>
+    </section>
+
+    <div class="mt-12 flex gap-3">
+      <a href="/privacy" class="rounded-btn border border-line px-5 py-2.5 text-sm text-cream hover:bg-surface-2">Read the full privacy policy</a>
+      <a href="/features/security" class="rounded-btn border border-line px-5 py-2.5 text-sm text-cream hover:bg-surface-2">Security →</a>
+    </div>
+  </div>
+</BaseLayout>

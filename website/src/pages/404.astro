@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found — Mouzi" description="This page does not exist." canonical="/404">
+  <div class="mx-auto flex max-w-3xl flex-col items-center px-5 py-32 text-center">
+    <p class="font-mono text-xs tracking-[0.2em] text-amber uppercase">404</p>
+    <h1 class="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">This file was not moved by a rule.</h1>
+    <p class="mt-4 max-w-md text-muted">
+      The page you are looking for does not exist. It may have been renamed, or the link is out of date.
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a href="/" class="rounded-btn bg-amber px-5 py-2.5 text-sm font-semibold text-[#151004] hover:opacity-90">Back to home</a>
+      <a href="/docs" class="rounded-btn border border-line px-5 py-2.5 text-sm text-cream hover:bg-surface-2">Documentation</a>
+    </div>
+  </div>
+</BaseLayout>

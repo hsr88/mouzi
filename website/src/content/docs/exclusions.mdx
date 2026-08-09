@@ -1,0 +1,60 @@
+---
+title: Exclusions and .mouziignore
+description: Keep selected files out of rules and understand Mouzi's built-in safety skips.
+section: Rules
+order: 3
+platforms: [windows, linux]
+updated: 2026-08-09
+---
+
+Mouzi applies built-in exclusions and then reads an optional `.mouziignore` file from each watched folder.
+
+## Built-in exclusions
+
+Mouzi ignores:
+
+- incomplete or temporary downloads ending in `.crdownload`, `.part`, `.download` or `.tmp`
+- names beginning with `.`, including `.mouziignore`
+- common operating-system files such as `desktop.ini`, `Thumbs.db`, `pagefile.sys` and `autorun.inf`
+- files with the Windows hidden or system attribute
+
+Zero-byte files are not automatically excluded. File-lock checking is a separate safety option under **Settings → General** and can be disabled.
+
+## Create a .mouziignore file
+
+Place `.mouziignore` in the top level of a watched folder. You can edit it yourself or manage its entries in Mouzi's settings.
+
+```text
+# Keep an installer in Downloads
+setup-obs-studio.exe
+
+# Keep all ISO images
+*.iso
+```
+
+The format supports:
+
+- one file-name pattern per line
+- `*` as a wildcard matching any sequence of characters
+- multiple `*` characters in one pattern
+- blank lines and full-line comments beginning with `#`
+
+Matching is case-insensitive on Windows and case-sensitive on Linux.
+
+Mouzi currently watches files only in the top level of a selected folder. Directory patterns such as `keep-here/` do not provide recursive folder protection because recursive watching is not implemented.
+
+## Literal # characters and inline comments
+
+Public version 0.1.5 treats only a line beginning with `#` as a comment. Do not rely on an inline comment after a pattern in that version.
+
+**Coming in 0.1.6:** inline comments are supported and a literal hash can be escaped as `\#`. For example:
+
+```text
+report\#final.pdf # keep the approved copy
+```
+
+## Grace period and lock checking
+
+Exclusions are not a substitute for download safety. In Silent mode Mouzi also waits for the configured grace period, five minutes by default, before processing a new file. The setting accepts values from zero to seven days. With lock checking enabled, a file that is still in use is left in place.
+
+Choosing **Clean now** or running a scheduled clean bypasses the grace period but still respects lock checking and exclusions.

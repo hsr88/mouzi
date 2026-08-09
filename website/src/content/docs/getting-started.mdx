@@ -1,0 +1,59 @@
+---
+title: Getting started
+description: Install Mouzi, understand its first run and organize a test folder safely.
+section: Start here
+order: 1
+platforms: [windows, linux]
+updated: 2026-08-09
+---
+
+Mouzi is a local tray application for organizing files with rules. It does not require an account or send your file names or rules to a server.
+
+These docs describe the latest public release shown in the sidebar. Features that are already in the source code but not yet in that release are marked explicitly.
+
+## Install Mouzi
+
+**Windows:** download the [installer](/download/windows) for the simplest setup. An MSI and a portable executable are also available. Read the [Windows guide](/docs/windows) before using the portable build.
+
+**Linux:** download the [AppImage, DEB or RPM](/download/linux). All current Linux builds are for x86_64. For an AppImage:
+
+```bash
+chmod +x Mouzi_*.AppImage
+./Mouzi_*.AppImage
+```
+
+Mouzi runs in the system tray. Open its window by clicking the tray icon.
+
+## What happens on first run
+
+Mouzi adds your Downloads folder in **Silent** mode, creates a starter set of rules and enables **Start with system**. Because Silent mode is automatic, existing top-level files in Downloads may be organized when watching starts.
+
+If you want to explore without moving real files:
+
+1. Create an empty folder such as `Mouzi test`.
+2. Add it under **Settings → Folders**.
+3. Set Downloads to **Paused**, or remove it temporarily.
+4. Put copies of a few files in the test folder.
+5. Use **Manual** mode until the results look right.
+
+## Create your first rule
+
+Rules are shared by every watched folder. A relative destination is resolved inside the folder containing the matched file.
+
+1. Open **Settings → Rules** and choose **Add rule**.
+2. Enter an extension such as `pdf`.
+3. Set the destination to `Documents/{year}/{month}`.
+4. Save the rule.
+5. Drop a PDF into the top level of your test folder.
+
+In Silent mode, Mouzi waits for the configured grace period and then moves the file. In Manual mode, choose **Clean now**. The result will look like `Documents/2026/08/report.pdf`.
+
+## Important limits
+
+- Mouzi watches the top level of each selected folder, not nested subfolders.
+- Rules are global, not assigned to individual watched folders.
+- Mouzi moves files. It does not delete them.
+- A destination with an existing file is never overwritten; Mouzi adds a timestamp to the new name.
+- Updates are manual. **Check for updates** opens mouzi.cc rather than installing an update in the background.
+
+Continue with [folders and modes](/docs/folders-and-modes), then read the full [rules guide](/docs/rules).

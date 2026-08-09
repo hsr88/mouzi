@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { site } from '../config/site';
+---
+
+<BaseLayout
+  title="Privacy policy — Mouzi"
+  description="The Mouzi privacy policy: the app collects nothing, and this website uses no tracking scripts or analytics cookies."
+  canonical="/privacy"
+>
+  <div class="mx-auto max-w-3xl px-5 py-16">
+    <SectionHeading kicker="Legal" title="Privacy policy" lead="Short, because there is little to disclose." />
+
+    <section class="prose mt-10">
+      <h2>The application</h2>
+      <p>
+        Mouzi processes files entirely on your device. The application does not collect, transmit or store any personal
+        data on external servers. Specifically:
+      </p>
+      <ul>
+        <li>No account or registration exists.</li>
+        <li>No telemetry or analytics are sent.</li>
+        <li>File names, paths and contents never leave your machine.</li>
+        <li>Rules, settings and move history are stored locally and can be deleted by removing the configuration folder.</li>
+        <li>
+          The optional update check requests GitHub's public releases feed. This is a standard HTTPS request to
+          GitHub and is subject to <a href="https://docs.github.com/en/site-policy/privacy-policies" rel="noopener">GitHub's privacy policy</a>. You can disable it in settings.
+        </li>
+      </ul>
+
+      <h2>This website</h2>
+      <p>
+        mouzi.cc is a static site. It sets no analytics cookies and loads no tracking scripts. Fonts and assets are
+        self-hosted. Download links may point to GitHub releases, and GitHub's own policies apply when you download
+        from them. If a sponsor is displayed, the sponsor link is a plain link; sponsors never get to run scripts on
+        this site.
+      </p>
+
+      <h2>Your rights</h2>
+      <p>
+        Since neither the app nor the site collects personal data, there is nothing to request, export or delete on
+        our side. Local application data is under your control at
+        <code>%APPDATA%\Mouzi</code> (Windows) or <code>~/.config/mouzi</code> (Linux).
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy: <a href={`mailto:${site.funding.contactEmail}`}>{site.funding.contactEmail}</a>.
+      </p>
+      <p>Last updated: August 2026.</p>
+    </section>
+  </div>
+</BaseLayout>

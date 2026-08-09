@@ -1,0 +1,202 @@
+---
+import { site } from '../config/site';
+import { getRepoStats, formatCount } from '../lib/github';
+import ThemeToggle from './ThemeToggle.astro';
+
+const stats = await getRepoStats();
+const stars = formatCount(stats.stars);
+
+const links = [
+  { href: '/features', label: 'Features' },
+  { href: '/docs', label: 'Docs' },
+  { href: '/roadmap', label: 'Roadmap' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/about', label: 'About' },
+];
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => path === href || path.startsWith(href + '/');
+---
+
+{
+  site.activeSponsor ? (
+    <div class="fixed inset-x-0 top-0 z-50 border-b border-line bg-surface/95 py-1.5 text-center font-mono text-[11px] tracking-[0.15em] text-muted uppercase">
+      Supported by{' '}
+      <a href={site.activeSponsor.url} rel="sponsored noopener" class="inline-flex items-center gap-1.5 align-middle text-cream hover:text-amber">
+        <img src={site.activeSponsor.logo} alt={site.activeSponsor.name} class="inline h-4 w-auto" />
+      </a>
+    </div>
+  ) : null
+}
+
+<header
+  class:list={[
+    'fixed inset-x-0 z-40 border-b border-line bg-ink/85 backdrop-blur-sm',
+    site.activeSponsor ? 'top-7' : 'top-0',
+  ]}
+>
+  <nav aria-label="Main" class="mx-auto flex h-16 max-w-6xl items-center gap-6 px-5">
+    <a href="/" class="flex shrink-0 items-center gap-2.5" aria-label="Mouzi home">
+      <img src="/images/mouzi-logo.png" alt="Mouzi" width="36" height="28" class="h-8 w-auto" />
+      <span class="text-[17px] font-semibold tracking-tight">Mouzi</span>
+    </a>
+
+    <ul class="hidden items-center gap-1 md:flex" role="list">
+      {
+        links.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              aria-current={isActive(l.href) ? 'page' : undefined}
+              class:list={[
+                'rounded-md px-3 py-2 text-sm transition-colors',
+                isActive(l.href) ? 'text-cream' : 'text-muted hover:text-cream',
+              ]}
+            >
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="ml-auto hidden items-center gap-2.5 md:flex">
+      <a
+        href={site.github.url}
+        rel="noopener"
+        data-gh-stars-label
+        class="flex items-center gap-1.5 rounded-md border border-line px-2.5 py-1.5 font-mono text-xs text-muted transition-colors hover:text-cream"
+        aria-label={`Mouzi on GitHub, ${stars} stars`}
+      >
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+          <path
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+          ></path>
+        </svg>
+        <span aria-hidden="true" data-gh-stars>{stars}</span>
+      </a>
+      <a href={site.funding.githubSponsors} rel="noopener" class="rounded-md px-3 py-2 text-sm text-muted transition-colors hover:text-cream">
+        Sponsor
+      </a>
+      <ThemeToggle />
+      <a
+        href="/download"
+        class="rounded-btn bg-amber px-4 py-2 text-sm font-semibold text-[#151004] transition-opacity hover:opacity-90"
+      >
+        Download
+      </a>
+    </div>
+
+    <button
+      id="nav-open"
+      type="button"
+      class="ml-auto rounded-md border border-line p-2 text-cream md:hidden"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobile-drawer"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round"></path>
+      </svg>
+    </button>
+  </nav>
+
+  {
+    !site.activeSponsor ? (
+      <div class="hidden border-t border-line py-1 text-center lg:block">
+        <a
+          href="/sponsors"
+          class="font-mono text-[10px] tracking-[0.2em] text-muted uppercase transition-colors hover:text-amber"
+        >
+          Become Mouzi's founding sponsor
+        </a>
+      </div>
+    ) : null
+  }
+</header>
+
+<div id="mobile-drawer" class="fixed inset-0 z-50 hidden md:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+  <div id="drawer-backdrop" class="absolute inset-0 bg-ink/70"></div>
+  <div class="absolute inset-y-0 right-0 flex w-72 flex-col border-l border-line bg-surface p-5">
+    <div class="flex items-center justify-between">
+      <span class="font-mono text-[11px] tracking-[0.15em] text-muted uppercase">Menu</span>
+      <button id="nav-close" type="button" class="rounded-md border border-line p-2" aria-label="Close menu">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"></path>
+        </svg>
+      </button>
+    </div>
+    <ul class="mt-6 space-y-1" role="list">
+      {
+        [...links, { href: '/sponsors', label: 'Sponsor' }].map((l) => (
+          <li>
+            <a href={l.href} class="block rounded-md px-3 py-2.5 text-[15px] text-cream hover:bg-surface-2">
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="mt-auto space-y-3">
+      <a
+        href={site.github.url}
+        rel="noopener"
+        class="block rounded-btn border border-line px-4 py-2.5 text-center text-sm text-cream hover:bg-surface-2"
+      >
+        GitHub (<span data-gh-stars>{stars}</span> stars)
+      </a>
+      <a href="/download" class="block rounded-btn bg-amber px-4 py-2.5 text-center text-sm font-semibold text-[#151004]">
+        Download
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const drawer = document.getElementById('mobile-drawer')!;
+  const openBtn = document.getElementById('nav-open')!;
+  const closeBtn = document.getElementById('nav-close')!;
+  const backdrop = document.getElementById('drawer-backdrop')!;
+
+  let lastFocused: HTMLElement | null = null;
+
+  function focusables(): HTMLElement[] {
+    return Array.from(drawer.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
+  }
+
+  function open() {
+    lastFocused = document.activeElement as HTMLElement;
+    drawer.classList.remove('hidden');
+    openBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    focusables()[0]?.focus();
+    document.addEventListener('keydown', onKeydown);
+  }
+
+  function close() {
+    drawer.classList.add('hidden');
+    openBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', onKeydown);
+    lastFocused?.focus();
+  }
+
+  function onKeydown(e: KeyboardEvent) {
+    if (e.key === 'Escape') return close();
+    if (e.key !== 'Tab') return;
+    const els = focusables();
+    const first = els[0];
+    const last = els[els.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
+  openBtn.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  backdrop.addEventListener('click', close);
+</script>

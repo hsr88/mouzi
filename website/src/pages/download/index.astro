@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import DownloadCards from '../../components/DownloadCards.astro';
+import { site, signingMessage } from '../../config/site';
+import { softwareApplicationLd } from '../../lib/seo';
+---
+
+<BaseLayout
+  title={`Download Mouzi ${site.version} — Downloads folder organizer for Windows and Linux`}
+  description={`Download Mouzi ${site.version}, a free open-source Downloads folder organizer for Windows 10/11 and Linux. Installer, MSI, portable, AppImage, DEB and RPM builds.`}
+  canonical="/download"
+  jsonLd={[softwareApplicationLd()]}
+>
+  <div class="mx-auto max-w-6xl px-5 py-16">
+    <SectionHeading
+      kicker={`Version ${site.version} · released ${site.releaseDate}`}
+      title="Download Mouzi"
+      lead="Free and open source under the MIT license. Pick your platform; both get the same features."
+    />
+    <p class="mt-4 font-mono text-xs text-muted">{signingMessage()}</p>
+
+    <div class="mt-12 grid gap-12 lg:grid-cols-2">
+      <section aria-labelledby="dl-windows">
+        <h2 id="dl-windows" class="mb-4 flex items-center gap-2 text-lg font-semibold">
+          Windows
+          <span class="font-mono text-[11px] font-normal text-muted">10 & 11 · x64</span>
+        </h2>
+        <DownloadCards platform="windows" />
+        <a href="/download/windows" class="mt-4 inline-block text-sm text-amber hover:underline">
+          Windows installation guide →
+        </a>
+      </section>
+      <section aria-labelledby="dl-linux">
+        <h2 id="dl-linux" class="mb-4 flex items-center gap-2 text-lg font-semibold">
+          Linux
+          <span class="font-mono text-[11px] font-normal text-muted">x86_64</span>
+        </h2>
+        <DownloadCards platform="linux" />
+        <a href="/download/linux" class="mt-4 inline-block text-sm text-amber hover:underline">
+          Linux installation guide →
+        </a>
+      </section>
+    </div>
+
+    <div class="mt-16 rounded-card border border-line bg-surface p-6">
+      <h2 class="font-semibold">Verifying your download</h2>
+      <p class="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+        All artifacts are built in public GitHub Actions from tagged commits. SHA-256 checksums are published with each{' '}
+        <a href={site.github.releases} rel="noopener" class="text-amber hover:underline">GitHub release</a>. See the{' '}
+        <a href="/docs/security" class="text-amber hover:underline">security documentation</a> for verification steps.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,68 @@
+---
+title: Building a trusted release pipeline for an open-source Windows app
+description: How Mouzi turns a public git tag into Windows and Linux packages, why the Windows executable is signed before the installers and where manual approval fits.
+pubDate: 2026-08-04
+updatedDate: 2026-08-09
+tags: [security, releases, windows]
+related: [why-mouzi-processes-everything-locally]
+cover: /images/blog/trusted-release-pipeline.webp
+coverAlt: The Mouzi mouse inspecting a sealed package at the end of a release pipeline
+---
+
+An unsigned Windows application from a small open-source project has a trust problem. The developer may be honest, the source may be public and the binary may still look suspicious to Windows. Users see "Unknown publisher" and have to decide whether a stranger on GitHub deserves permission to run code on their computer.
+
+Mouzi makes that decision harder than many utilities because it watches Downloads and moves files. A safety claim on a landing page is not enough. The release process needs to be inspectable.
+
+## Releases start with a public tag
+
+I do not compile public Mouzi releases on my development machine. A release starts with a versioned git tag in the public repository. GitHub Actions checks out that exact commit and builds the artifacts on fresh hosted runners.
+
+The workflow is public in [`.github/workflows/build.yml`](https://github.com/hsr88/mouzi/blob/main/.github/workflows/build.yml). Anyone can see the operating system image, Node and Rust setup, Tauri commands, packaging steps and validation checks.
+
+Windows and Linux use separate jobs because the packages need different treatment. They meet again only after both sides finish successfully.
+
+## Why the Windows application is signed first
+
+The Windows release contains three downloads: a portable executable, an NSIS installer and an MSI package. Both installers contain the main Mouzi executable.
+
+Signing only the outside of an installer is not enough. After installation, Windows should still see a signed `mouzi.exe` on disk. The workflow therefore builds the application without installers first and sends that executable to SignPath.
+
+When the signed file comes back, the workflow checks its Authenticode status. A missing or invalid signature stops the job. Only then does Tauri build the NSIS and MSI packages around the signed application.
+
+The two installers are submitted for their own signatures and checked again. The portable download uses the same signed application executable, so users receive one signed binary regardless of which Windows package they choose.
+
+## What SignPath controls
+
+Buying a code-signing certificate directly is expensive for a free project, and modern certificates need stronger private-key protection than a file copied into a CI secret.
+
+SignPath Foundation provides code signing to accepted open-source projects. The private key stays in their hardware security module. GitHub Actions sends a signing request, not the private key.
+
+The release policy also checks where the request came from. Mouzi's policy is tied to the public GitHub repository and its trusted build system. A random executable built on my laptop cannot be submitted as if it were an official CI artifact.
+
+At the time of writing, the integration and test signing are complete. The production certificate is still being issued by the certificate authority, so the release policy remains unavailable until that certificate becomes valid. The website will not label Mouzi releases as signed before the published files actually carry the production signature.
+
+## Manual approval is intentional
+
+The production policy requires approval from the project maintainer. This adds a pause to the release, but that pause is useful. A compromised automation token should not be enough to sign and publish a new executable without a person seeing the request.
+
+For a normal release, GitHub Actions builds the candidate and creates the signing request. I review and approve it in SignPath. The workflow then downloads the result, validates the signature and continues packaging.
+
+It is slower than putting a certificate into a repository secret and signing everything automatically. It also gives an attacker one more boundary to cross.
+
+## Linux has a different failure mode
+
+Linux packages do not use Windows Authenticode, but they still need release checks. Mouzi ships an AppImage, DEB and RPM from the same tagged source.
+
+The AppImage previously contained an icon link that pointed back to a temporary GitHub Actions runner path. The application could launch directly while installation through AppManager failed. That bug is now handled in the workflow: the AppImage is repaired, its links are checked and the finished artifact is installed through AppManager before it can reach a release.
+
+This is the kind of problem a successful compilation will not catch. A package needs to be used the way a user will use it.
+
+## What a signature proves
+
+An Authenticode signature answers two useful questions: who signed the file, and whether the file changed after signing. It does not prove that the application has no bugs or that every line of source code is safe.
+
+SmartScreen reputation is separate too. A newly issued certificate may still trigger warnings until Microsoft sees enough clean downloads. Signing gives Windows a stable publisher identity, but reputation can take time to build.
+
+The practical goal is not a green badge that says "trust us." It is a chain people can inspect: a public source commit, a public build, a restricted signing policy, manual release approval and verification that rejects an unsigned result.
+
+The current state of that process is documented on the [security page](/docs/security). Security problems should be reported through a [private GitHub advisory](https://github.com/hsr88/mouzi/security/advisories/new).

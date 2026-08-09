@@ -1,0 +1,116 @@
+---
+/**
+ * Interactive rule example. Switch between realistic rules and see
+ * the condition → destination mapping the way Mouzi evaluates it.
+ */
+const examples = [
+  {
+    id: 'pdf',
+    label: 'Invoices & documents',
+    condition: 'File extension is PDF',
+    destination: 'Documents/{year}/{month}',
+    sample: 'invoice-march.pdf',
+    result: 'Documents/2026/08/invoice-march.pdf',
+  },
+  {
+    id: 'screenshots',
+    label: 'Screenshots',
+    condition: 'Name matches ^Screenshot.*\\.png$',
+    destination: 'Images/Screenshots/{year}',
+    sample: 'Screenshot 2026-08-09.png',
+    result: 'Images/Screenshots/2026/Screenshot 2026-08-09.png',
+  },
+  {
+    id: 'installers',
+    label: 'Installers',
+    condition: 'Extension is EXE or MSI',
+    destination: 'Installers',
+    sample: 'node-v22.4.0-x64.msi',
+    result: 'Installers/node-v22.4.0-x64.msi',
+  },
+  {
+    id: 'archives',
+    label: 'Archives',
+    condition: 'Extension is ZIP, RAR or 7Z',
+    destination: 'Archives/{year}',
+    sample: 'backup-photos.zip',
+    result: 'Archives/2026/backup-photos.zip',
+  },
+];
+---
+
+<div class="rounded-card border border-line bg-surface">
+  <div class="flex flex-wrap gap-1.5 border-b border-line p-3" role="tablist" aria-label="Rule examples">
+    {
+      examples.map((ex, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`rule-tab-${ex.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          aria-controls={`rule-panel-${ex.id}`}
+          data-rule-tab={ex.id}
+          class="rule-tab rounded-md px-3 py-1.5 text-[13px] transition-colors"
+        >
+          {ex.label}
+        </button>
+      ))
+    }
+  </div>
+
+  {
+    examples.map((ex, i) => (
+      <div
+        id={`rule-panel-${ex.id}`}
+        role="tabpanel"
+        aria-labelledby={`rule-tab-${ex.id}`}
+        data-rule-panel={ex.id}
+        class:list={['p-5', i !== 0 && 'hidden']}
+      >
+        <div class="grid gap-3 font-mono text-[13px] sm:grid-cols-[auto_1fr]">
+          <span class="pt-2 text-[10px] tracking-[0.18em] text-muted uppercase">If</span>
+          <code class="rounded-md border border-line bg-surface-2 px-3 py-2 text-cream/90">{ex.condition}</code>
+          <span class="pt-2 text-[10px] tracking-[0.18em] text-muted uppercase">Then</span>
+          <code class="rounded-md border border-line bg-surface-2 px-3 py-2 text-cream/90">
+            Move to <span class="text-amber">{ex.destination}</span>
+          </code>
+        </div>
+        <div class="tdivider my-5" />
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[12px]">
+          <span class="text-muted">{ex.sample}</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber" aria-hidden="true">
+            <path d="M5 12h14m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span class="text-cream">{ex.result}</span>
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .rule-tab[aria-selected='true'] {
+    background: var(--color-surface-2);
+    color: var(--color-cream);
+  }
+  .rule-tab[aria-selected='false'] {
+    color: var(--color-muted);
+  }
+  .rule-tab[aria-selected='false']:hover {
+    color: var(--color-cream);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-rule-tab]').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const id = tab.dataset.ruleTab;
+      document.querySelectorAll<HTMLButtonElement>('[data-rule-tab]').forEach((t) => {
+        t.setAttribute('aria-selected', String(t === tab));
+      });
+      document.querySelectorAll<HTMLElement>('[data-rule-panel]').forEach((p) => {
+        p.classList.toggle('hidden', p.dataset.rulePanel !== id);
+      });
+    });
+  });
+</script>

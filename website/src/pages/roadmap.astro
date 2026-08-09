@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { roadmap, type RoadmapStatus } from '../config/roadmap';
+
+const sections: { status: RoadmapStatus; label: string; note: string }[] = [
+  { status: 'now', label: 'Now', note: 'In active development.' },
+  { status: 'next', label: 'Next', note: 'Planned for upcoming releases.' },
+  { status: 'later', label: 'Later', note: 'On the list, not yet scheduled.' },
+  { status: 'shipped', label: 'Shipped', note: 'Already in your hands.' },
+];
+---
+
+<BaseLayout
+  title="Roadmap — Mouzi"
+  description="What is being built now, what comes next and what has shipped in Mouzi, the open-source Downloads folder organizer."
+  canonical="/roadmap"
+>
+  <div class="mx-auto max-w-4xl px-5 py-16">
+    <SectionHeading
+      kicker="Direction"
+      title="Roadmap"
+      lead="What is in progress, what is planned and what already shipped. Priorities can and do change; treat everything except Shipped as intent, not commitment."
+    />
+
+    <div class="mt-12 space-y-14">
+      {
+        sections.map((section) => {
+          const items = roadmap.filter((i) => i.status === section.status);
+          return (
+            <section aria-labelledby={`rm-${section.status}`}>
+              <div class="flex items-baseline gap-3">
+                <h2 id={`rm-${section.status}`} class="font-mono text-sm tracking-[0.18em] text-amber uppercase">
+                  {section.label}
+                </h2>
+                <p class="text-sm text-muted">{section.note}</p>
+              </div>
+              <ul role="list" class="mt-5 space-y-3">
+                {items.map((item) => (
+                  <li class="rounded-card border border-line bg-surface p-5">
+                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                      <h3 class="font-semibold">{item.title}</h3>
+                      {item.target && (
+                        <span class="rounded border border-line px-1.5 py-0.5 font-mono text-[10px] text-muted">{item.target}</span>
+                      )}
+                      {item.issue && (
+                        <a href={item.issue} rel="noopener" class="ml-auto font-mono text-[11px] text-muted transition-colors hover:text-amber">
+                          {item.issue.replace('https://github.com/', '')}
+                        </a>
+                      )}
+                    </div>
+                    <p class="mt-1.5 text-sm leading-relaxed text-muted">{item.description}</p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          );
+        })
+      }
+    </div>
+
+    <p class="mt-14 border-t border-line pt-6 text-sm text-muted">
+      Want something that is not here? <a href="https://github.com/hsr88/mouzi/issues/new/choose" rel="noopener" class="text-amber hover:underline">Open a feature request</a> on GitHub.
+    </p>
+  </div>
+</BaseLayout>

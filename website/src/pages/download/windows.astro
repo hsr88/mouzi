@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import DownloadCards from '../../components/DownloadCards.astro';
+import { site, signingMessage } from '../../config/site';
+import { softwareApplicationLd, breadcrumbLd } from '../../lib/seo';
+---
+
+<BaseLayout
+  title={`Download Mouzi for Windows — automatic Downloads folder organizer`}
+  description={`Mouzi ${site.version} for Windows 10 and 11: free installer, MSI for managed deployments and a portable build. Organizes your Downloads folder automatically with rules you control.`}
+  canonical="/download/windows"
+  jsonLd={[softwareApplicationLd(), breadcrumbLd([{ name: 'Download', url: '/download' }, { name: 'Windows', url: '/download/windows' }])]}
+>
+  <div class="mx-auto max-w-4xl px-5 py-16">
+    <SectionHeading
+      kicker={`Version ${site.version} · Windows 10 & 11 · x64`}
+      title="Mouzi for Windows"
+      lead="Three builds, one app. The installer suits most people; the MSI is for deployment tools; the portable build runs from anywhere without touching the registry."
+    />
+    <div class="mt-10">
+      <DownloadCards platform="windows" />
+    </div>
+
+    <section class="prose mt-14">
+      <h2>Installation</h2>
+      <p>
+        Run the installer and follow the prompts. Mouzi starts automatically afterwards, adds itself to the system tray
+        and begins watching your Downloads folder with sensible defaults. Nothing moves until rules exist, so your
+        first stop is the <a href="/docs/getting-started">getting started guide</a>.
+      </p>
+
+      <h2>About the SmartScreen prompt</h2>
+      <p>
+        {signingMessage()} Until signing is complete, Windows may show a "Windows protected your PC" prompt for new
+        downloads. If you downloaded the file from this site or from{' '}
+        <a href={site.github.releases} rel="noopener">GitHub releases</a>, click <strong>More info → Run anyway</strong>.
+        You can verify any file against the SHA-256 checksums published with each release; the steps are in the{' '}
+        <a href="/docs/security">security docs</a>.
+      </p>
+
+      <h2>Portable build</h2>
+      <p>
+        The portable executable stores configuration next to itself, so rules travel with the file. It suits USB
+        drives, locked-down machines and quick testing. There is no uninstaller because there is nothing to uninstall:
+        delete the file and it is gone.
+      </p>
+
+      <h2>System requirements</h2>
+      <ul>
+        <li>Windows 10 or Windows 11, 64-bit</li>
+        <li>Around 20 MB of disk space installed</li>
+        <li>No admin rights needed for the portable build</li>
+      </ul>
+
+      <h2>Next steps</h2>
+      <p>
+        Read <a href="/docs/windows">Mouzi on Windows</a> for autostart, data locations and platform notes, or jump
+        straight to <a href="/docs/rules">writing rules</a>.
+      </p>
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,37 @@
+---
+title: Scheduled cleans
+description: Run up to four automatic cleans per day and understand which folders and safeguards apply.
+section: Start here
+order: 4
+platforms: [windows, linux]
+updated: 2026-08-09
+---
+
+The scheduler runs Clean now at selected local times while Mouzi is running. It is useful when you prefer batches over processing each arrival.
+
+## Configure a schedule
+
+Open **Settings → Schedule**, enable scheduled cleaning and choose from one to four times per day. Times use the computer's local clock.
+
+Mouzi checks the schedule approximately once a minute. A clean may therefore begin shortly after the displayed minute rather than at the exact second.
+
+## Which folders run
+
+Scheduled cleans process **Silent** folders only. Manual and Paused folders are skipped.
+
+If you want a folder organized only when you choose, keep it in Manual mode and use Clean now yourself. If you want automatic batches, use Silent mode with a schedule.
+
+## Grace period and safety
+
+A scheduled clean bypasses the grace period, just like pressing Clean now. It still applies:
+
+- built-in file exclusions
+- the folder's `.mouziignore`
+- enabled rules and their priority
+- file-lock checking when that option is enabled
+
+Do not schedule a clean for a time when another application regularly writes unlocked temporary files into the watched folder. Add a `.mouziignore` pattern where necessary.
+
+## Mouzi must be running
+
+The scheduler is part of the desktop application. It does not install a separate system service or wake a powered-off computer. Leave **Start with system** enabled if schedules should run after login.

@@ -1,0 +1,81 @@
+---
+/**
+ * Full-bleed hero background video.
+ *
+ * Replace the assets at:
+ *   /videos/mouzi-hero.webm
+ *   /videos/mouzi-hero.mp4
+ *   /videos/mouzi-hero-poster.webp
+ *
+ * Behavior:
+ * - autoplay, muted, looped, playsinline, no controls
+ * - poster shown while loading and permanently when prefers-reduced-motion
+ *   is set or the connection reports save-data / 2g
+ * - playback pauses when the hero leaves the viewport
+ * - extremely subtle pointer parallax on the container
+ */
+---
+
+<div id="hero-video-wrap" class="absolute inset-0 overflow-hidden" aria-hidden="true">
+  <div id="hero-video-inner" class="absolute -inset-6 will-change-transform">
+    <video
+      id="hero-video"
+      class="h-full w-full object-cover"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster="/videos/mouzi-hero-poster.webp"
+    >
+      <source src="/videos/mouzi-hero.webm" type="video/webm" />
+      <source src="/videos/mouzi-hero.mp4" type="video/mp4" />
+    </video>
+  </div>
+
+  <!-- Directional overlay: keeps nav + headline readable, fades into page bg -->
+  <div class="absolute inset-0 bg-gradient-to-b from-ink/80 via-ink/60 to-ink"></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-ink/55 via-transparent to-ink/35"></div>
+</div>
+
+<script>
+  const video = document.getElementById('hero-video') as HTMLVideoElement | null;
+  const inner = document.getElementById('hero-video-inner');
+  const wrap = document.getElementById('hero-video-wrap');
+
+  if (video && wrap && inner) {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const conn = (navigator as any).connection;
+    const slow = conn && (conn.saveData || /(^|-)2g/.test(conn.effectiveType ?? ''));
+
+    if (reducedMotion || slow) {
+      // Keep the static poster only.
+      video.removeAttribute('autoplay');
+      video.pause();
+      video.querySelectorAll('source').forEach((s) => s.remove());
+      video.load();
+    } else {
+      // Pause when the hero scrolls out of view.
+      new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) video.play().catch(() => {});
+          else video.pause();
+        },
+        { threshold: 0.05 },
+      ).observe(wrap);
+
+      // Extremely subtle pointer parallax (max ~6px shift).
+      let raf = 0;
+      wrap.parentElement?.addEventListener('pointermove', (e) => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          const r = wrap.getBoundingClientRect();
+          const x = ((e.clientX - r.left) / r.width - 0.5) * -6;
+          const y = ((e.clientY - r.top) / r.height - 0.5) * -6;
+          inner.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+        });
+      });
+    }
+  }
+</script>

@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { blogPostingLd, breadcrumbLd } from '../../lib/seo';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const all = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const related =
+  entry.data.related.length > 0
+    ? all.filter((p) => entry.data.related.includes(p.id))
+    : all.filter((p) => p.id !== entry.id).slice(0, 2);
+
+const jsonLd = [
+  blogPostingLd({ ...entry.data, slug: entry.id }),
+  breadcrumbLd([
+    { name: 'Blog', url: '/blog' },
+    { name: entry.data.title, url: `/blog/${entry.id}` },
+  ]),
+];
+---
+
+<BaseLayout
+  title={`${entry.data.title} — Mouzi blog`}
+  description={entry.data.description}
+  canonical={entry.data.canonical ?? `/blog/${entry.id}`}
+  ogType="article"
+  ogImage={entry.data.cover}
+  jsonLd={jsonLd}
+>
+  <article class="mx-auto max-w-3xl px-5 py-16" data-pagefind-body>
+    <nav aria-label="Breadcrumb" class="mb-8 font-mono text-[11px] text-muted">
+      <ol class="flex gap-1.5" role="list">
+        <li><a href="/" class="hover:text-cream">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/blog" class="hover:text-cream">Blog</a></li>
+      </ol>
+    </nav>
+
+    <header>
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] text-muted">
+        <time datetime={entry.data.pubDate.toISOString()}>
+          {entry.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </time>
+        <span>·</span>
+        <span>{entry.data.author}</span>
+        {entry.data.tags.map((tag) => (
+          <span class="rounded border border-line px-1.5 py-0.5 uppercase tracking-[0.08em]">{tag}</span>
+        ))}
+      </div>
+      <h1 class="mt-4 text-3xl font-semibold tracking-tight text-balance sm:text-4xl">{entry.data.title}</h1>
+      <p class="mt-4 text-lg leading-relaxed text-muted">{entry.data.description}</p>
+      {
+        entry.data.cover && (
+          <img src={entry.data.cover} alt={entry.data.coverAlt ?? ''} class="mt-8 w-full rounded-card border border-line" width="1200" height="630" />
+        )
+      }
+    </header>
+
+    <div class="tdivider my-10"></div>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    {
+      entry.data.updatedDate && (
+        <p class="mt-10 font-mono text-xs text-muted">
+          Updated {entry.data.updatedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </p>
+      )
+    }
+
+    {
+      related.length > 0 && (
+        <aside class="mt-14 border-t border-line pt-8">
+          <h2 class="font-mono text-xs tracking-[0.18em] text-muted uppercase">Related posts</h2>
+          <div class="mt-4 grid gap-4 sm:grid-cols-2">
+            {related.map((p) => (
+              <a href={`/blog/${p.id}`} class="rounded-card border border-line bg-surface p-4 transition-colors hover:border-amber/40">
+                <h3 class="text-sm font-semibold">{p.data.title}</h3>
+                <p class="mt-1 line-clamp-2 text-[13px] text-muted">{p.data.description}</p>
+              </a>
+            ))}
+          </div>
+        </aside>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll('article pre').forEach((pre) => {
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.type = 'button';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy code to clipboard');
+    btn.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(pre.querySelector('code')?.textContent ?? '');
+      btn.textContent = 'Copied';
+      setTimeout(() => (btn.textContent = 'Copy'), 1500);
+    });
+    pre.appendChild(btn);
+  });
+</script>

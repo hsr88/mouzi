@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import { breadcrumbLd } from '../../lib/seo';
+---
+
+<BaseLayout
+  title="Automatic organization — Mouzi features"
+  description="How Mouzi organizes files automatically: folder watching, silent and manual modes, scheduled cleans and download-safe detection."
+  canonical="/features/automatic-organization"
+  jsonLd={[breadcrumbLd([{ name: 'Features', url: '/features' }, { name: 'Automatic organization', url: '/features/automatic-organization' }])]}
+>
+  <div class="mx-auto max-w-4xl px-5 py-16">
+    <SectionHeading
+      kicker="Features"
+      title="Automatic organization"
+      lead="Mouzi watches the folders you pick and moves new files according to your rules, the moment they are safe to move."
+    />
+
+    <img src="/screenshots/kar1.png" alt="Mouzi main window with watched folders and recent activity" width="1200" height="750" class="mt-10 w-full rounded-card border border-line" />
+
+    <section class="prose mt-12">
+      <h2>How watching works</h2>
+      <p>
+        Mouzi registers a file-system watcher on each folder you configure. When a new file appears, it waits out a
+        short grace period, confirms the file is not locked by another process, then evaluates your rules top to
+        bottom. The first matching rule decides the destination. If no rule matches, the file stays put.
+      </p>
+
+      <h2>Three modes</h2>
+      <p>
+        <strong>Silent</strong> organizes continuously in the background. <strong>Manual</strong> waits until you click
+        Clean Now, which suits people who prefer batch tidying. <strong>Paused</strong> stops watching entirely. You
+        switch modes from the tray menu, and you can also schedule cleans at up to four fixed times per day.
+      </p>
+
+      <h2>Safe with live downloads</h2>
+      <p>
+        Downloads folders are hostile territory for automation: files appear half-written, browsers create temp files
+        and download managers hold locks. Mouzi skips <code>.crdownload</code>, <code>.part</code>,
+        <code>.download</code> and <code>.tmp</code> files, ignores zero-byte placeholders and never touches a file
+        that another process holds open. A large download moves only after it finishes.
+      </p>
+
+      <h2>Everything is reversible</h2>
+      <p>
+        Each move is written to a local SQLite history. Open History from the main window to see what moved, where and
+        which rule fired, and undo any entry with one click. Details in the{' '}
+        <a href="/docs/getting-started">getting started guide</a>.
+      </p>
+    </section>
+
+    <div class="mt-12 flex gap-3">
+      <a href="/download" class="rounded-btn bg-amber px-5 py-2.5 text-sm font-semibold text-[#151004] hover:opacity-90">Download Mouzi</a>
+      <a href="/docs/getting-started" class="rounded-btn border border-line px-5 py-2.5 text-sm text-cream hover:bg-surface-2">Getting started</a>
+    </div>
+  </div>
+</BaseLayout>

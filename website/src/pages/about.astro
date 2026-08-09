@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { site } from '../config/site';
+import { personLd } from '../lib/seo';
+---
+
+<BaseLayout
+  title="About — Mouzi"
+  description="Mouzi is built by Krystian Welcel, an independent developer. The story behind the project, its principles and how it is maintained."
+  canonical="/about"
+  jsonLd={[{ '@context': 'https://schema.org', ...personLd() }]}
+>
+  <div class="mx-auto max-w-3xl px-5 py-16">
+    <SectionHeading kicker="About" title="One developer, one tray icon." />
+
+    <section class="prose mt-10">
+      <p>
+        Mouzi started the way most utilities do: with an annoyed developer and a Downloads folder holding four hundred
+        files. I wanted a small tool that would sort new downloads by my own rules, run from the system tray and never
+        phone home. Nothing on the market fit all three, so I built it.
+      </p>
+      <p>
+        I'm Krystian Welcel, and I develop Mouzi after hours as an independent project. It is written in Rust with
+        Tauri, ships for Windows and Linux, and is MIT licensed. There is no company behind it and no plan to bolt on
+        a subscription. The app is free, the source is public and the roadmap is driven by GitHub issues.
+      </p>
+
+      <h2>Principles</h2>
+      <ul>
+        <li><strong>Local-only.</strong> A file organizer sees everything you download. That data stays on your machine, full stop.</li>
+        <li><strong>Quiet.</strong> Mouzi should be forgotten a day after installation. No popups, no upsells, no badges begging for attention.</li>
+        <li><strong>Reversible.</strong> Automation you cannot undo is a hazard. Every move Mouzi makes can be undone from History.</li>
+        <li><strong>Verifiable.</strong> Public source, public CI builds, published checksums. Claims you can check beat claims you must trust.</li>
+      </ul>
+
+      <h2>The stack, briefly</h2>
+      <p>
+        Rust handles the file watching, rule engine and SQLite history. Tauri provides the UI shell, which keeps the
+        installer small, a few megabytes rather than a bundled browser. The interface is translated into 10 languages
+        by contributors.
+      </p>
+
+      <h2>Get in touch</h2>
+      <p>
+        The best channel is GitHub: <a href={site.github.issues} rel="noopener">issues</a> for bugs and features,{' '}
+        <a href={`${site.github.url}/security/advisories/new`} rel="noopener">private advisories</a> for security. I'm
+        also on <a href={site.maintainer.x} rel="noopener">X</a> and{' '}
+        <a href={site.maintainer.reddit} rel="noopener">r/Mouzi</a>, or by email at{' '}
+        <a href={`mailto:${site.funding.contactEmail}`}>{site.funding.contactEmail}</a>.
+      </p>
+    </section>
+
+    <div class="mt-12 flex flex-wrap gap-3">
+      <a href="/impact" class="rounded-btn border border-line px-5 py-2.5 text-sm text-cream hover:bg-surface-2">Project impact →</a>
+      <a href="/sponsors" class="rounded-btn border border-line px-5 py-2.5 text-sm text-cream hover:bg-surface-2">Sponsor the project →</a>
+    </div>
+  </div>
+</BaseLayout>

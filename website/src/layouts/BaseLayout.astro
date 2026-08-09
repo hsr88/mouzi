@@ -1,0 +1,90 @@
+---
+import '@fontsource-variable/instrument-sans';
+import '@fontsource/geist-mono/400.css';
+import '@fontsource/geist-mono/500.css';
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import GitHubStats from '../components/GitHubStats.astro';
+import { site } from '../config/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path-based canonical, e.g. "/download". Defaults to current path. */
+  canonical?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  /** JSON-LD objects rendered into the head. */
+  jsonLd?: object[];
+  /** Removes the default top padding under the fixed nav (used by the hero). */
+  flush?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage = site.ogImage,
+  ogType = 'website',
+  jsonLd = [],
+  flush = false,
+} = Astro.props;
+
+const canonicalUrl = new URL(canonical ?? Astro.url.pathname, site.url).href.replace(/\/$/, '') || site.url;
+const ogImageUrl = new URL(ogImage, site.url).href;
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/png" href="/images/mouzi-logo.png" />
+    <link rel="apple-touch-icon" href="/images/mouzi-logo.png" />
+    <link rel="alternate" type="application/rss+xml" title="Mouzi blog" href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" hreflang="en" href={canonicalUrl} />
+    <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+    <meta name="theme-color" content="#0B0D10" />
+    <meta name="author" content={site.maintainer.name} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:site_name" content="Mouzi" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    {jsonLd.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
+
+    <script is:inline>
+      (() => {
+        const saved = localStorage.getItem('mouzi-theme');
+        document.documentElement.dataset.theme = saved === 'light' ? 'light' : 'dark';
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen bg-ink text-cream antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-md focus:bg-surface focus:px-4 focus:py-2 focus:text-sm"
+    >
+      Skip to content
+    </a>
+    <Nav />
+    <main id="main" class={flush ? '' : 'pt-16'}>
+      <slot />
+    </main>
+    <Footer />
+    <GitHubStats />
+  </body>
+</html>

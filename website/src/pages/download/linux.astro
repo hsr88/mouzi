@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import DownloadCards from '../../components/DownloadCards.astro';
+import { site } from '../../config/site';
+import { softwareApplicationLd, breadcrumbLd } from '../../lib/seo';
+---
+
+<BaseLayout
+  title={`Download Mouzi for Linux — automatic Downloads folder organizer`}
+  description={`Mouzi ${site.version} for Linux: AppImage, DEB and RPM packages (x86_64). A free, open-source tray app that organizes your Downloads folder automatically.`}
+  canonical="/download/linux"
+  jsonLd={[softwareApplicationLd(), breadcrumbLd([{ name: 'Download', url: '/download' }, { name: 'Linux', url: '/download/linux' }])]}
+>
+  <div class="mx-auto max-w-4xl px-5 py-16">
+    <SectionHeading
+      kicker={`Version ${site.version} · x86_64`}
+      title="Mouzi for Linux"
+      lead="The AppImage runs everywhere without installation. The DEB and RPM packages integrate with your package manager."
+    />
+    <div class="mt-10">
+      <DownloadCards platform="linux" />
+    </div>
+
+    <section class="prose mt-14">
+      <h2>AppImage</h2>
+      <pre><code>chmod +x Mouzi_{site.version}_amd64.AppImage
+./Mouzi_{site.version}_amd64.AppImage</code></pre>
+      <p>
+        No installation, no root. If you use AppImageLauncher or a similar tool, integration adds Mouzi to your app
+        menu and autostart.
+      </p>
+
+      <h2>DEB (Debian, Ubuntu, Mint)</h2>
+      <pre><code>sudo apt install ./Mouzi_{site.version}_amd64.deb</code></pre>
+
+      <h2>RPM (Fedora, openSUSE)</h2>
+      <pre><code>sudo dnf install ./Mouzi-{site.version}-1.x86_64.rpm</code></pre>
+
+      <h2>Tray icon</h2>
+      <p>
+        Mouzi lives in the system tray. Most desktops support this out of the box; GNOME needs the AppIndicator
+        extension. Details and Wayland notes are in <a href="/docs/linux">Mouzi on Linux</a>.
+      </p>
+
+      <h2>Next steps</h2>
+      <p>
+        Follow the <a href="/docs/getting-started">getting started guide</a> to watch your first folder and write your
+        first rule. If anything misbehaves, the <a href="/docs/troubleshooting">troubleshooting page</a> covers the
+        common cases.
+      </p>
+    </section>
+  </div>
+</BaseLayout>
