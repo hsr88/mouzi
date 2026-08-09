@@ -7,25 +7,37 @@ const featurePages = [
     href: '/features/automatic-organization',
     title: 'Automatic organization',
     body: 'Watch folders, apply rules, move files. Silent, manual or scheduled.',
-    img: '/screenshots/kar1.png',
+    img: '/screenshots/automatic-organization.png',
+    alt: 'Mouzi settings showing watched folders in Silent, Manual and Paused modes',
+    width: 968,
+    height: 698,
   },
   {
     href: '/features/custom-rules',
     title: 'Custom rules',
     body: 'Extensions, name patterns, regex, dynamic paths and priorities.',
-    img: '/screenshots/kar2.png',
+    img: '/screenshots/custom-rules.png',
+    alt: 'Mouzi rules view listing rules for common file types',
+    width: 952,
+    height: 700,
+  },
+  {
+    href: '/docs/history-and-undo',
+    title: 'History and one-click undo',
+    body: 'Review recent moves and restore a file when a rule sends it somewhere unexpected.',
+    img: '/screenshots/history-undo.png',
+    alt: 'Mouzi recent actions with destination folders and undo buttons',
+    width: 964,
+    height: 706,
   },
   {
     href: '/features/privacy',
-    title: 'Privacy',
-    body: 'No cloud, no account, no telemetry. Everything stays on your machine.',
-    img: '/screenshots/kar3.png',
-  },
-  {
-    href: '/features/security',
-    title: 'Security',
-    body: 'Public CI builds and production code signing being prepared through SignPath Foundation.',
-    img: '/screenshots/kar4.png',
+    title: 'Privacy and security, by design',
+    body: 'No cloud, no account, no telemetry. Local safeguards control when files are safe to move.',
+    img: '/screenshots/privacy-security-settings.png',
+    alt: 'Mouzi general settings with grace period and file lock controls',
+    width: 956,
+    height: 700,
   },
 ];
 
@@ -58,7 +70,7 @@ const details = [
       {
         featurePages.map((f) => (
           <a href={f.href} class="group overflow-hidden rounded-card border border-line bg-surface transition-colors hover:border-amber/40">
-            <img src={f.img} alt="" width="1200" height="750" loading="lazy" class="aspect-[16/10] w-full border-b border-line object-cover" />
+            <img src={f.img} alt={f.alt} width={f.width} height={f.height} loading="lazy" class="aspect-[4/3] w-full border-b border-line object-cover" />
             <div class="p-5">
               <h2 class="text-lg font-semibold tracking-tight transition-colors group-hover:text-amber">{f.title}</h2>
               <p class="mt-1.5 text-sm leading-relaxed text-muted">{f.body}</p>
@@ -67,6 +79,32 @@ const details = [
         ))
       }
     </div>
+
+    <section class="mt-16">
+      <div class="max-w-2xl">
+        <p class="font-mono text-[11px] tracking-[0.2em] text-amber uppercase">See it work</p>
+        <h2 class="mt-3 text-2xl font-semibold tracking-tight">A Downloads folder, organized in seconds.</h2>
+        <p class="mt-3 leading-relaxed text-muted">
+          This short recording shows Mouzi applying its rules and moving a mixed group of files into their destination folders on Linux.
+        </p>
+      </div>
+      <video
+        class="mt-8 w-full rounded-card border border-line bg-surface"
+        width="1152"
+        height="720"
+        autoplay
+        muted
+        loop
+        playsinline
+        controls
+        preload="metadata"
+        poster="/videos/mouzi-organizing-poster.webp"
+        aria-label="Mouzi organizing files into destination folders on Linux"
+      >
+        <source src="/videos/mouzi-organizing.webm" type="video/webm" />
+        <source src="/videos/mouzi-organizing.mp4" type="video/mp4" />
+      </video>
+    </section>
 
     <div class="tdivider mt-16"></div>
 

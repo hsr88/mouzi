@@ -33,29 +33,37 @@ const features = [
     title: 'Automatic organization',
     body: 'Mouzi sits in your system tray and watches the folders you choose. When a new file lands, it applies your rules and moves it to the right place. You keep working; the folder stays clean.',
     href: '/features/automatic-organization',
-    img: '/screenshots/kar1.png',
-    alt: 'Mouzi main window showing watched folders and organization status',
+    img: '/screenshots/automatic-organization.png',
+    alt: 'Mouzi settings showing watched folders in Silent, Manual and Paused modes',
+    width: 968,
+    height: 698,
   },
   {
     title: 'Custom rules, in your words',
     body: 'Match files by extension and optionally narrow the match with a regular expression applied to the full file name. Destinations can use placeholders such as {year} and {month} to create dated folders.',
     href: '/features/custom-rules',
-    img: '/screenshots/kar2.png',
-    alt: 'Mouzi rule editor with extension and destination fields',
+    img: '/screenshots/custom-rules.png',
+    alt: 'Mouzi rules view listing image, document, archive, installer, music and video rules',
+    width: 952,
+    height: 700,
   },
   {
     title: 'History and one-click undo',
     body: 'Every successful move is recorded in a local SQLite database. If a rule sends a file somewhere unexpected, open History and undo that entry.',
-    href: '/docs/getting-started',
-    img: '/screenshots/screenshot4.png',
-    alt: 'History view listing moved files with undo buttons',
+    href: '/docs/history-and-undo',
+    img: '/screenshots/history-undo.png',
+    alt: 'Mouzi recent actions showing organized files, destinations and undo buttons',
+    width: 964,
+    height: 706,
   },
   {
     title: 'Privacy and security, by design',
     body: 'No cloud, no account and no telemetry. Releases are built in public CI. Mouzi also uses a grace period, skips browser temporary files and checks for file locks before an automatic move.',
     href: '/features/privacy',
-    img: '/screenshots/kar3.png',
-    alt: 'Mouzi settings showing local-only operation',
+    img: '/screenshots/privacy-security-settings.png',
+    alt: 'Mouzi general settings showing local controls for startup, grace period and file locks',
+    width: 956,
+    height: 700,
   },
 ];
 
@@ -195,8 +203,8 @@ const contributions = [
                   src={f.img}
                   alt={f.alt}
                   loading="lazy"
-                  width="1200"
-                  height="750"
+                  width={f.width}
+                  height={f.height}
                   class="w-full rounded-card border border-line"
                 />
               </div>
