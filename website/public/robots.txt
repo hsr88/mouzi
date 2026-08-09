@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mouzi.cc/sitemap-index.xml
+Sitemap: https://mouzi.cc/sitemap.xml
