@@ -20,6 +20,9 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 const metrics = [
   { label: 'GitHub stars', value: formatCount(stats.stars), attr: 'data-gh-stars' },
   { label: 'Forks', value: formatCount(stats.forks), attr: 'data-gh-forks' },
+  ...(site.metrics.verifiedDownloads
+    ? [{ label: 'Downloads', value: site.metrics.verifiedDownloads.label, attr: null }]
+    : []),
   { label: 'Contributors', value: formatCount(stats.contributors), attr: 'data-gh-contributors' },
   { label: 'Languages', value: String(site.metrics.supportedLanguages), attr: null },
   { label: 'Platforms', value: String(site.metrics.supportedPlatforms), attr: null },
