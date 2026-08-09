@@ -10,9 +10,15 @@ import { site } from '../config/site';
   canonical="/privacy"
 >
   <div class="mx-auto max-w-3xl px-5 py-16">
-    <SectionHeading kicker="Legal" title="Privacy policy" lead="Short, because there is little to disclose." />
+    <SectionHeading kicker="Legal" title="Privacy policy" lead="How Mouzi and mouzi.cc handle data." />
 
     <section class="prose mt-10">
+      <h2>Data controller</h2>
+      <p>
+        The controller for optional website analytics is Krystian Welcel, the maintainer of Mouzi. Questions and GDPR
+        requests can be sent to <a href={`mailto:${site.funding.contactEmail}`}>{site.funding.contactEmail}</a>.
+      </p>
+
       <h2>The application</h2>
       <p>
         Mouzi processes files entirely on your device. The application does not collect, transmit or store any personal
@@ -39,7 +45,7 @@ import { site } from '../config/site';
       <p>
         Google Analytics does not load until you choose <strong>Allow analytics</strong>. Advertising storage, advertising
         user data and advertising personalization remain disabled. Your choice is saved locally in your browser under
-        <code>mouzi-analytics-consent</code>. You can change it below. See{' '}
+        <code>mouzi-analytics-consent</code> for up to 180 days. You can change it below. See{' '}
         <a href="https://policies.google.com/privacy" rel="noopener">Google's privacy policy</a> for information about
         Google's processing.
       </p>
@@ -48,10 +54,39 @@ import { site } from '../config/site';
         Sponsor links are ordinary links and sponsors cannot place tracking scripts on this site.
       </p>
 
+      <h2>Purpose and legal basis</h2>
+      <p>
+        Analytics is used to count visits, understand which documentation and download pages are useful, and find site
+        navigation problems. The legal basis is your consent under Article 6(1)(a) GDPR. Refusing analytics does not
+        limit the website, downloads or the Mouzi application. No analytics data is used for automated decisions or
+        profiling by Mouzi.
+      </p>
+
+      <h2>Cookies, retention and recipients</h2>
+      <p>
+        After consent, Google Analytics may set <code>_ga</code> and <code>_ga_&lt;container-id&gt;</code> cookies to
+        distinguish users and sessions. Google documents a default lifetime of up to two years, although browsers may
+        shorten it. User-level and event-level information in a standard GA4 property may be retained for up to 14
+        months. Aggregated reports may remain available for longer.
+      </p>
+      <p>
+        Analytics data is processed by Google, including Google Ireland Limited for users in the EEA. Google may use
+        infrastructure or subprocessors outside the EEA and describes its transfer safeguards, including applicable
+        adequacy frameworks and Standard Contractual Clauses, in its{' '}
+        <a href="https://business.safety.google/adsdatatransfers/" rel="noopener">international transfer information</a>.
+      </p>
+
       <h2>Your rights</h2>
       <p>
         The application does not send personal data to Mouzi. Local application data is under your control at
         <code>%APPDATA%\Mouzi</code> (Windows) or <code>~/.config/mouzi</code> (Linux).
+      </p>
+      <p>
+        For website analytics data, you may request access, rectification, deletion or restriction where applicable.
+        You may withdraw consent at any time without affecting processing that took place before withdrawal. You may
+        also lodge a complaint with the{' '}
+        <a href="https://uodo.gov.pl/en/681" rel="noopener">President of the Personal Data Protection Office (UODO)</a>
+        in Poland or another competent supervisory authority.
       </p>
       <p>
         <button type="button" data-manage-analytics class="text-amber underline hover:no-underline">
@@ -63,7 +98,7 @@ import { site } from '../config/site';
       <p>
         Questions about this policy: <a href={`mailto:${site.funding.contactEmail}`}>{site.funding.contactEmail}</a>.
       </p>
-      <p>Last updated: August 2026.</p>
+      <p>Last updated: 9 August 2026.</p>
     </section>
   </div>
 </BaseLayout>

@@ -10,10 +10,10 @@ const measurementId = 'G-GMDTSE5DFS';
   aria-describedby="analytics-consent-description"
   hidden
 >
-  <h2 id="analytics-consent-title" class="text-[15px] font-semibold text-cream">Optional website analytics</h2>
+  <h2 id="analytics-consent-title" class="text-[15px] font-semibold text-cream">Optional analytics cookies</h2>
   <p id="analytics-consent-description" class="mt-2 text-sm leading-relaxed text-muted">
-    The Mouzi app sends no telemetry. With your permission, this website uses Google Analytics to count visits and see
-    which pages are useful. <a href="/privacy" class="text-amber hover:underline">Privacy details</a>
+    The Mouzi app sends no telemetry. If you agree, this website loads Google Analytics, sets <code>_ga</code> cookies
+    and sends page, device and approximate location data to Google. <a href="/privacy" class="text-amber hover:underline">Privacy details</a>
   </p>
   <div class="mt-4 flex flex-wrap gap-3">
     <button
@@ -36,6 +36,7 @@ const measurementId = 'G-GMDTSE5DFS';
 <script is:inline define:vars={{ measurementId }}>
   (() => {
     const storageKey = 'mouzi-analytics-consent';
+    const consentMaxAgeMs = 180 * 24 * 60 * 60 * 1000;
     const banner = document.getElementById('analytics-consent');
     const acceptButton = document.getElementById('analytics-accept');
     const declineButton = document.getElementById('analytics-decline');
@@ -91,7 +92,28 @@ const measurementId = 'G-GMDTSE5DFS';
       if (banner) banner.hidden = true;
     };
 
-    const savedConsent = localStorage.getItem(storageKey);
+    const saveConsent = (value) => {
+      localStorage.setItem(storageKey, JSON.stringify({ value, savedAt: Date.now() }));
+    };
+
+    const readConsent = () => {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) return null;
+
+      try {
+        const parsed = JSON.parse(raw);
+        const validValue = parsed?.value === 'granted' || parsed?.value === 'denied';
+        const stillCurrent = Number.isFinite(parsed?.savedAt) && Date.now() - parsed.savedAt <= consentMaxAgeMs;
+        if (validValue && stillCurrent) return parsed.value;
+      } catch {
+        // Previous versions stored a plain string. Ask again under the current notice.
+      }
+
+      localStorage.removeItem(storageKey);
+      return null;
+    };
+
+    const savedConsent = readConsent();
     if (savedConsent === 'granted') {
       loadAnalytics();
     } else if (savedConsent !== 'denied') {
@@ -99,13 +121,13 @@ const measurementId = 'G-GMDTSE5DFS';
     }
 
     acceptButton?.addEventListener('click', () => {
-      localStorage.setItem(storageKey, 'granted');
+      saveConsent('granted');
       loadAnalytics();
       hideBanner();
     });
 
     declineButton?.addEventListener('click', () => {
-      localStorage.setItem(storageKey, 'denied');
+      saveConsent('denied');
       window.gtag('consent', 'update', {
         analytics_storage: 'denied',
         ad_storage: 'denied',
