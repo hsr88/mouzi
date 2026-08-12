@@ -253,6 +253,7 @@ MVP with default rules, multi-language support, dark mode, history & undo, start
 - [ ] Rename "Edit" button to "Save" in rule editor
 - [ ] Better error messages for invalid rules / input
 - [ ] Move files to Recycle Bin instead of permanent move
+- [ ] Optional screenshot cleanup: move screenshots older than a chosen number of days from system and custom screenshot folders to the Recycle Bin
 - [ ] Auto-update via Tauri updater
 - [ ] Windows Explorer context menu ("Add to Mouzi")
 - [ ] npm wrapper (`npm install -g mouzi`) for cross-platform CLI install

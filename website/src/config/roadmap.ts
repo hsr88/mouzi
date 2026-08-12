@@ -75,6 +75,12 @@ export const roadmap: RoadmapItem[] = [
     status: 'later',
     issue: `${ISSUES}/49`,
   },
+  {
+    title: 'Automatic screenshot cleanup',
+    description:
+      'Optionally move screenshots older than a chosen number of days from system and custom screenshot folders to the Recycle Bin.',
+    status: 'later',
+  },
 
   // Shipped
   {
