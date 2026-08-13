@@ -74,6 +74,13 @@ export interface CoverageReachCard {
 
 export type CommunityReachCard = RedditReachCard | PodcastReachCard | CoverageReachCard;
 
+export interface IndependentCoverageLink {
+  outlet: string;
+  title: string;
+  url: string;
+  language: string;
+}
+
 function formatTimestamp(totalSeconds: number): string {
   const m = Math.floor(totalSeconds / 60);
   const s = totalSeconds % 60;
@@ -185,3 +192,37 @@ export const communityReach: CommunityReachCard[] = [
  */
 export const communityReachNote =
   'These are only a few of the public mentions. Many more threads, shares and write-ups have helped people find Mouzi, and more keep appearing. Thank you to everyone who posted, linked, mirrored or talked about the project.';
+
+/** Independent articles and guides shown as a compact secondary list. */
+export const independentCoverage: IndependentCoverageLink[] = [
+  {
+    outlet: 'AskWoody',
+    title: 'Mouzi — Because your Downloads folder is a mess',
+    url: 'https://www.askwoody.com/forums/topic/mouzi-because-your-downloads-folder-is-a-mess/',
+    language: 'English',
+  },
+  {
+    outlet: 'IlSoftware.it',
+    title: 'A free Windows tool that keeps the Downloads folder organized',
+    url: 'https://www.ilsoftware.it/focus/riordinare-cartella-download-windows/',
+    language: 'Italian',
+  },
+  {
+    outlet: 'Linux-Bibel',
+    title: 'Mouzi — Ordnung im Downloads-Ordner',
+    url: 'https://linux-bibel.at/index.php/2026/06/30/mouzi-ordnung-im-downloads-ordner/',
+    language: 'German',
+  },
+  {
+    outlet: 'FreeSoft 100',
+    title: 'Mouzi download and usage guide',
+    url: 'https://freesoft-100.com/review/mouzi.html',
+    language: 'Japanese',
+  },
+  {
+    outlet: 'Portable.info.pl',
+    title: 'Mouzi Portable',
+    url: 'https://portable.info.pl/mouzi-portable/',
+    language: 'Polish',
+  },
+];
