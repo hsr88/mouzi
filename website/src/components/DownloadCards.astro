@@ -33,6 +33,11 @@ const artifacts: readonly DownloadArtifact[] = site.downloads[platform];
           <a
             href={a.url}
             rel="noopener"
+            data-mouzi-download
+            data-download-platform={platform}
+            data-download-artifact={a.label}
+            data-download-file={a.file}
+            data-download-version={site.version}
             class:list={[
               'ml-auto shrink-0 rounded-btn px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-90',
               a.recommended ? 'bg-amber text-[#151004]' : 'border border-line text-cream hover:bg-surface-2',
