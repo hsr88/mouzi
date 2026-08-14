@@ -82,7 +82,41 @@ A pull request may be changed or declined if it adds unnecessary complexity, bre
 
 ## Translations
 
-Translation improvements are welcome. Please preserve formatting placeholders and test that longer text still fits inside the interface.
+Mouzi keeps its interface translations in JSON files under [`src/i18n/locales`](src/i18n/locales). You can improve an existing translation or add a new language without changing the file-organizing logic.
+
+### Improve an existing translation
+
+1. Fork the repository and create a branch for your translation.
+2. Open the matching file in [`src/i18n/locales`](src/i18n/locales), for example `es.json` for Spanish.
+3. Translate the text values. Do not rename, add, or remove the JSON keys.
+4. Preserve placeholders and technical values exactly, including `{}`, `{year}`, `{month}`, file extensions, paths, and product names.
+5. Check that the JSON remains valid and that longer text fits in the interface.
+6. Submit a pull request describing which language you updated.
+
+### Add a new language
+
+Please open an issue before starting so we can agree on the language code and avoid duplicate work. Mention whether the translation targets a regional variant, such as Brazilian or European Portuguese.
+
+After the language code is confirmed:
+
+1. Copy [`src/i18n/locales/en.json`](src/i18n/locales/en.json) to a new file named with the agreed language code, such as `pt.json`.
+2. Translate the values while keeping the complete English key structure unchanged.
+3. Register the locale import, resource, and `SupportedLang` value in [`src/i18n/index.ts`](src/i18n/index.ts).
+4. Add the language to the selector in [`src/components/Settings.tsx`](src/components/Settings.tsx).
+5. Add translations for the native tray menu and notifications in [`src-tauri/src/i18n.rs`](src-tauri/src/i18n.rs).
+6. Add the language to the supported-language list in [`README.md`](README.md).
+7. Run the app, switch to the new language, and check the popup, every Settings tab, tray menu, notifications, dialogs, and empty states.
+8. Run `npm run build` and submit a focused pull request.
+
+If you are comfortable translating but not editing TypeScript or Rust, submit the completed JSON file in a pull request or attach it to the language issue. A maintainer can wire it into the application.
+
+### Translation rules
+
+* Use natural wording rather than translating each English word literally.
+* Keep Mouzi, file extensions, keyboard shortcuts, placeholders, and example paths unchanged unless localization is necessary.
+* Preserve punctuation or whitespace when it is part of a placeholder or path.
+* Do not translate text that is not present in the English locale without explaining why in the pull request.
+* Test narrow windows and longer labels where possible; a correct translation should not make buttons or settings unusable.
 
 ## License
 

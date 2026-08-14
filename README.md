@@ -102,6 +102,18 @@ Auto-detects your system language. Supported:
 
 ---
 
+## 🌍 Help translate Mouzi
+
+Want to use Mouzi in another language or improve an existing translation? Community translations are welcome, and you do not need to work on the rest of the application.
+
+- Read the [step-by-step translation guide](CONTRIBUTING.md#translations).
+- Browse the current [locale files](src/i18n/locales).
+- Translation updates can be submitted directly as a pull request.
+
+If you want to add a new language, open an issue first so we can confirm the language code and avoid duplicate work.
+
+---
+
 ## 📥 Download
 
 ### Windows
