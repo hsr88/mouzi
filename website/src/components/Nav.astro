@@ -75,8 +75,17 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
         </svg>
         <span aria-hidden="true" data-gh-stars>{stars}</span>
       </a>
-      <a href={site.funding.githubSponsors} rel="noopener" class="rounded-md px-3 py-2 text-sm text-muted transition-colors hover:text-cream">
-        Sponsor
+      <a
+        href={site.funding.kofi}
+        rel="noopener"
+        aria-label="Support Mouzi on Ko-fi"
+        class="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm text-muted transition-colors hover:text-cream focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber active:text-amber"
+      >
+        <span>Support</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M4 7h12v7a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V7Z" stroke-linejoin="round"></path>
+          <path d="M16 9h1.5a2.5 2.5 0 0 1 0 5H16M7 3.5c0 1 1 1 1 2M11 3.5c0 1 1 1 1 2" stroke-linecap="round"></path>
+        </svg>
       </a>
       <ThemeToggle />
       <a

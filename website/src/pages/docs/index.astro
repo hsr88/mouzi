@@ -59,7 +59,8 @@ const groups = sectionOrder
 <script>
   const mount = document.getElementById('docs-search');
   if (mount) {
-    import(/* @vite-ignore */ '/pagefind/pagefind-ui.js')
+    const pagefindUiPath = '/pagefind/pagefind-ui.js';
+    import(/* @vite-ignore */ pagefindUiPath)
       .then(() => {
         // @ts-expect-error global from pagefind-ui
         const search = new PagefindUI({

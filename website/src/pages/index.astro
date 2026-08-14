@@ -559,7 +559,8 @@ const contributions = [
   const mount = document.getElementById('home-docs-search');
   const fallback = document.getElementById('home-docs-search-fallback');
   if (mount && fallback) {
-    import(/* @vite-ignore */ '/pagefind/pagefind-ui.js')
+    const pagefindUiPath = '/pagefind/pagefind-ui.js';
+    import(/* @vite-ignore */ pagefindUiPath)
       .then(() => {
         // @ts-expect-error global from pagefind-ui
         new PagefindUI({
