@@ -52,6 +52,7 @@
       "name": "名前",
       "extensions": "拡張子",
       "destination": "移動先",
+      "selectDestination": "移動先フォルダーを選択",
       "pattern": "パターン",
       "priority": "優先順位",
       "action": "アクション",

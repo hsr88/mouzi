@@ -52,6 +52,7 @@
       "name": "Nom",
       "extensions": "Extensions",
       "destination": "Destination",
+      "selectDestination": "Sélectionner le dossier de destination",
       "pattern": "Pattern",
       "priority": "Priorité",
       "action": "Action",

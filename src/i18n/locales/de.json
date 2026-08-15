@@ -52,6 +52,7 @@
       "name": "Name",
       "extensions": "Erweiterungen",
       "destination": "Ziel",
+      "selectDestination": "Zielordner auswählen",
       "pattern": "Pattern",
       "priority": "Priorität",
       "action": "Aktion",

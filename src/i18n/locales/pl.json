@@ -52,6 +52,7 @@
       "name": "Nazwa",
       "extensions": "Rozszerzenia",
       "destination": "Cel",
+      "selectDestination": "Wybierz folder docelowy",
       "pattern": "Wzorzec (regex)",
       "priority": "Priorytet",
       "action": "Akcja",

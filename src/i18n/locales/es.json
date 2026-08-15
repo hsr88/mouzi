@@ -42,6 +42,7 @@
       "name": "Nombre",
       "extensions": "Extensiones",
       "destination": "Destino",
+      "selectDestination": "Seleccionar carpeta de destino",
       "pattern": "Patrón",
       "priority": "Prioridad",
       "action": "Acción",

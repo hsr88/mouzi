@@ -52,6 +52,7 @@
       "name": "Назва",
       "extensions": "Розширення",
       "destination": "Цільова тека",
+      "selectDestination": "Вибрати цільову теку",
       "pattern": "Шаблон назви",
       "priority": "Пріоритет",
       "action": "Дія",

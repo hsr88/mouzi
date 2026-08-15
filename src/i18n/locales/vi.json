@@ -58,6 +58,7 @@
       "name": "Tên",
       "extensions": "Đuôi tệp",
       "destination": "Đích đến",
+      "selectDestination": "Chọn thư mục đích",
       "pattern": "Mẫu",
       "priority": "Độ ưu tiên",
       "action": "Hành động",

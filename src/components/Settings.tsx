@@ -183,6 +183,23 @@ export default function Settings() {
     setEditingRule(null);
   };
 
+  const handlePickRuleDestination = async () => {
+    try {
+      const selected = await open({
+        directory: true,
+        multiple: false,
+      });
+      const path = Array.isArray(selected) ? selected[0] : selected;
+      if (path) {
+        setEditingRule((current) =>
+          current ? { ...current, destination: path } : current
+        );
+      }
+    } catch (e) {
+      console.error("Selecting a rule destination failed:", e);
+    }
+  };
+
   const handleChangeLanguage = async (lang: string) => {
     if (!settings) return;
     await i18n.changeLanguage(lang);
@@ -578,11 +595,22 @@ export default function Settings() {
                   </div>
                   <div>
                     <label className="text-xs font-medium text-text-muted">{t("settings.rules.destination")}</label>
-                    <input
-                      value={editingRule.destination}
-                      onChange={(e) => setEditingRule({ ...editingRule, destination: e.target.value })}
-                      className="mt-1 w-full rounded-md border border-border bg-surface px-2 py-1.5 text-sm outline-none focus:border-primary"
-                    />
+                    <div className="mt-1 flex gap-2">
+                      <input
+                        value={editingRule.destination}
+                        onChange={(e) => setEditingRule({ ...editingRule, destination: e.target.value })}
+                        className="min-w-0 flex-1 rounded-md border border-border bg-surface px-2 py-1.5 text-sm outline-none focus:border-primary"
+                      />
+                      <button
+                        type="button"
+                        onClick={handlePickRuleDestination}
+                        aria-label={t("settings.rules.selectDestination")}
+                        title={t("settings.rules.selectDestination")}
+                        className="rounded-md border border-border px-2 text-text-muted hover:bg-surface hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                      >
+                        <FolderOpen size={16} aria-hidden="true" />
+                      </button>
+                    </div>
                   </div>
                   <div>
                     <label className="text-xs font-medium text-text-muted">{t("settings.rules.priority")}</label>

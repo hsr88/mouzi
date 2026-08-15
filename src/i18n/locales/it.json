@@ -52,6 +52,7 @@
       "name": "Nome",
       "extensions": "Estensioni",
       "destination": "Destinazione",
+      "selectDestination": "Seleziona cartella di destinazione",
       "pattern": "Pattern (regex)",
       "priority": "Priorità",
       "action": "Azione",
