@@ -121,7 +121,7 @@ If you want to add a new language, open an issue first so we can confirm the lan
 | Installer | Size | Best For |
 |-----------|------|----------|
 | [`Mouzi_0.1.6_x64-setup.exe`](https://mouzi.cc/download) | ~4.7 MB | Regular users (auto-installer) |
-| [`Mouzi_0.1.6_x64_en-US.msi`](https://mouzi.cc/download) | ~7.8 MB | Enterprise / Active Directory |
+| [`Mouzi_0.1.6_x64_en-US.msi`](https://mouzi.cc/download) | ~6.7 MB | Enterprise / Active Directory |
 | [`Mouzi_0.1.6_x64-portable.exe`](https://mouzi.cc/download) | ~18.2 MB | Power users (no install) |
 
 > ⚠️ **Windows 10/11.** Requires the [Microsoft Edge WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (pre-installed on most systems).
@@ -130,9 +130,9 @@ If you want to add a new language, open an issue first so we can confirm the lan
 
 | Package | Size | Best For |
 |---------|------|----------|
-| [`Mouzi_0.1.6_amd64.AppImage`](https://mouzi.cc/download/linux) | See release | Universal — works on most distros |
-| [`Mouzi_0.1.6_amd64.deb`](https://mouzi.cc/download/linux) | See release | Debian, Ubuntu, Mint, Pop!_OS |
-| [`Mouzi-0.1.6-1.x86_64.rpm`](https://mouzi.cc/download/linux) | See release | Fedora, openSUSE, RHEL |
+| [`Mouzi_0.1.6_amd64.AppImage`](https://mouzi.cc/download/linux) | ~85.8 MB | Universal — works on most distros |
+| [`Mouzi_0.1.6_amd64.deb`](https://mouzi.cc/download/linux) | ~8.7 MB | Debian, Ubuntu, Mint, Pop!_OS |
+| [`Mouzi-0.1.6-1.x86_64.rpm`](https://mouzi.cc/download/linux) | ~8.7 MB | Fedora, openSUSE, RHEL |
 
 > 🐧 **Linux requirements:** `libwebkit2gtk-4.1` and `libayatana-appindicator3`. Most modern distros have these pre-installed.
 
