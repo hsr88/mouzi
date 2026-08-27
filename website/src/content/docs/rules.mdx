@@ -4,7 +4,7 @@ description: Match files by extension and regular expression, set priorities and
 section: Rules
 order: 1
 platforms: [windows, linux]
-updated: 2026-08-09
+updated: 2026-08-27
 ---
 
 A rule combines an extension condition, an optional regular expression and a destination. Mouzi checks enabled rules from the lowest priority number to the highest and uses the first match.
@@ -21,6 +21,8 @@ Destination: Documents
 ```
 
 Extension matching is case-insensitive, so `Report.PDF` matches `pdf`. The special value `*` matches any extension and is useful as a final catch-all rule.
+
+Mouzi 0.1.6 also inspects recognizable files without a filename extension. PNG, JPEG, PDF, ZIP and other formats reported by their file signature use that detected type when matching rules. PE, ELF and Mach-O executables are routed through the existing `exe` rule category. The filename itself is not changed merely because a type was detected.
 
 ## File-name patterns
 
@@ -54,17 +56,39 @@ An invoice reaches the first rule and stops there. Other PDFs reach the second r
 
 ## Enable and disable
 
-In public version 0.1.5, edit a rule and clear **Enabled** to disable it without deleting it.
-
-**Coming in 0.1.6:** every rule row has a quick enable/disable control.
+Use the switch on a rule row to pause or resume it without opening the editor. Disabled rules remain in the database and keep their configuration.
 
 ## Destinations and conflicts
 
 Relative destinations such as `Documents/PDF` are created inside the source watched folder. Absolute paths such as `D:\Archive` or `/mnt/archive` are also supported, including moves to another drive.
 
+The folder button beside **Destination** stores a relative path when you pick a folder inside the watched folder and an absolute path when you pick one elsewhere.
+
 Mouzi creates missing destination folders. If a file with the same name already exists, it keeps the existing file and adds a Unix timestamp to the file being moved.
 
 See [dynamic paths](/docs/dynamic-paths) for destination placeholders.
+
+## Rule actions and the system Trash
+
+The usual action moves a file to its destination. The remove action sends it to the operating system Recycle Bin or Trash; Mouzi no longer permanently deletes it. Restoration for this action is handled by the operating system and is not offered by Mouzi's History view.
+
+## Extension normalization
+
+Enable **Normalize file extensions** on a move rule to rename equivalent suffixes while moving. Mappings use `source:target`, separated by commas, semicolons or lines:
+
+```text
+jpeg:jpg, tiff:tif
+```
+
+Only the final filename suffix is changed. Mouzi validates the target extension and still applies its normal collision protection.
+
+## Custom notifications
+
+A rule can provide its own notification text. Use `{file}`, `{rule}` and `{destination}` placeholders, for example:
+
+```text
+Dangerous file moved by Mouzi: {file}
+```
 
 ## Import and export
 

@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
+import { check, type Update } from "@tauri-apps/plugin-updater";
+import { relaunch } from "@tauri-apps/plugin-process";
 
 function getIconForType(typeName: string) {
   const lower = typeName.toLowerCase();
@@ -51,6 +53,9 @@ export default function Popup() {
     folders,
     pendingFiles,
     getPendingFiles,
+    scanSelectedFiles,
+    settings,
+    loadSettings,
   } = useAppStore();
   const [scanResults, setScanResults] = useState<
     { file: string; rule: string; destination: string }[]
@@ -60,12 +65,22 @@ export default function Popup() {
     rule: string;
     destination: string;
     destination_folder: string;
+    message?: string;
   } | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
+  const [availableUpdate, setAvailableUpdate] = useState<Update | null>(null);
+  const [updateBusy, setUpdateBusy] = useState(false);
+
+  const pendingPath = (folder: string, file: string) => {
+    const separator = folder.includes("\\") ? "\\" : "/";
+    return `${folder.replace(/[\\/]$/, "")}${separator}${file}`;
+  };
 
   useEffect(() => {
     loadLogs();
     loadStats();
     loadFolders();
+    loadSettings();
     getPendingFiles();
 
     // Listen for file-organized events from Rust watcher — show in-app toast
@@ -79,6 +94,7 @@ export default function Popup() {
           rule: payload.rule,
           destination: payload.destination,
           destination_folder: destFolder,
+          message: payload.message || undefined,
         });
         setTimeout(() => setToast(null), 30000);
         loadLogs();
@@ -96,7 +112,23 @@ export default function Popup() {
       unlisten.then((f) => f());
       clearInterval(interval);
     };
-  }, [loadLogs, loadStats, loadFolders, getPendingFiles]);
+  }, [loadLogs, loadStats, loadFolders, loadSettings, getPendingFiles]);
+
+  useEffect(() => {
+    if (!settings?.auto_update_enabled) return;
+    check()
+      .then((update) => setAvailableUpdate(update))
+      .catch((error) => console.error("[updater] automatic check failed:", error));
+  }, [settings?.auto_update_enabled]);
+
+  useEffect(() => {
+    const available = new Set(
+      pendingFiles.map(([folder, file]) => pendingPath(folder, file))
+    );
+    setSelectedFiles((current) =>
+      new Set([...current].filter((path) => available.has(path)))
+    );
+  }, [pendingFiles]);
 
 
 
@@ -121,6 +153,25 @@ export default function Popup() {
   const handleOpenDownloads = async () => {
     const downloads = folders[0]?.path || (await invoke<string>("get_downloads_folder"));
     await invoke("open_folder_cmd", { path: downloads });
+  };
+
+  const handleSelected = async () => {
+    if (selectedFiles.size === 0) return;
+    const results = await scanSelectedFiles([...selectedFiles]);
+    setScanResults(results);
+    setSelectedFiles(new Set());
+  };
+
+  const handleInstallUpdate = async () => {
+    if (!availableUpdate) return;
+    setUpdateBusy(true);
+    try {
+      await availableUpdate.downloadAndInstall();
+      await relaunch();
+    } catch (error) {
+      console.error("[updater] installation failed:", error);
+      setUpdateBusy(false);
+    }
   };
 
   const handleOpenActionFolder = async (filePath: string | null | undefined) => {
@@ -151,6 +202,7 @@ export default function Popup() {
           onClick={handleQuit}
           className="p-1.5 rounded-md hover:bg-border transition-colors"
           title={t("popup.quit")}
+          aria-label={t("popup.quit")}
         >
           <X size={14} />
         </button>
@@ -164,11 +216,55 @@ export default function Popup() {
           className="w-full flex items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2.5 text-sm font-medium text-white hover:bg-primary-hover transition-colors disabled:opacity-60"
         >
           <Sparkles size={15} />
-          {isLoading ? "..." : t("popup.cleanNow")}
+          {isLoading ? "..." : t("popup.organizeNow")}
         </button>
         {pendingFiles.length > 0 && (
-          <div className="text-center text-xs text-text-muted">
-            {t("popup.pendingFiles", { count: pendingFiles.length })}
+          <div className="rounded-lg border border-border bg-surface-dark p-2 space-y-2">
+            <div className="flex items-center justify-between text-xs text-text-muted">
+              <span>{t("popup.pendingFiles", { count: pendingFiles.length })}</span>
+              <button
+                onClick={() => {
+                  const all = pendingFiles.map(([folder, file]) => pendingPath(folder, file));
+                  setSelectedFiles(
+                    selectedFiles.size === all.length ? new Set() : new Set(all)
+                  );
+                }}
+                className="text-primary hover:underline"
+              >
+                {selectedFiles.size === pendingFiles.length
+                  ? t("popup.clearSelection")
+                  : t("popup.selectAll")}
+              </button>
+            </div>
+            <div className="max-h-20 overflow-auto space-y-1">
+              {pendingFiles.map(([folder, file]) => {
+                const path = pendingPath(folder, file);
+                return (
+                  <label key={path} className="flex items-center gap-2 text-xs">
+                    <input
+                      type="checkbox"
+                      checked={selectedFiles.has(path)}
+                      onChange={() =>
+                        setSelectedFiles((current) => {
+                          const next = new Set(current);
+                          if (next.has(path)) next.delete(path);
+                          else next.add(path);
+                          return next;
+                        })
+                      }
+                    />
+                    <span className="truncate" title={path}>{file}</span>
+                  </label>
+                );
+              })}
+            </div>
+            <button
+              onClick={handleSelected}
+              disabled={selectedFiles.size === 0 || isLoading}
+              className="w-full rounded-md border border-primary px-2 py-1.5 text-xs font-medium text-primary hover:bg-primary/10 disabled:opacity-50"
+            >
+              {t("popup.organizeSelected", { count: selectedFiles.size })}
+            </button>
           </div>
         )}
         <button
@@ -206,12 +302,13 @@ export default function Popup() {
                 <span className="text-text-muted truncate max-w-[80px]">
                   {log.file_type}
                 </span>
-                {!log.undone && log.id && (
+                {!log.undone && log.id && log.action === "move" && log.destination_path && (
                   <>
                     <button
                       onClick={() => handleOpenActionFolder(log.destination_path)}
                       className="p-1 rounded hover:bg-border text-text-muted hover:text-text"
-                      title="Open folder"
+                      title={t("popup.openActionFolder")}
+                      aria-label={t("popup.openActionFolder")}
                     >
                       <FolderOpen size={12} />
                     </button>
@@ -219,6 +316,7 @@ export default function Popup() {
                       onClick={() => undoAction(log.id!)}
                       className="p-1 rounded hover:bg-border text-text-muted hover:text-text"
                       title={t("popup.undo")}
+                      aria-label={t("popup.undo")}
                     >
                       <RotateCcw size={12} />
                     </button>
@@ -274,7 +372,9 @@ export default function Popup() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 text-primary">
                 <ExternalLink size={12} />
-                <span className="font-medium">{t("popup.organized", { file: toast.file })}</span>
+                <span className="font-medium">
+                  {toast.message || t("popup.organized", { file: toast.file })}
+                </span>
               </div>
               <button
                 onClick={(e) => {
@@ -282,6 +382,8 @@ export default function Popup() {
                   setToast(null);
                 }}
                 className="p-0.5 rounded hover:bg-primary/20 text-primary"
+                title={t("common.close")}
+                aria-label={t("common.close")}
               >
                 <X size={10} />
               </button>
@@ -298,6 +400,23 @@ export default function Popup() {
         <div className="px-3 pb-3">
           <div className="rounded-lg bg-green-50 border border-green-200 px-3 py-2 text-xs text-green-700">
             {t("notifications.cleaned", { count: scanResults.length })}
+          </div>
+        </div>
+      )}
+
+      {availableUpdate && (
+        <div className="px-3 pb-3">
+          <div className="rounded-lg border border-primary/30 bg-primary/10 p-2.5 text-xs">
+            <div className="font-medium">
+              {t("updater.available", { version: availableUpdate.version })}
+            </div>
+            <button
+              onClick={handleInstallUpdate}
+              disabled={updateBusy}
+              className="mt-2 w-full rounded-md bg-primary px-2 py-1.5 font-medium text-white disabled:opacity-60"
+            >
+              {updateBusy ? t("updater.installing") : t("updater.installRestart")}
+            </button>
           </div>
         </div>
       )}

@@ -62,7 +62,7 @@ Mouzi is a silent, elegant file organizer that lives in your system tray and kee
 ### 📂 Folder Modes
 Each watched folder can run in one of three modes:
 - **Silent** - automatically organize files as they arrive (default)
-- **Manual** - collect files and only process them when you click **Clean Now**
+- **Manual** - collect files and only process them when you click **Organize Now**
 - **Paused** - watch the folder but don't move anything
 
 ### 📦 Google Takeout Import
@@ -120,9 +120,9 @@ If you want to add a new language, open an issue first so we can confirm the lan
 
 | Installer | Size | Best For |
 |-----------|------|----------|
-| [`Mouzi_0.1.5_x64-setup.exe`](https://mouzi.cc/download) | ~3.7 MB | Regular users (auto-installer) |
-| [`Mouzi_0.1.5_x64_en-US.msi`](https://mouzi.cc/download) | ~5.3 MB | Enterprise / Active Directory |
-| [`Mouzi_0.1.5_x64-portable.exe`](https://mouzi.cc/download) | ~14.7 MB | Power users (no install) |
+| [`Mouzi_0.1.6_x64-setup.exe`](https://mouzi.cc/download) | ~4.7 MB | Regular users (auto-installer) |
+| [`Mouzi_0.1.6_x64_en-US.msi`](https://mouzi.cc/download) | ~7.8 MB | Enterprise / Active Directory |
+| [`Mouzi_0.1.6_x64-portable.exe`](https://mouzi.cc/download) | ~18.2 MB | Power users (no install) |
 
 > ⚠️ **Windows 10/11.** Requires the [Microsoft Edge WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (pre-installed on most systems).
 
@@ -130,20 +130,15 @@ If you want to add a new language, open an issue first so we can confirm the lan
 
 | Package | Size | Best For |
 |---------|------|----------|
-| [`Mouzi_0.1.5_amd64.AppImage`](https://mouzi.cc/download/linux) | ~84.4 MB | Universal — works on most distros |
-| [`Mouzi_0.1.5_amd64.deb`](https://mouzi.cc/download/linux) | ~7.1 MB | Debian, Ubuntu, Mint, Pop!_OS |
-| [`Mouzi-0.1.5-1.x86_64.rpm`](https://mouzi.cc/download/linux) | ~7.1 MB | Fedora, openSUSE, RHEL |
+| [`Mouzi_0.1.6_amd64.AppImage`](https://mouzi.cc/download/linux) | See release | Universal — works on most distros |
+| [`Mouzi_0.1.6_amd64.deb`](https://mouzi.cc/download/linux) | See release | Debian, Ubuntu, Mint, Pop!_OS |
+| [`Mouzi-0.1.6-1.x86_64.rpm`](https://mouzi.cc/download/linux) | See release | Fedora, openSUSE, RHEL |
 
 > 🐧 **Linux requirements:** `libwebkit2gtk-4.1` and `libayatana-appindicator3`. Most modern distros have these pre-installed.
 
-**SHA-256 Checksums**
-
-```
-Mouzi_0.1.5_x64-setup.exe:   ee9b173aaa10c03fac5c201345cb388115bbb0c78e2e294a92d18fad454e99a2
-Mouzi_0.1.5_amd64.AppImage:  6801341766201a7a2a6c45fb3217757567b27507bef74b5e7bf6d847fdbfc5bb
-Mouzi_0.1.5_amd64.deb:       73301c563a7c00dd4a68d143550d953ca8644c206a7603b4f3f8be066e0efe6a
-Mouzi-0.1.5-1.x86_64.rpm:    62a2e565f4dcd3e6a19c19122d4399b77684c07826419d2515a1e1aa532f56d6
-```
+**SHA-256 checksums:** every GitHub release includes a generated `SHA256SUMS.txt`
+covering the exact published artifacts. Use that file instead of copying a checksum
+from an older release.
 
 ---
 
@@ -152,8 +147,8 @@ Mouzi-0.1.5-1.x86_64.rpm:    62a2e565f4dcd3e6a19c19122d4399b77684c07826419d2515a
 1. **Download** Mouzi for your OS using the links above.
 2. **Windows:** Install and Mouzi starts automatically with a tray icon (📂).
    **Linux:** Run the AppImage directly, or install the `.deb`/`.rpm` package.
-3. **Left-click** the tray icon to open the popup - see recent actions, stats, and clean manually.
-4. **Right-click** the tray icon for the menu: `Clean Now`, `Settings`, `Quit`.
+3. **Left-click** the tray icon to open the popup - see recent actions, stats, and organize files manually.
+4. **Right-click** the tray icon for the menu: `Organize Now`, `Settings`, `Quit`.
 5. Drop a file into your `Downloads` folder and watch it disappear into the right subfolder within 2 seconds.
 
 ---
@@ -198,7 +193,7 @@ A computer repair technician uses Mouzi to automatically move ScreenConnect inst
 |  Backend (Rust)                              |
 |  +- File Watcher (notify crate)              |
 |  +- Rules Engine                             |
-|  +- Scheduler (time-based cleaning)          |
+|  +- Scheduler (time-based organization)      |
 |  +- SQLite Database (rusqlite)               |
 |  +- System Tray & Notifications              |
 +---------------------------------------------+
@@ -239,11 +234,17 @@ Output will be in `src-tauri/target/release/bundle/`.
 
 ---
 
-## 🆕 Coming in 0.1.6
+## 🆕 Mouzi 0.1.6
 
-### New Features
-- Added a quick enable/disable switch directly to every rule row.
-- `.mouziignore` now supports inline comments. Escape a literal `#` as `\#`.
+### Release highlights
+- Secure in-app update checks and one-click installation through the Tauri updater.
+- Extensionless files recognized by their content and routed through existing rules.
+- Selective batch organization for files waiting in Manual mode.
+- Folder picker, quick enable/disable switch and accessible labels for rules.
+- Per-rule extension normalization and custom notifications.
+- Destructive rule actions now use the Recycle Bin or Trash.
+- Confirmation before clearing history and clearer **Organize**/**Save** wording.
+- `.mouziignore` inline comments, improved locked-file handling and updated translations.
 
 ---
 
@@ -251,22 +252,13 @@ Output will be in `src-tauri/target/release/bundle/`.
 
 ### Already implemented
 
-MVP with default rules, multi-language support, dark mode, history & undo, start with Windows, custom folders with local rules, folder modes (silent / manual / paused), system files ignored, check for updates, `.mouziignore`, portable version, browser temp files ignored, grace period option, file lock check, single-instance guard, first-run popup visibility, clickable toast, skip 0 KB placeholder files, Linux port, Google Takeout archive import, Wayland crash workaround.
+MVP with default rules, multi-language support, dark mode, history & undo, start with Windows, custom folders with local rules, folder modes (silent / manual / paused), system files ignored, secure automatic update checks, `.mouziignore`, portable version, browser temp files ignored, grace period option, file lock check, single-instance guard, first-run popup visibility, clickable and custom notifications, skip 0 KB placeholder files, Linux port, Google Takeout archive import, Wayland crash workaround, rule destination picker, quick rule toggles, extensionless-file detection, selective batches, extension normalization, Recycle Bin/Trash actions and history deletion confirmation.
 
 ### Upcoming
 
-- [ ] Rename "Clean Downloads" to "Organize Downloads" to avoid implying that files will be deleted ([#51](https://github.com/hsr88/mouzi/issues/51))
-- [ ] Detect extensionless files by magic bytes and route them through the existing rules engine ([#49](https://github.com/hsr88/mouzi/issues/49))
-- [ ] Confirmation dialog for "Delete History" button
-- [ ] Batch group selected files
 - [ ] Suggest mode (modal confirmation per file)
-- [ ] Custom notification / popup after intercepting files (e.g. "Dangerous file moved by Mouzi")
-- [ ] Extension normalization rule (per-rule toggle + custom mappings, e.g. `.jpeg` → `.jpg`)
-- [ ] Rename "Edit" button to "Save" in rule editor
 - [ ] Better error messages for invalid rules / input
-- [ ] Move files to Recycle Bin instead of permanent move
 - [ ] Optional screenshot cleanup: move screenshots older than a chosen number of days from system and custom screenshot folders to the Recycle Bin
-- [ ] Auto-update via Tauri updater
 - [ ] Windows Explorer context menu ("Add to Mouzi")
 - [ ] npm wrapper (`npm install -g mouzi`) for cross-platform CLI install
 - [ ] Local AI tagging (ONNX runtime for content classification)

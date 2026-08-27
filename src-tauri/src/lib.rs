@@ -36,6 +36,8 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_autostart::init(
             tauri_plugin_autostart::MacosLauncher::LaunchAgent,
             Some(vec!["--autostart"]),
@@ -170,6 +172,7 @@ pub fn run() {
             is_autostart_enabled_cmd,
             clear_logs_cmd,
             scan_folder_cmd,
+            scan_selected_files_cmd,
             import_archive_cmd,
             open_folder_cmd,
             get_downloads_folder,

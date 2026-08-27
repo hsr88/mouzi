@@ -8,6 +8,7 @@ import Footer from '../components/Footer.astro';
 import GitHubStats from '../components/GitHubStats.astro';
 import AnalyticsConsent from '../components/AnalyticsConsent.astro';
 import { site } from '../config/site';
+import { common, localeFromPath, localizedPath, stripLocale, translatedLocales } from '../i18n';
 
 interface Props {
   title: string;
@@ -34,10 +35,19 @@ const {
 
 const canonicalUrl = new URL(canonical ?? Astro.url.pathname, site.url).href.replace(/\/$/, '') || site.url;
 const ogImageUrl = new URL(ogImage, site.url).href;
+const locale = localeFromPath(Astro.url.pathname);
+const basePath = canonical ?? Astro.url.pathname;
+const cleanBasePath = basePath.replace(/^\/(es|pl|de|fr|it)/, '') || '/';
+const translatable = ['/', '/features', '/download', '/faq', '/about', '/roadmap', '/privacy', '/support', '/sponsors', '/impact', '/changelog'].includes(cleanBasePath)
+  || cleanBasePath.startsWith('/features/')
+  || cleanBasePath.startsWith('/download/');
+const alternates = translatable
+  ? ['en', ...translatedLocales].map((lang) => ({ lang, href: new URL(localizedPath(basePath, lang as any), site.url).href }))
+  : [{ lang: 'en', href: canonicalUrl }];
 ---
 
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang={locale} data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -48,8 +58,8 @@ const ogImageUrl = new URL(ogImage, site.url).href;
     <link rel="apple-touch-icon" href="/images/mouzi-logo.png" />
     <link rel="alternate" type="application/rss+xml" title="Mouzi blog" href="/rss.xml" />
     <link rel="sitemap" href="/sitemap.xml" />
-    <link rel="alternate" hreflang="en" href={canonicalUrl} />
-    <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+    {alternates.map((alt) => <link rel="alternate" hreflang={alt.lang} href={alt.href} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL(stripLocale(basePath), site.url).href} />
     <meta name="theme-color" content="#0B0D10" />
     <meta name="author" content={site.maintainer.name} />
     <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -59,7 +69,7 @@ const ogImageUrl = new URL(ogImage, site.url).href;
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:site_name" content="Mouzi" />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content={locale === 'en' ? 'en_US' : locale} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
@@ -79,7 +89,7 @@ const ogImageUrl = new URL(ogImage, site.url).href;
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-md focus:bg-surface focus:px-4 focus:py-2 focus:text-sm"
     >
-      Skip to content
+      {common[locale].skip}
     </a>
     <Nav />
     <main id="main" class={flush ? '' : 'pt-16'}>

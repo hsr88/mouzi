@@ -2,16 +2,21 @@
 import { site } from '../config/site';
 import { getRepoStats, formatCount } from '../lib/github';
 import ThemeToggle from './ThemeToggle.astro';
+import { common, localeFromPath, localeNames, locales, localizedPath } from '../i18n';
 
 const stats = await getRepoStats();
 const stars = formatCount(stats.stars);
+const locale = localeFromPath(Astro.url.pathname);
+const t = common[locale];
+const local = (path: string) => localizedPath(path, locale);
+const sponsorLine={en:'Become a Mouzi sponsor',es:'Hazte patrocinador de Mouzi',pl:'Zostań sponsorem Mouzi',de:'Werde Sponsor von Mouzi',fr:'Devenez sponsor de Mouzi',it:'Diventa sponsor di Mouzi'}[locale];
 
 const links = [
-  { href: '/features', label: 'Features' },
-  { href: '/docs', label: 'Docs' },
-  { href: '/roadmap', label: 'Roadmap' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/about', label: 'About' },
+  { href: local('/features'), label: t.features },
+  { href: '/docs', label: t.docs },
+  { href: local('/roadmap'), label: t.roadmap },
+  { href: '/blog', label: t.blog },
+  { href: local('/about'), label: t.about },
 ];
 
 const path = Astro.url.pathname;
@@ -36,7 +41,7 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
   ]}
 >
   <nav aria-label="Main" class="mx-auto flex h-16 max-w-6xl items-center gap-6 px-5">
-    <a href="/" class="flex shrink-0 items-center gap-2.5" aria-label="Mouzi home">
+    <a href={local('/')} class="flex shrink-0 items-center gap-2.5" aria-label="Mouzi home">
       <img src="/images/mouzi-logo.png" alt="Mouzi" width="36" height="28" class="h-8 w-auto" />
       <span class="text-[17px] font-semibold tracking-tight">Mouzi</span>
     </a>
@@ -81,18 +86,22 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
         aria-label="Support Mouzi on Ko-fi"
         class="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm text-muted transition-colors hover:text-cream focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber active:text-amber"
       >
-        <span>Support</span>
+        <span>{t.support}</span>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
           <path d="M4 7h12v7a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V7Z" stroke-linejoin="round"></path>
           <path d="M16 9h1.5a2.5 2.5 0 0 1 0 5H16M7 3.5c0 1 1 1 1 2M11 3.5c0 1 1 1 1 2" stroke-linecap="round"></path>
         </svg>
       </a>
       <ThemeToggle />
+      <label class="sr-only" for="language-select">{t.language}</label>
+      <select id="language-select" class="rounded-md border border-line bg-ink px-2 py-1.5 text-xs text-muted" aria-label={t.language}>
+        {locales.map((lang) => <option value={localizedPath(Astro.url.pathname, lang)} selected={lang === locale}>{localeNames[lang]}</option>)}
+      </select>
       <a
-        href="/download"
+        href={local('/download')}
         class="rounded-btn bg-amber px-4 py-2 text-sm font-semibold text-[#151004] transition-opacity hover:opacity-90"
       >
-        Download
+        {t.download}
       </a>
     </div>
 
@@ -100,7 +109,7 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
       id="nav-open"
       type="button"
       class="ml-auto rounded-md border border-line p-2 text-cream md:hidden"
-      aria-label="Open menu"
+      aria-label={t.open}
       aria-expanded="false"
       aria-controls="mobile-drawer"
     >
@@ -114,10 +123,10 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
     !site.activeSponsor ? (
       <div class="hidden border-t border-line py-1 text-center lg:block">
         <a
-          href="/sponsors"
+          href={local('/sponsors')}
           class="font-mono text-[10px] tracking-[0.2em] text-muted uppercase transition-colors hover:text-amber"
         >
-          Become Mouzi's founding sponsor
+          {sponsorLine}
         </a>
       </div>
     ) : null
@@ -128,8 +137,8 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
   <div id="drawer-backdrop" class="absolute inset-0 bg-ink/70"></div>
   <div class="absolute inset-y-0 right-0 flex w-72 flex-col border-l border-line bg-surface p-5">
     <div class="flex items-center justify-between">
-      <span class="font-mono text-[11px] tracking-[0.15em] text-muted uppercase">Menu</span>
-      <button id="nav-close" type="button" class="rounded-md border border-line p-2" aria-label="Close menu">
+      <span class="font-mono text-[11px] tracking-[0.15em] text-muted uppercase">{t.menu}</span>
+      <button id="nav-close" type="button" class="rounded-md border border-line p-2" aria-label={t.close}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"></path>
         </svg>
@@ -137,7 +146,7 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
     </div>
     <ul class="mt-6 space-y-1" role="list">
       {
-        [...links, { href: '/sponsors', label: 'Sponsor' }].map((l) => (
+        [...links, { href: local('/sponsors'), label: t.support }].map((l) => (
           <li>
             <a href={l.href} class="block rounded-md px-3 py-2.5 text-[15px] text-cream hover:bg-surface-2">
               {l.label}
@@ -154,8 +163,8 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
       >
         GitHub (<span data-gh-stars>{stars}</span> stars)
       </a>
-      <a href="/download" class="block rounded-btn bg-amber px-4 py-2.5 text-center text-sm font-semibold text-[#151004]">
-        Download
+      <a href={local('/download')} class="block rounded-btn bg-amber px-4 py-2.5 text-center text-sm font-semibold text-[#151004]">
+        {t.download}
       </a>
     </div>
   </div>
@@ -208,4 +217,9 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
   openBtn.addEventListener('click', open);
   closeBtn.addEventListener('click', close);
   backdrop.addEventListener('click', close);
+  document.getElementById('language-select')?.addEventListener('change', (event) => {
+    const select = event.currentTarget as HTMLSelectElement;
+    localStorage.setItem('mouzi-language', select.value.split('/').filter(Boolean)[0] || 'en');
+    window.location.href = select.value;
+  });
 </script>

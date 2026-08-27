@@ -6,7 +6,7 @@ import { breadcrumbLd } from '../../lib/seo';
 
 <BaseLayout
   title="Automatic organization — Mouzi features"
-  description="How Mouzi organizes files automatically: folder watching, silent and manual modes, scheduled cleans and download-safe detection."
+  description="How Mouzi organizes files automatically: folder watching, silent and manual modes, scheduled organization and download-safe detection."
   canonical="/features/automatic-organization"
   jsonLd={[breadcrumbLd([{ name: 'Features', url: '/features' }, { name: 'Automatic organization', url: '/features/automatic-organization' }])]}
 >
@@ -30,8 +30,8 @@ import { breadcrumbLd } from '../../lib/seo';
       <h2>Three modes</h2>
       <p>
         <strong>Silent</strong> organizes continuously in the background. <strong>Manual</strong> waits until you click
-        Clean Now, which suits people who prefer batch tidying. <strong>Paused</strong> stops watching entirely. You
-        switch modes from the tray menu, and you can also schedule cleans at up to four fixed times per day.
+        Organize Now, which suits people who prefer batch organization. <strong>Paused</strong> stops watching entirely. You
+        switch modes from the tray menu, and you can also schedule organization at up to four fixed times per day.
       </p>
 
       <h2>Safe with live downloads</h2>
@@ -39,7 +39,7 @@ import { breadcrumbLd } from '../../lib/seo';
         Files may appear before a browser has finished writing them. In Silent mode, Mouzi waits through a grace
         period and skips <code>.crdownload</code>, <code>.part</code>, <code>.download</code> and <code>.tmp</code>
         files. It also ignores zero-byte placeholders and, when lock checking is enabled, skips files that another
-        process holds open. Manual and scheduled cleans do not wait through the grace period.
+        process holds open. Manual and scheduled organization runs do not wait through the grace period.
       </p>
 
       <h2>History and undo</h2>

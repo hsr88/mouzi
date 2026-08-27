@@ -6,7 +6,8 @@
   },
   "popup": {
     "title": "Mouzi",
-    "cleanNow": "Clean Now",
+    "cleanNow": "Organize Now",
+    "organizeNow": "Organize Now",
     "openDownloads": "Open Downloads",
     "recentActions": "Recent Actions",
     "noActions": "No actions yet",
@@ -17,7 +18,11 @@
     "organized": "Organized: {{file}}",
     "openFolder": "Click to open → {{folder}}",
     "pendingFiles": "{{count}} files waiting",
-    "cleanManual": "Clean Now"
+    "cleanManual": "Organize Now",
+    "selectAll": "Select all",
+    "clearSelection": "Clear selection",
+    "organizeSelected": "Organize selected ({{count}})",
+    "openActionFolder": "Open destination folder"
   },
   "settings": {
     "title": "Mouzi Settings",
@@ -48,6 +53,7 @@
       "title": "Rules",
       "add": "Add Rule",
       "edit": "Edit",
+      "save": "Save",
       "delete": "Delete",
       "name": "Name",
       "extensions": "Extensions",
@@ -62,7 +68,17 @@
       "importSuccess": "Imported {{count}} rules",
       "importError": "Failed to import rules",
       "exportError": "Failed to export rules",
-      "replaceOnImport": "Replace existing rules (otherwise append)"
+      "replaceOnImport": "Replace existing rules (otherwise append)",
+      "pickDestination": "Choose destination folder",
+      "actionMove": "Move to folder",
+      "actionRecycle": "Move to Recycle Bin / Trash",
+      "actionIgnore": "Ignore",
+      "recycleBin": "Recycle Bin / Trash",
+      "normalizeExtensions": "Normalize file extensions",
+      "normalizeHelp": "Map equivalent extensions before moving, for example jpeg:jpg. Separate mappings with commas.",
+      "notificationMessage": "Custom notification",
+      "notificationPlaceholder": "Dangerous file moved by Mouzi: {file}",
+      "notificationHelp": "Optional. Available placeholders: {file}, {rule}, {destination}."
     },
     "history": {
       "title": "History",
@@ -71,7 +87,10 @@
       "undone": "Undone",
       "empty": "No history",
       "revertAll": "Revert All",
-      "revertAllDisabled": "No actions to revert"
+      "revertAllDisabled": "No actions to revert",
+      "confirmTitle": "Delete the entire history?",
+      "confirmDescription": "This only removes Mouzi's activity log. It does not move or delete your files.",
+      "confirmDelete": "Delete history"
     },
     "general": {
       "title": "General",
@@ -90,7 +109,9 @@
       "gracePeriodMinutes": "Minutes",
       "gracePeriodHours": "Hours",
       "gracePeriodCustom": "Custom",
-      "gracePeriodMaxError": "Grace period cannot exceed 7 days"
+      "gracePeriodMaxError": "Grace period cannot exceed 7 days",
+      "autoUpdates": "Automatic update checks",
+      "autoUpdatesDesc": "Check for new Mouzi versions and offer one-click installation."
     },
     "ignore": {
       "title": "Ignore",
@@ -120,10 +141,10 @@
     },
     "scheduler": {
       "title": "Scheduler",
-      "enable": "Enable scheduled cleaning",
+      "enable": "Enable scheduled organization",
       "timesPerDay": "Times per day",
       "time": "Time {{number}}",
-      "desc": "Run Clean Now automatically at scheduled times.",
+      "desc": "Organize files automatically at scheduled times.",
       "once": "Once per day",
       "twice": "Twice per day",
       "thrice": "3 times per day",
@@ -135,6 +156,17 @@
   },
   "common": {
     "cancel": "Cancel",
-    "off": "OFF"
+    "off": "OFF",
+    "close": "Close",
+    "back": "Back"
+  },
+  "updater": {
+    "available": "Mouzi {{version}} is available",
+    "checking": "Checking for updates...",
+    "current": "You already have the latest version.",
+    "error": "Could not check for updates. Try again later.",
+    "installVersion": "Install Mouzi {{version}}",
+    "installRestart": "Install and restart",
+    "installing": "Installing update..."
   }
 }

@@ -7,6 +7,7 @@
   "popup": {
     "title": "Mouzi",
     "cleanNow": "今すぐ整理",
+    "organizeNow": "今すぐ整理",
     "openDownloads": "ダウンロードフォルダを開く",
     "recentActions": "最近のアクション",
     "noActions": "まだアクションがありません",
@@ -17,7 +18,11 @@
     "organized": "整理済み: {{file}}",
     "openFolder": "クリックして開く → {{folder}}",
     "pendingFiles": "{{count}}件のファイル待機中",
-    "cleanManual": "今すぐ整理"
+    "cleanManual": "今すぐ整理",
+    "selectAll": "すべて選択",
+    "clearSelection": "選択を解除",
+    "organizeSelected": "選択項目を整理 ({{count}})",
+    "openActionFolder": "移動先フォルダーを開く"
   },
   "settings": {
     "title": "Mouziの設定",
@@ -48,6 +53,7 @@
       "title": "ルール",
       "add": "ルールを追加",
       "edit": "編集",
+      "save": "保存",
       "delete": "削除",
       "name": "名前",
       "extensions": "拡張子",
@@ -62,7 +68,17 @@
       "importSuccess": "{{count}}件のルールをインポートしました",
       "importError": "ルールのインポートに失敗しました",
       "exportError": "ルールのエクスポートに失敗しました",
-      "replaceOnImport": "既存のルールを置き換える（無効の場合は追加）"
+      "replaceOnImport": "既存のルールを置き換える（無効の場合は追加）",
+      "pickDestination": "移動先フォルダーを選択",
+      "actionMove": "フォルダーへ移動",
+      "actionRecycle": "ゴミ箱へ移動",
+      "actionIgnore": "無視",
+      "recycleBin": "ゴミ箱",
+      "normalizeExtensions": "拡張子を正規化",
+      "normalizeHelp": "移動前に同等の拡張子を対応付けます（例: jpeg:jpg）。複数の対応はカンマで区切ります。",
+      "notificationMessage": "カスタム通知",
+      "notificationPlaceholder": "Mouzi が危険なファイルを移動しました: {file}",
+      "notificationHelp": "任意。使用可能: {file}, {rule}, {destination}。"
     },
     "history": {
       "title": "履歴",
@@ -71,7 +87,10 @@
       "undone": "取り消し済み",
       "empty": "履歴がありません",
       "revertAll": "すべて取り消す",
-      "revertAllDisabled": "元に戻すアクションがありません"
+      "revertAllDisabled": "元に戻すアクションがありません",
+      "confirmTitle": "履歴をすべて削除しますか？",
+      "confirmDescription": "Mouzi の操作ログだけが削除されます。ファイルは移動も削除もされません。",
+      "confirmDelete": "履歴を削除"
     },
     "general": {
       "title": "一般",
@@ -90,7 +109,9 @@
       "gracePeriodMinutes": "分",
       "gracePeriodHours": "時間",
       "gracePeriodCustom": "カスタム",
-      "gracePeriodMaxError": "猶予期間は7日を超えることはできません"
+      "gracePeriodMaxError": "猶予期間は7日を超えることはできません",
+      "autoUpdates": "更新を自動確認",
+      "autoUpdatesDesc": "Mouzi の新しいバージョンを確認し、ワンクリックでインストールできます。"
     },
     "ignore": {
       "title": "除外",
@@ -120,10 +141,10 @@
     },
     "scheduler": {
       "title": "スケジューラ",
-      "enable": "定期クリーンを有効化",
+      "enable": "定期整理を有効化",
       "timesPerDay": "1日あたりの回数",
       "time": "時刻 {{number}}",
-      "desc": "指定した時刻に自動で「今すぐ整理」を実行します。",
+      "desc": "指定した時刻にファイルを自動で整理します。",
       "once": "1日1回",
       "twice": "1日2回",
       "thrice": "1日3回",
@@ -135,6 +156,17 @@
   },
   "common": {
     "cancel": "キャンセル",
-    "off": "オフ"
+    "off": "オフ",
+    "close": "閉じる",
+    "back": "戻る"
+  },
+  "updater": {
+    "available": "Mouzi {{version}} を利用できます",
+    "checking": "更新を確認しています...",
+    "current": "すでに最新バージョンです。",
+    "error": "更新を確認できませんでした。後でもう一度お試しください。",
+    "installVersion": "Mouzi {{version}} をインストール",
+    "installRestart": "インストールして再起動",
+    "installing": "更新をインストールしています..."
   }
 }

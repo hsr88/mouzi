@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { invoke } from "@tauri-apps/api/core";
 import { Download, ExternalLink, Heart } from "lucide-react";
+import { check, type Update } from "@tauri-apps/plugin-updater";
+import { relaunch } from "@tauri-apps/plugin-process";
 
 interface VersionInfo {
   version: string;
@@ -11,12 +13,38 @@ interface VersionInfo {
 export default function About() {
   const { t } = useTranslation();
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
+  const [availableUpdate, setAvailableUpdate] = useState<Update | null>(null);
+  const [updateStatus, setUpdateStatus] = useState<
+    "idle" | "checking" | "current" | "installing" | "error"
+  >("idle");
 
   useEffect(() => {
     invoke<[string, string]>("get_version_cmd")
       .then(([version, releaseDate]) => setVersionInfo({ version, releaseDate }))
       .catch((err) => console.error("[About] failed to get version:", err));
   }, []);
+
+  const handleUpdate = async () => {
+    try {
+      if (availableUpdate) {
+        setUpdateStatus("installing");
+        await availableUpdate.downloadAndInstall();
+        await relaunch();
+        return;
+      }
+      setUpdateStatus("checking");
+      const update = await check();
+      if (update) {
+        setAvailableUpdate(update);
+        setUpdateStatus("idle");
+      } else {
+        setUpdateStatus("current");
+      }
+    } catch (error) {
+      console.error("[updater] check or installation failed:", error);
+      setUpdateStatus("error");
+    }
+  };
 
   return (
     <div className="space-y-6 max-w-md">
@@ -53,17 +81,25 @@ export default function About() {
 
       {/* Check for Updates */}
       <button
-        onClick={() =>
-          invoke("open_folder_cmd", {
-            path: "https://mouzi.cc/#download",
-          })
-        }
+        onClick={handleUpdate}
+        disabled={updateStatus === "checking" || updateStatus === "installing"}
         className="flex w-full items-center gap-2 rounded-lg border border-border bg-surface px-4 py-2.5 text-sm font-medium text-text hover:bg-border transition-colors"
       >
         <Download size={16} className="text-primary" />
-        {t("settings.about.checkUpdates")}
-        <ExternalLink size={14} className="ml-auto text-text-muted" />
+        {availableUpdate
+          ? t("updater.installVersion", { version: availableUpdate.version })
+          : updateStatus === "checking"
+            ? t("updater.checking")
+            : updateStatus === "installing"
+              ? t("updater.installing")
+              : t("settings.about.checkUpdates")}
       </button>
+      {updateStatus === "current" && (
+        <p className="-mt-4 text-xs text-green-600">{t("updater.current")}</p>
+      )}
+      {updateStatus === "error" && (
+        <p className="-mt-4 text-xs text-red-500">{t("updater.error")}</p>
+      )}
 
       {/* Author */}
       <div className="pt-2 border-t border-border">

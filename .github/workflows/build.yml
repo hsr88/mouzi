@@ -1,19 +1,17 @@
-name: Build, Sign & Release
+name: Build and release
 
 on:
+  workflow_dispatch:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
-  workflow_dispatch:
-
-permissions:
-  actions: read
-  contents: read
+      - "v*"
 
 jobs:
   windows:
-    name: Build and production-sign Windows
+    name: Build Windows (unsigned Authenticode)
     runs-on: windows-latest
+    env:
+      TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -30,136 +28,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build application without installers
-        run: npm run tauri build -- --no-bundle --ci
+      - name: Build Windows installers and updater signatures
+        run: npm run tauri build -- --ci
 
-      - name: Prepare unsigned portable executable
-        id: portable
+      - name: Collect Windows artifacts
         shell: pwsh
         run: |
           $version = (Get-Content src-tauri/tauri.conf.json | ConvertFrom-Json).version
-          $fileName = "Mouzi_${version}_x64-portable.exe"
-          Copy-Item src-tauri/target/release/mouzi.exe $fileName
-          "file-name=$fileName" >> $env:GITHUB_OUTPUT
-
-      - name: Upload unsigned application executable
-        id: upload-app
-        uses: actions/upload-artifact@v7
-        with:
-          path: ${{ steps.portable.outputs.file-name }}
-          archive: false
-          if-no-files-found: error
-          retention-days: 7
-
-      - name: Sign application executable with SignPath
-        uses: signpath/github-action-submit-signing-request@v2
-        with:
-          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
-          organization-id: a37db202-f3ad-408e-a505-9f70ba021150
-          project-slug: mouzi
-          signing-policy-slug: release-signing
-          github-artifact-id: ${{ steps.upload-app.outputs.artifact-id }}
-          wait-for-completion: true
-          output-artifact-directory: signed-app
-          skip-decompress: true
-
-      - name: Install signed executable and verify signature
-        shell: pwsh
-        run: |
-          $signedFile = Get-ChildItem signed-app -File -Filter *.exe
-          if ($signedFile.Count -ne 1) {
-            throw "Expected exactly one signed application executable, found $($signedFile.Count)."
-          }
-          $signature = Get-AuthenticodeSignature $signedFile.FullName
-          $signature | Format-List Status, StatusMessage, SignerCertificate, TimeStamperCertificate
-          if ($signature.Status -ne 'Valid') {
-            throw "Application signature is not valid: $($signature.Status)."
-          }
-          Copy-Item $signedFile.FullName src-tauri/target/release/mouzi.exe -Force
-          Copy-Item $signedFile.FullName "${{ steps.portable.outputs.file-name }}" -Force
-
-      - name: Build installers around the signed application
-        run: npm run tauri -- bundle --bundles nsis,msi --ci
-
-      - name: Locate Windows installers
-        id: installers
-        shell: pwsh
-        run: |
-          $nsis = Get-ChildItem src-tauri/target/release/bundle/nsis -File -Filter *.exe
-          $msi = Get-ChildItem src-tauri/target/release/bundle/msi -File -Filter *.msi
-          if ($nsis.Count -ne 1 -or $msi.Count -ne 1) {
-            throw "Expected one NSIS installer and one MSI installer."
-          }
-          "nsis=$($nsis.FullName)" >> $env:GITHUB_OUTPUT
-          "msi=$($msi.FullName)" >> $env:GITHUB_OUTPUT
-
-      - name: Upload unsigned NSIS installer
-        id: upload-nsis
-        uses: actions/upload-artifact@v7
-        with:
-          path: ${{ steps.installers.outputs.nsis }}
-          archive: false
-          if-no-files-found: error
-          retention-days: 7
-
-      - name: Sign NSIS installer with SignPath
-        uses: signpath/github-action-submit-signing-request@v2
-        with:
-          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
-          organization-id: a37db202-f3ad-408e-a505-9f70ba021150
-          project-slug: mouzi
-          signing-policy-slug: release-signing
-          github-artifact-id: ${{ steps.upload-nsis.outputs.artifact-id }}
-          wait-for-completion: true
-          output-artifact-directory: signed-nsis
-          skip-decompress: true
-
-      - name: Upload unsigned MSI installer
-        id: upload-msi
-        uses: actions/upload-artifact@v7
-        with:
-          path: ${{ steps.installers.outputs.msi }}
-          archive: false
-          if-no-files-found: error
-          retention-days: 7
-
-      - name: Sign MSI installer with SignPath
-        uses: signpath/github-action-submit-signing-request@v2
-        with:
-          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
-          organization-id: a37db202-f3ad-408e-a505-9f70ba021150
-          project-slug: mouzi
-          signing-policy-slug: release-signing
-          artifact-configuration-slug: windows-msi
-          github-artifact-id: ${{ steps.upload-msi.outputs.artifact-id }}
-          wait-for-completion: true
-          output-artifact-directory: signed-msi
-          skip-decompress: true
-
-      - name: Verify signed installers
-        shell: pwsh
-        run: |
-          $files = @(
-            (Get-ChildItem signed-nsis -File -Filter *.exe),
-            (Get-ChildItem signed-msi -File -Filter *.msi)
-          )
-          foreach ($file in $files) {
-            $signature = Get-AuthenticodeSignature $file.FullName
-            $signature | Format-List Path, Status, StatusMessage, SignerCertificate, TimeStamperCertificate
-            if ($signature.Status -ne 'Valid') {
-              throw "Installer signature is not valid for $($file.Name): $($signature.Status)."
-            }
-          }
-
-      - name: Collect signed Windows artifacts
-        shell: pwsh
-        run: |
           New-Item release-windows -ItemType Directory
-          Copy-Item "${{ steps.portable.outputs.file-name }}" release-windows/
-          Copy-Item signed-nsis/*.exe release-windows/
-          Copy-Item signed-msi/*.msi release-windows/
+          Copy-Item src-tauri/target/release/mouzi.exe "release-windows/Mouzi_${version}_x64-portable.exe"
+          Copy-Item src-tauri/target/release/bundle/nsis/*.exe release-windows/
+          Copy-Item src-tauri/target/release/bundle/nsis/*.sig release-windows/
+          Copy-Item src-tauri/target/release/bundle/msi/*.msi release-windows/
+          Get-ChildItem src-tauri/target/release/bundle/msi/*.sig -ErrorAction SilentlyContinue | Copy-Item -Destination release-windows/
 
-      - name: Upload signed Windows artifacts
+      - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
           name: release-windows
@@ -169,6 +52,8 @@ jobs:
   linux:
     name: Build and validate Linux
     runs-on: ubuntu-22.04
+    env:
+      TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -193,13 +78,31 @@ jobs:
       - name: Build Linux packages
         run: npm run tauri build -- --ci
 
-      - name: Repair and validate AppImage symlinks
+      - name: Repair and re-sign AppImage
         shell: bash
         run: |
           APPIMAGE=$(find src-tauri/target/release/bundle/appimage -maxdepth 1 -name '*.AppImage' -print -quit)
           test -n "$APPIMAGE"
           bash .github/scripts/fix-appimage-symlinks.sh "$APPIMAGE"
+          rm -f "$APPIMAGE.sig"
+          npm run tauri signer sign -- "$APPIMAGE"
+          test -s "$APPIMAGE.sig"
           echo "APPIMAGE_PATH=$APPIMAGE" >> "$GITHUB_ENV"
+
+      - name: Ensure DEB and RPM updater signatures
+        shell: bash
+        run: |
+          DEB=$(find src-tauri/target/release/bundle/deb -maxdepth 1 -name '*.deb' -print -quit)
+          RPM=$(find src-tauri/target/release/bundle/rpm -maxdepth 1 -name '*.rpm' -print -quit)
+          test -n "$DEB"
+          test -n "$RPM"
+          if [[ ! -s "$DEB.sig" ]]; then
+            npm run tauri signer sign -- "$DEB"
+          fi
+          rm -f "$RPM.sig"
+          npm run tauri signer sign -- "$RPM"
+          test -s "$DEB.sig"
+          test -s "$RPM.sig"
 
       - name: Install AppImage with AppManager 3.7.3
         shell: bash
@@ -220,8 +123,11 @@ jobs:
         run: |
           mkdir release-linux
           cp src-tauri/target/release/bundle/appimage/*.AppImage release-linux/
+          cp src-tauri/target/release/bundle/appimage/*.sig release-linux/
           cp src-tauri/target/release/bundle/deb/*.deb release-linux/
+          cp src-tauri/target/release/bundle/deb/*.sig release-linux/
           cp src-tauri/target/release/bundle/rpm/*.rpm release-linux/
+          cp src-tauri/target/release/bundle/rpm/*.sig release-linux/
 
       - name: Upload validated Linux artifacts
         uses: actions/upload-artifact@v4
@@ -239,6 +145,8 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+      - uses: actions/checkout@v4
+
       - name: Download release artifacts
         uses: actions/download-artifact@v4
         with:
@@ -246,12 +154,78 @@ jobs:
           path: release
           merge-multiple: true
 
+      - name: Create updater manifest and checksums
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          NSIS_PATH=$(find release -maxdepth 1 -name '*-setup.exe' -print -quit)
+          MSI_PATH=$(find release -maxdepth 1 -name '*.msi' -print -quit)
+          APPIMAGE_PATH=$(find release -maxdepth 1 -name '*.AppImage' -print -quit)
+          DEB_PATH=$(find release -maxdepth 1 -name '*.deb' -print -quit)
+          RPM_PATH=$(find release -maxdepth 1 -name '*.rpm' -print -quit)
+          test -n "$NSIS_PATH"
+          test -n "$MSI_PATH"
+          test -n "$APPIMAGE_PATH"
+          test -n "$DEB_PATH"
+          test -n "$RPM_PATH"
+          test -s "$NSIS_PATH.sig"
+          test -s "$MSI_PATH.sig"
+          test -s "$APPIMAGE_PATH.sig"
+          test -s "$DEB_PATH.sig"
+          test -s "$RPM_PATH.sig"
+
+          NSIS_NAME=$(basename "$NSIS_PATH")
+          MSI_NAME=$(basename "$MSI_PATH")
+          APPIMAGE_NAME=$(basename "$APPIMAGE_PATH")
+          DEB_NAME=$(basename "$DEB_PATH")
+          RPM_NAME=$(basename "$RPM_PATH")
+          NSIS_SIGNATURE=$(cat "$NSIS_PATH.sig")
+          MSI_SIGNATURE=$(cat "$MSI_PATH.sig")
+          APPIMAGE_SIGNATURE=$(cat "$APPIMAGE_PATH.sig")
+          DEB_SIGNATURE=$(cat "$DEB_PATH.sig")
+          RPM_SIGNATURE=$(cat "$RPM_PATH.sig")
+          BASE_URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}"
+
+          jq -n \
+            --arg version "$VERSION" \
+            --arg notes "See the Mouzi ${GITHUB_REF_NAME} release notes on GitHub." \
+            --arg pub_date "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+            --arg windows_url "$BASE_URL/$NSIS_NAME" \
+            --arg windows_signature "$NSIS_SIGNATURE" \
+            --arg msi_url "$BASE_URL/$MSI_NAME" \
+            --arg msi_signature "$MSI_SIGNATURE" \
+            --arg linux_url "$BASE_URL/$APPIMAGE_NAME" \
+            --arg linux_signature "$APPIMAGE_SIGNATURE" \
+            --arg deb_url "$BASE_URL/$DEB_NAME" \
+            --arg deb_signature "$DEB_SIGNATURE" \
+            --arg rpm_url "$BASE_URL/$RPM_NAME" \
+            --arg rpm_signature "$RPM_SIGNATURE" \
+            '{version:$version, notes:$notes, pub_date:$pub_date, platforms:{"windows-x86_64":{signature:$windows_signature,url:$windows_url},"windows-x86_64-nsis":{signature:$windows_signature,url:$windows_url},"windows-x86_64-msi":{signature:$msi_signature,url:$msi_url},"linux-x86_64":{signature:$linux_signature,url:$linux_url},"linux-x86_64-appimage":{signature:$linux_signature,url:$linux_url},"linux-x86_64-deb":{signature:$deb_signature,url:$deb_url},"linux-x86_64-rpm":{signature:$rpm_signature,url:$rpm_url}}}' \
+            > release/latest.json
+
+          (
+            cd release
+            find . -maxdepth 1 -type f ! -name 'SHA256SUMS.txt' -printf '%f\0' \
+              | sort -z \
+              | xargs -0 sha256sum \
+              > SHA256SUMS.txt
+          )
+
       - name: Create GitHub release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "$GITHUB_REF_NAME" release/* \
-            --repo "$GITHUB_REPOSITORY" \
-            --title "Mouzi $GITHUB_REF_NAME" \
-            --generate-notes \
-            --verify-tag
+          NOTES_FILE=".github/release-notes/${GITHUB_REF_NAME}.md"
+          if [ -f "$NOTES_FILE" ]; then
+            gh release create "$GITHUB_REF_NAME" release/* \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "Mouzi $GITHUB_REF_NAME" \
+              --notes-file "$NOTES_FILE" \
+              --verify-tag
+          else
+            gh release create "$GITHUB_REF_NAME" release/* \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "Mouzi $GITHUB_REF_NAME" \
+              --generate-notes \
+              --verify-tag
+          fi

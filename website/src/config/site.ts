@@ -47,8 +47,8 @@ export const site = {
   ogImage: '/images/og-image.png',
 
   /** Latest published release. Bump this with every public release. */
-  version: '0.1.5',
-  releaseDate: '2026-07-14',
+  version: '0.1.6',
+  releaseDate: '2026-08-27',
 
   /**
    * Code signing status.
@@ -105,9 +105,9 @@ export const site = {
     windows: [
       {
         label: 'Installer (NSIS)',
-        file: 'Mouzi_0.1.5_x64-setup.exe',
-        url: `${RELEASE_BASE}/v0.1.5/Mouzi_0.1.5_x64-setup.exe`,
-        size: '3.7 MB',
+        file: 'Mouzi_0.1.6_x64-setup.exe',
+        url: `${RELEASE_BASE}/v0.1.6/Mouzi_0.1.6_x64-setup.exe`,
+        size: '4.7 MB',
         arch: 'x64',
         sha256: null,
         recommended: true,
@@ -115,18 +115,18 @@ export const site = {
       },
       {
         label: 'MSI package',
-        file: 'Mouzi_0.1.5_x64_en-US.msi',
-        url: `${RELEASE_BASE}/v0.1.5/Mouzi_0.1.5_x64_en-US.msi`,
-        size: '5.3 MB',
+        file: 'Mouzi_0.1.6_x64_en-US.msi',
+        url: `${RELEASE_BASE}/v0.1.6/Mouzi_0.1.6_x64_en-US.msi`,
+        size: '7.8 MB',
         arch: 'x64',
         sha256: null,
         note: 'For managed and enterprise deployments.',
       },
       {
         label: 'Portable',
-        file: 'Mouzi_0.1.5_x64-portable.exe',
-        url: `${RELEASE_BASE}/v0.1.5/Mouzi_0.1.5_x64-portable.exe`,
-        size: '14.7 MB',
+        file: 'Mouzi_0.1.6_x64-portable.exe',
+        url: `${RELEASE_BASE}/v0.1.6/Mouzi_0.1.6_x64-portable.exe`,
+        size: '18.2 MB',
         arch: 'x64',
         sha256: null,
         note: 'No installation. Run from any folder or USB drive.',
@@ -135,9 +135,9 @@ export const site = {
     linux: [
       {
         label: 'AppImage',
-        file: 'Mouzi_0.1.5_amd64.AppImage',
-        url: `${RELEASE_BASE}/v0.1.5/Mouzi_0.1.5_amd64.AppImage`,
-        size: '84.4 MB',
+        file: 'Mouzi_0.1.6_amd64.AppImage',
+        url: `${RELEASE_BASE}/v0.1.6/Mouzi_0.1.6_amd64.AppImage`,
+        size: null,
         arch: 'x86_64',
         sha256: null,
         recommended: true,
@@ -145,18 +145,18 @@ export const site = {
       },
       {
         label: 'DEB package',
-        file: 'Mouzi_0.1.5_amd64.deb',
-        url: `${RELEASE_BASE}/v0.1.5/Mouzi_0.1.5_amd64.deb`,
-        size: '7.1 MB',
+        file: 'Mouzi_0.1.6_amd64.deb',
+        url: `${RELEASE_BASE}/v0.1.6/Mouzi_0.1.6_amd64.deb`,
+        size: null,
         arch: 'amd64',
         sha256: null,
         note: 'Debian, Ubuntu, Mint and derivatives.',
       },
       {
         label: 'RPM package',
-        file: 'Mouzi-0.1.5-1.x86_64.rpm',
-        url: `${RELEASE_BASE}/v0.1.5/Mouzi-0.1.5-1.x86_64.rpm`,
-        size: '7.1 MB',
+        file: 'Mouzi-0.1.6-1.x86_64.rpm',
+        url: `${RELEASE_BASE}/v0.1.6/Mouzi-0.1.6-1.x86_64.rpm`,
+        size: null,
         arch: 'x86_64',
         sha256: null,
         note: 'Fedora, openSUSE, RHEL and derivatives.',

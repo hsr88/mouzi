@@ -11,6 +11,9 @@ export interface Rule {
   destination: string;
   action: string;
   folder_id: number;
+  notification_message: string | null;
+  normalize_extensions: boolean;
+  extension_mappings: string;
 }
 
 export interface WatchedFolder {
@@ -40,6 +43,7 @@ export interface AppSettings {
   autostart: boolean;
   grace_period_seconds: number;
   lock_check_enabled: boolean;
+  auto_update_enabled: boolean;
 }
 
 export const defaultSettings: AppSettings = {
@@ -50,6 +54,7 @@ export const defaultSettings: AppSettings = {
   autostart: true,
   grace_period_seconds: 300,
   lock_check_enabled: true,
+  auto_update_enabled: true,
 };
 
 export interface ScheduleSettings {
@@ -80,6 +85,7 @@ interface AppState {
   loadLogs: () => Promise<void>;
   loadStats: () => Promise<void>;
   scanFolder: (path: string) => Promise<{ file: string; rule: string; destination: string }[]>;
+  scanSelectedFiles: (paths: string[]) => Promise<{ file: string; rule: string; destination: string }[]>;
   undoAction: (id: number) => Promise<boolean>;
   undoAll: () => Promise<number>;
   addFolder: (path: string, mode: string) => Promise<void>;
@@ -156,6 +162,19 @@ export const useAppStore = create<AppState>((set, get) => ({
       const results = await invoke<[string, string, string][]>('scan_folder_cmd', { path });
       await get().loadLogs();
       await get().loadStats();
+      return results.map(([file, rule, destination]) => ({ file, rule, destination }));
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  scanSelectedFiles: async (paths) => {
+    set({ isLoading: true });
+    try {
+      const results = await invoke<[string, string, string][]>('scan_selected_files_cmd', { paths });
+      await get().loadLogs();
+      await get().loadStats();
+      await get().getPendingFiles();
       return results.map(([file, rule, destination]) => ({ file, rule, destination }));
     } finally {
       set({ isLoading: false });

@@ -1,42 +1,37 @@
 ---
 import { site } from '../config/site';
+import { common, localeFromPath, localizedPath } from '../i18n';
 
 const year = new Date().getFullYear();
+const locale = localeFromPath(Astro.url.pathname);
+const local = (path: string) => localizedPath(path, locale);
+const ft={en:{product:'Product',resources:'Resources',project:'Project',community:'Community',copy:'A free, open-source Downloads folder organizer for Windows and Linux. Everything runs on your computer.',changelog:'Changelog',faq:'FAQ',troubleshooting:'Troubleshooting',impact:'Impact',sponsors:'Sponsors',privacy:'Privacy policy',bug:'Report a bug',license:'Released under the MIT License. Developed by',tag:'Local-only · No telemetry · No accounts'},es:{product:'Producto',resources:'Recursos',project:'Proyecto',community:'Comunidad',copy:'Organizador gratuito y abierto de Descargas para Windows y Linux. Todo funciona en tu ordenador.',changelog:'Cambios',faq:'Preguntas',troubleshooting:'Solución de problemas',impact:'Impacto',sponsors:'Patrocinadores',privacy:'Privacidad',bug:'Informar un error',license:'Publicado con licencia MIT. Desarrollado por',tag:'Solo local · Sin telemetría · Sin cuentas'},pl:{product:'Produkt',resources:'Materiały',project:'Projekt',community:'Społeczność',copy:'Darmowy organizer folderu Pobrane dla Windows i Linuksa. Wszystko działa na Twoim komputerze.',changelog:'Historia zmian',faq:'FAQ',troubleshooting:'Rozwiązywanie problemów',impact:'Wpływ',sponsors:'Wsparcie',privacy:'Prywatność',bug:'Zgłoś błąd',license:'Wydane na licencji MIT. Autor:',tag:'Tylko lokalnie · Bez telemetrii · Bez kont'},de:{product:'Produkt',resources:'Ressourcen',project:'Projekt',community:'Community',copy:'Kostenloser Open-Source-Organizer für Downloads unter Windows und Linux. Alles läuft auf deinem Computer.',changelog:'Änderungen',faq:'FAQ',troubleshooting:'Fehlerbehebung',impact:'Wirkung',sponsors:'Sponsoren',privacy:'Datenschutz',bug:'Fehler melden',license:'Unter MIT veröffentlicht. Entwickelt von',tag:'Nur lokal · Keine Telemetrie · Keine Konten'},fr:{product:'Produit',resources:'Ressources',project:'Projet',community:'Communauté',copy:'Organisateur gratuit et open source des téléchargements pour Windows et Linux. Tout fonctionne sur votre ordinateur.',changelog:'Modifications',faq:'FAQ',troubleshooting:'Dépannage',impact:'Impact',sponsors:'Sponsors',privacy:'Confidentialité',bug:'Signaler un bug',license:'Publié sous licence MIT. Développé par',tag:'En local · Sans télémétrie · Sans compte'},it:{product:'Prodotto',resources:'Risorse',project:'Progetto',community:'Comunità',copy:'Organizzatore gratuito e open source dei download per Windows e Linux. Tutto funziona sul computer.',changelog:'Modifiche',faq:'FAQ',troubleshooting:'Problemi',impact:'Impatto',sponsors:'Sponsor',privacy:'Privacy',bug:'Segnala un bug',license:'Rilasciato con licenza MIT. Sviluppato da',tag:'Solo locale · Nessuna telemetria · Nessun account'}}[locale];
+const nav=common[locale];
 
 const columns = [
   {
-    heading: 'Product',
+    heading: ft.product,
     links: [
-      { href: '/download', label: 'Download' },
-      { href: '/features', label: 'Features' },
-      { href: '/roadmap', label: 'Roadmap' },
-      { href: '/changelog', label: 'Changelog' },
-      { href: '/faq', label: 'FAQ' },
+      { href: local('/download'), label: nav.download }, { href: local('/features'), label: nav.features }, { href: local('/roadmap'), label: nav.roadmap }, { href: local('/changelog'), label: ft.changelog }, { href: local('/faq'), label: ft.faq },
     ],
   },
   {
-    heading: 'Resources',
+    heading: ft.resources,
     links: [
-      { href: '/docs', label: 'Documentation' },
-      { href: '/blog', label: 'Blog' },
-      { href: '/support', label: 'Support' },
-      { href: '/docs/troubleshooting', label: 'Troubleshooting' },
+      { href: '/docs', label: nav.docs }, { href: '/blog', label: nav.blog }, { href: local('/support'), label: 'Support' }, { href: '/docs/troubleshooting', label: ft.troubleshooting },
     ],
   },
   {
-    heading: 'Project',
+    heading: ft.project,
     links: [
-      { href: '/about', label: 'About' },
-      { href: '/impact', label: 'Impact' },
-      { href: '/sponsors', label: 'Sponsors' },
-      { href: '/privacy', label: 'Privacy policy' },
+      { href: local('/about'), label: nav.about }, { href: local('/impact'), label: ft.impact }, { href: local('/sponsors'), label: ft.sponsors }, { href: local('/privacy'), label: ft.privacy },
     ],
   },
   {
-    heading: 'Community',
+    heading: ft.community,
     links: [
       { href: site.github.url, label: 'GitHub' },
-      { href: site.github.newIssue, label: 'Report a bug' },
+      { href: site.github.newIssue, label: ft.bug },
       { href: site.funding.githubSponsors, label: 'GitHub Sponsors' },
       { href: site.funding.kofi, label: 'Ko-fi' },
     ],
@@ -48,13 +43,12 @@ const columns = [
   <div class="mx-auto max-w-6xl px-5 py-14">
     <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-6">
       <div class="lg:col-span-2">
-        <a href="/" class="flex items-center gap-2.5">
+        <a href={local('/')} class="flex items-center gap-2.5">
           <img src="/images/mouzi-logo.png" alt="Mouzi" width="34" height="26" class="h-7 w-auto" loading="lazy" />
           <span class="font-semibold tracking-tight">Mouzi</span>
         </a>
         <p class="mt-3 max-w-xs text-sm leading-relaxed text-muted">
-          A free, open-source Downloads folder organizer for Windows and Linux. Mouzi sorts downloaded files
-          automatically with rules you control. Everything runs on your computer.
+          {ft.copy}
         </p>
         <p class="mt-4 font-mono text-[11px] tracking-[0.1em] text-muted uppercase">
           v{site.version} · {site.license} License
@@ -84,11 +78,11 @@ const columns = [
     <div class="tdivider mt-12"></div>
     <div class="mt-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
       <p class="text-xs text-muted">
-        © {year} Mouzi. Released under the MIT License. Developed by{' '}
+        © {year} Mouzi. {ft.license}{' '}
         <a href={site.maintainer.github} rel="noopener" class="text-cream/80 transition-colors hover:text-amber">hsr</a>
       </p>
       <p class="font-mono text-[11px] text-muted">
-        Local-only · No telemetry · No accounts
+        {ft.tag}
       </p>
     </div>
   </div>

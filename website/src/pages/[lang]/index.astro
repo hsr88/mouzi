@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroBackgroundVideo from '../../components/HeroBackgroundVideo.astro';
+import OrganizeDemo from '../../components/OrganizeDemo';
+import RuleDemo from '../../components/RuleDemo.astro';
+import PrivacyDiagram from '../../components/PrivacyDiagram.astro';
+import DownloadCards from '../../components/DownloadCards.astro';
+import { homeSections, landing, translatedLocales, type Locale } from '../../i18n';
+import { site } from '../../config/site';
+
+export function getStaticPaths() {
+  return translatedLocales.map((lang) => ({ params: { lang }, props: { lang } }));
+}
+const { lang } = Astro.props as { lang: Exclude<Locale, 'en'> };
+const t = landing[lang];
+const s = homeSections[lang];
+const features = [
+  [t.automatic, t.automaticBody, '/screenshots/automatic-organization.png'],
+  [t.rules, t.rulesBody, '/screenshots/custom-rules.png'],
+  [t.undo, t.undoBody, '/screenshots/history-undo.png'],
+  [t.privacy, t.privacyBody, '/screenshots/privacy-security-settings.png'],
+];
+---
+<BaseLayout title={t.title} description={t.description} canonical={`/${lang}`} flush>
+  <section class="relative flex min-h-[82vh] items-center overflow-hidden">
+    <HeroBackgroundVideo />
+    <div class="relative z-10 mx-auto w-full max-w-6xl px-5 pt-32 pb-20">
+      <div class="max-w-2xl">
+        <p class="font-mono text-xs tracking-[0.2em] text-amber">{t.eyebrow}</p>
+        <h1 class="mt-5 text-4xl font-semibold tracking-tight text-balance sm:text-6xl">{t.hero}</h1>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-cream/85">{t.lead}</p>
+        <div class="mt-9 flex flex-wrap gap-3">
+          <a href={`/${lang}/download`} class="rounded-btn bg-amber px-6 py-3 font-semibold text-[#151004]">{t.cta}</a>
+          <a href={site.github.url} rel="noopener" class="rounded-btn border border-cream/25 px-6 py-3">{t.github}</a>
+        </div>
+        <ul class="mt-10 flex flex-wrap gap-5 font-mono text-[11px] text-cream/60 uppercase" role="list">
+          <li>Windows 10 & 11</li><li>Linux</li><li>MIT License</li><li>{t.local}</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="border-y border-line">
+    <div class="mx-auto grid max-w-6xl grid-cols-3 px-5 text-center font-mono text-xs uppercase">
+      <div class="py-6">{t.local}</div><div class="border-x border-line py-6">{t.account}</div><div class="py-6">{t.telemetry}</div>
+    </div>
+  </section>
+  <section class="border-t border-line">
+    <div class="mx-auto max-w-6xl px-5 py-24"><p class="font-mono text-xs tracking-[.2em] text-amber">{s.demoK}</p><h2 class="mt-4 text-3xl font-semibold sm:text-4xl">{s.demoT}</h2><p class="mt-4 max-w-2xl text-muted">{s.demoL}</p><div class="mt-10"><OrganizeDemo client:load /></div></div>
+  </section>
+  <section class="mx-auto max-w-6xl px-5 py-24">
+    <p class="font-mono text-xs tracking-[0.2em] text-amber">{t.kicker}</p>
+    <h2 class="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">{t.section}</h2>
+    <p class="mt-4 max-w-2xl text-muted">{t.sectionLead}</p>
+    <div class="mt-14 grid gap-8 md:grid-cols-2">
+      {features.map(([title, body, image]) => <article class="overflow-hidden rounded-card border border-line bg-surface"><img src={image} alt="" class="aspect-[1.38] w-full object-cover" loading="lazy"/><div class="p-6"><h3 class="text-xl font-semibold">{title}</h3><p class="mt-3 leading-relaxed text-muted">{body}</p></div></article>)}
+    </div>
+    <div class="mt-12 flex flex-wrap gap-3"><a href={`/${lang}/features`} class="rounded-btn border border-line px-5 py-3">{t.section}</a><a href={`/${lang}/faq`} class="rounded-btn border border-line px-5 py-3">{t.faq}</a></div>
+  </section>
+  <section class="relative border-t border-line bg-surface/40 noise">
+    <div class="relative mx-auto max-w-6xl px-5 py-24"><p class="font-mono text-xs tracking-[.2em] text-amber">{s.privacyK}</p><h2 class="mt-4 text-3xl font-semibold sm:text-4xl">{s.privacyT}</h2><p class="mt-4 max-w-2xl text-muted">{s.privacyL}</p><div class="mt-12 grid gap-12 lg:grid-cols-2"><ul class="space-y-4" role="list">{s.privacyItems.map((item) => <li class="flex gap-3"><span class="text-amber">✓</span><span>{item}</span></li>)}</ul><PrivacyDiagram /></div></div>
+  </section>
+  <section class="mx-auto max-w-6xl px-5 py-24"><p class="font-mono text-xs tracking-[.2em] text-amber">{s.rulesK}</p><h2 class="mt-4 text-3xl font-semibold sm:text-4xl">{s.rulesT}</h2><p class="mt-4 max-w-2xl text-muted">{s.rulesL}</p><div class="mt-10"><RuleDemo /></div></section>
+  <section class="border-t border-line bg-surface/40"><div class="mx-auto max-w-6xl px-5 py-24"><p class="font-mono text-xs tracking-[.2em] text-amber">{s.docsK}</p><h2 class="mt-4 text-3xl font-semibold sm:text-4xl">{s.docsT}</h2><p class="mt-4 max-w-2xl text-muted">{s.docsL}</p><div class="mt-8 flex flex-wrap gap-3"><a href="/docs/getting-started" class="rounded-btn border border-line px-5 py-3 text-amber">{s.readDocs}</a><a href={`/${lang}/faq`} class="rounded-btn border border-line px-5 py-3">{t.faq}</a></div></div></section>
+  <section class="border-t border-line"><div class="mx-auto max-w-6xl px-5 py-24"><p class="font-mono text-xs tracking-[.2em] text-amber">{s.securityK}</p><h2 class="mt-4 text-3xl font-semibold sm:text-4xl">{s.securityT}</h2><p class="mt-4 max-w-2xl text-muted">{s.securityL}</p><a href="/docs/security" class="mt-6 inline-block text-amber underline">{s.readDocs}</a></div></section>
+  <section id="download" class="border-t border-line bg-surface/40"><div class="mx-auto max-w-6xl px-5 py-24"><p class="font-mono text-xs tracking-[.2em] text-amber">{s.downloadK}</p><h2 class="mt-4 text-3xl font-semibold sm:text-4xl">{s.downloadT}</h2><p class="mt-4 max-w-2xl text-muted">{s.downloadL}</p><div class="mt-12 grid gap-12 lg:grid-cols-2"><section><h3 class="mb-4 text-xl font-semibold">Windows</h3><DownloadCards platform="windows" compact /></section><section><h3 class="mb-4 text-xl font-semibold">Linux</h3><DownloadCards platform="linux" compact /></section></div></div></section>
+  <section class="border-t border-line"><div class="mx-auto max-w-6xl px-5 py-24"><p class="font-mono text-xs tracking-[.2em] text-amber">{s.roadmapK}</p><h2 class="mt-4 text-3xl font-semibold sm:text-4xl">{s.roadmapT}</h2><p class="mt-4 max-w-2xl text-muted">{s.roadmapL}</p><a href="/roadmap" class="mt-6 inline-block rounded-btn border border-line px-5 py-3">{s.roadmap}</a></div></section>
+  <section class="border-t border-line bg-surface/40"><div class="mx-auto grid max-w-6xl gap-12 px-5 py-24 lg:grid-cols-2"><div><p class="font-mono text-xs tracking-[.2em] text-amber">{s.communityK}</p><h2 class="mt-4 text-3xl font-semibold">{s.communityT}</h2><p class="mt-4 text-muted">{s.communityL}</p><a href={site.github.url} class="mt-6 inline-block text-amber underline">{s.contribute}</a></div><div><p class="font-mono text-xs tracking-[.2em] text-amber">{s.fundingK}</p><h2 class="mt-4 text-3xl font-semibold">{s.fundingT}</h2><p class="mt-4 text-muted">{s.fundingL}</p><a href={site.funding.kofi} class="mt-6 inline-block text-amber underline">{s.sponsor}</a></div></div></section>
+  <section class="border-t border-line"><div class="mx-auto max-w-4xl px-5 py-24 text-center"><h2 class="text-3xl font-semibold sm:text-4xl">{s.finalT}</h2><a href={`/${lang}/download`} class="mt-8 inline-block rounded-btn bg-amber px-6 py-3 font-semibold text-[#151004]">{t.cta}</a></div></section>
+</BaseLayout>

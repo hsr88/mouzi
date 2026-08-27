@@ -28,6 +28,7 @@
   },
   "bundle": {
     "active": true,
+    "createUpdaterArtifacts": true,
     "targets": "all",
     "icon": [
       "icons/32x32.png",
@@ -43,6 +44,17 @@
     },
     "macOS": {
       "infoPlist": "Info.plist"
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDI5RTlDQkJFOURBOEQwQzYKUldURzBLaWR2c3ZwS1k0WTlqNzhQMk1McFo0MlN2L2dSa0I3QkNwd1lxRFNCUzZ2MTdPenRUOCsK",
+      "endpoints": [
+        "https://github.com/hsr88/mouzi/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
     }
   }
 }

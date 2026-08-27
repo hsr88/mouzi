@@ -1,9 +1,9 @@
-use tauri::menu::{Menu, MenuItem, PredefinedMenuItem};
-use tauri::tray::{MouseButton, TrayIconBuilder, TrayIconEvent};
-use tauri::{AppHandle, Emitter, Manager};
 use crate::db::{get_settings, get_watched_folders, is_folder_paused_mode};
 use crate::i18n::TrayI18n;
 use crate::rules::manual_scan_folder;
+use tauri::menu::{Menu, MenuItem, PredefinedMenuItem};
+use tauri::tray::{MouseButton, TrayIconBuilder, TrayIconEvent};
+use tauri::{AppHandle, Emitter, Manager};
 
 pub fn setup_tray(app: &AppHandle, lang: &str) -> Result<(), Box<dyn std::error::Error>> {
     let i18n = TrayI18n::new(lang);
@@ -98,7 +98,9 @@ fn perform_clean(app: &AppHandle) -> Result<(), String> {
     let folders = get_watched_folders().map_err(|e| e.to_string())?;
     let mut total = 0;
     for folder in folders {
-        if !folder.enabled || is_folder_paused_mode(&folder.mode) { continue; }
+        if !folder.enabled || is_folder_paused_mode(&folder.mode) {
+            continue;
+        }
         if let Ok(results) = manual_scan_folder(&folder.path) {
             total += results.len();
         }

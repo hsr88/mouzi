@@ -1,6 +1,6 @@
 use crate::db::*;
 use crate::ignore::{load_mouziignore, save_mouziignore};
-use crate::rules::manual_scan_folder;
+use crate::rules::{manual_scan_folder, process_file};
 use crate::AppState;
 use serde::Serialize;
 use std::path::Path;
@@ -128,7 +128,7 @@ pub fn undo_action_cmd(id: i64, state: tauri::State<AppState>) -> Result<bool, S
     let conn = db.lock().unwrap();
     let log: Option<(String, String)> = conn
         .query_row(
-            "SELECT source_path, destination_path FROM action_logs WHERE id=?1 AND undone=0",
+            "SELECT source_path, destination_path FROM action_logs WHERE id=?1 AND undone=0 AND action='move' AND destination_path IS NOT NULL",
             [id],
             |row| Ok((row.get(0)?, row.get(1)?)),
         )
@@ -173,7 +173,7 @@ pub fn undo_all_cmd(state: tauri::State<AppState>) -> Result<i32, String> {
 #[tauri::command]
 pub fn get_version_cmd(app: AppHandle) -> Result<(String, String), String> {
     let version = app.package_info().version.to_string();
-    let release_date = "2026-08-06".to_string();
+    let release_date = "2026-08-27".to_string();
     Ok((version, release_date))
 }
 
@@ -204,6 +204,40 @@ pub fn scan_folder_cmd(path: String) -> Result<Vec<(String, String, String)>, St
         return Ok(vec![]);
     }
     manual_scan_folder(&path)
+}
+
+#[tauri::command]
+pub fn scan_selected_files_cmd(
+    paths: Vec<String>,
+) -> Result<Vec<(String, String, String)>, String> {
+    let manual_folders: Vec<String> = get_watched_folders()
+        .map_err(|e| e.to_string())?
+        .into_iter()
+        .filter(|folder| folder.enabled && is_folder_manual_mode(&folder.mode))
+        .map(|folder| folder.path)
+        .collect();
+
+    let mut results = Vec::new();
+    for path in paths {
+        let path = std::path::PathBuf::from(path);
+        let parent = path
+            .parent()
+            .map(|value| value.to_string_lossy().to_string())
+            .unwrap_or_default();
+        if !manual_folders.iter().any(|folder| folder == &parent) || !path.is_file() {
+            continue;
+        }
+
+        if let Some((rule, destination)) = process_file(&path, true)? {
+            let file_name = path
+                .file_name()
+                .unwrap_or_default()
+                .to_string_lossy()
+                .to_string();
+            results.push((file_name, rule.name, destination.unwrap_or_default()));
+        }
+    }
+    Ok(results)
 }
 
 #[derive(Debug, Serialize)]
@@ -350,7 +384,7 @@ pub fn show_popup_cmd(app: AppHandle) {
     crate::tray::show_popup_window(&app);
 }
 
-/// Return files detected in manual-mode folders that are waiting for Clean Now.
+/// Return files detected in manual-mode folders that are waiting for Organize Now.
 #[tauri::command]
 pub fn get_pending_files_cmd(
     state: tauri::State<AppState>,

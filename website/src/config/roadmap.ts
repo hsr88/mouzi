@@ -20,19 +20,21 @@ export const roadmap: RoadmapItem[] = [
     title: 'Folder picker for rule destinations',
     description:
       'A picker next to the destination field. Relative destinations are preserved when the folder is inside the watched folder; absolute paths work outside it.',
-    status: 'now',
+    status: 'shipped',
     issue: `${ISSUES}/52`,
+    target: 'v0.1.6',
   },
   {
     title: 'Tooltips and accessibility labels',
     description: 'Translated tooltips and accessible names for all icon-only buttons.',
-    status: 'now',
+    status: 'shipped',
     issue: `${ISSUES}/52`,
+    target: 'v0.1.6',
   },
   {
     title: 'Quick enable/disable on rule rows',
-    description: 'Toggle any rule without opening the editor. Merged for v0.1.6 but not yet publicly released.',
-    status: 'now',
+    description: 'Toggle any rule without opening the editor.',
+    status: 'shipped',
     target: 'v0.1.6',
   },
 
@@ -47,8 +49,9 @@ export const roadmap: RoadmapItem[] = [
     title: 'AppImage icon fix',
     description:
       'The AppImage contains a broken absolute icon symlink from the CI runner path, which breaks AppManager installs.',
-    status: 'next',
+    status: 'shipped',
     issue: `${ISSUES}/53`,
+    target: 'v0.1.6',
   },
   {
     title: 'Signed Windows releases',
@@ -70,10 +73,11 @@ export const roadmap: RoadmapItem[] = [
     issue: `${ISSUES}/52`,
   },
   {
-    title: 'Extensionless executable support',
-    description: 'Detect and handle executables without file extensions.',
-    status: 'later',
+    title: 'Extensionless file detection',
+    description: 'Detect recognized extensionless files by magic bytes and route them through existing rules.',
+    status: 'shipped',
     issue: `${ISSUES}/49`,
+    target: 'v0.1.6',
   },
   {
     title: 'Automatic screenshot cleanup',
@@ -90,9 +94,16 @@ export const roadmap: RoadmapItem[] = [
     target: 'v0.1.5',
   },
   {
-    title: 'Scheduled cleans',
+    title: 'Scheduled organization',
     description: 'Automatic organization at up to four fixed times per day.',
     status: 'shipped',
     target: 'v0.1.5',
+  },
+  {
+    title: 'Safer organization, selective batches and automatic updates',
+    description:
+      'Adds signed in-app updater packages, selected-file batches, Recycle Bin actions, extension normalization, custom notifications, history confirmation and clearer Organize wording.',
+    status: 'shipped',
+    target: 'v0.1.6',
   },
 ];

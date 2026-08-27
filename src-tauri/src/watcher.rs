@@ -11,6 +11,18 @@ use tauri_plugin_notification::NotificationExt;
 
 const IGNORE_DURATION_SECS: u64 = 5;
 
+fn render_notification_message(
+    template: &str,
+    file: &str,
+    rule: &str,
+    destination: &str,
+) -> String {
+    template
+        .replace("{file}", file)
+        .replace("{rule}", rule)
+        .replace("{destination}", destination)
+}
+
 #[derive(Debug, Clone)]
 struct PendingFile {
     path: PathBuf,
@@ -20,7 +32,7 @@ struct PendingFile {
 pub struct FolderWatcher {
     watchers: HashMap<String, RecommendedWatcher>,
     pending: Arc<Mutex<Vec<PendingFile>>>,
-    /// Files detected in manual-mode folders, waiting for the user to trigger Clean Now.
+    /// Files detected in manual-mode folders, waiting for the user to trigger Organize Now.
     pending_manual: Arc<Mutex<HashSet<String>>>,
     ignored_files: Arc<Mutex<HashMap<String, Instant>>>,
     /// Shared with AppState — stores the last destination folder to open on notification click
@@ -70,16 +82,27 @@ impl FolderWatcher {
                 let mut last_file_name = String::new();
                 let mut last_rule_name = String::new();
                 let mut last_dest_folder = String::new();
+                let mut last_notification_message: Option<String> = None;
 
                 for path in to_process {
                     if path.exists() && path.is_file() {
                         // Defensive check: if the folder has been switched to manual or paused
                         // since the file was queued, skip it instead of auto-organizing.
-                        let should_skip = path.parent().and_then(|parent| {
-                            let parent_str = parent.to_string_lossy().to_string();
-                            get_watched_folders().ok()?.into_iter().find(|f| f.path == parent_str)
-                        }).map(|f| !f.enabled || is_folder_paused_mode(&f.mode) || is_folder_manual_mode(&f.mode))
-                          .unwrap_or(false);
+                        let should_skip = path
+                            .parent()
+                            .and_then(|parent| {
+                                let parent_str = parent.to_string_lossy().to_string();
+                                get_watched_folders()
+                                    .ok()?
+                                    .into_iter()
+                                    .find(|f| f.path == parent_str)
+                            })
+                            .map(|f| {
+                                !f.enabled
+                                    || is_folder_paused_mode(&f.mode)
+                                    || is_folder_manual_mode(&f.mode)
+                            })
+                            .unwrap_or(false);
                         if should_skip {
                             continue;
                         }
@@ -88,12 +111,20 @@ impl FolderWatcher {
                         // if their modification time changes while queued.
                         match process_file(&path, true) {
                             Ok(Some((rule, dest))) => {
-                                let file_name = path.file_name()
+                                let file_name = path
+                                    .file_name()
                                     .unwrap_or_default()
                                     .to_string_lossy()
                                     .to_string();
-                                let dest_folder = std::path::Path::new(&dest)
-                                    .parent()
+                                let destination = dest.clone().unwrap_or_default();
+                                let destination_label = if rule.action == "delete" {
+                                    "Recycle Bin".to_string()
+                                } else {
+                                    destination.clone()
+                                };
+                                let dest_folder = dest
+                                    .as_deref()
+                                    .and_then(|value| std::path::Path::new(value).parent())
                                     .map(|p| p.to_string_lossy().to_string())
                                     .unwrap_or_else(|| {
                                         path.parent()
@@ -104,24 +135,44 @@ impl FolderWatcher {
                                 last_file_name = file_name.clone();
                                 last_rule_name = rule.name.clone();
                                 last_dest_folder = dest_folder.clone();
+                                last_notification_message = rule
+                                    .notification_message
+                                    .as_deref()
+                                    .filter(|message| !message.trim().is_empty())
+                                    .map(|message| {
+                                        render_notification_message(
+                                            message,
+                                            &file_name,
+                                            &rule.name,
+                                            &destination_label,
+                                        )
+                                    });
                                 organized_count += 1;
 
                                 // Emit event to frontend (in-app toast)
-                                let _ = handle.emit("file-organized", serde_json::json!({
-                                    "file": file_name,
-                                    "rule": rule.name,
-                                    "destination": dest,
-                                    "destination_folder": dest_folder,
-                                    "success": true
-                                }));
+                                let _ = handle.emit(
+                                    "file-organized",
+                                    serde_json::json!({
+                                        "file": file_name,
+                                        "rule": rule.name,
+                                        "destination": destination,
+                                        "destination_folder": dest_folder,
+                                        "message": last_notification_message.clone(),
+                                        "action": rule.action,
+                                        "success": true
+                                    }),
+                                );
                             }
                             Ok(None) => {}
                             Err(e) => {
-                                let _ = handle.emit("file-organized", serde_json::json!({
-                                    "file": path.to_string_lossy(),
-                                    "error": e,
-                                    "success": false
-                                }));
+                                let _ = handle.emit(
+                                    "file-organized",
+                                    serde_json::json!({
+                                        "file": path.to_string_lossy(),
+                                        "error": e,
+                                        "success": false
+                                    }),
+                                );
                             }
                         }
                     }
@@ -134,7 +185,9 @@ impl FolderWatcher {
                     *pending_open_folder.lock().unwrap() = Some(last_dest_folder.clone());
 
                     let body = if organized_count == 1 {
-                        format!("{} → {}", last_file_name, last_rule_name)
+                        last_notification_message
+                            .clone()
+                            .unwrap_or_else(|| format!("{} → {}", last_file_name, last_rule_name))
                     } else {
                         format!("Organized {} files", organized_count)
                     };
@@ -215,7 +268,9 @@ impl FolderWatcher {
                         let path_str = path.to_string_lossy().to_string();
                         let mut ignore_guard = ig.lock().unwrap();
                         if let Some(&instant) = ignore_guard.get(&path_str) {
-                            if Instant::now().duration_since(instant) < Duration::from_secs(IGNORE_DURATION_SECS) {
+                            if Instant::now().duration_since(instant)
+                                < Duration::from_secs(IGNORE_DURATION_SECS)
+                            {
                                 continue;
                             }
                             ignore_guard.remove(&path_str);
@@ -223,7 +278,8 @@ impl FolderWatcher {
                         drop(ignore_guard);
 
                         if is_manual {
-                            let file_name = path.file_name()
+                            let file_name = path
+                                .file_name()
                                 .unwrap_or_default()
                                 .to_string_lossy()
                                 .to_string();
@@ -231,10 +287,13 @@ impl FolderWatcher {
                             manual.insert(path_str.clone());
                             let count = manual.len();
                             drop(manual);
-                            let _ = h.emit("file-detected", serde_json::json!({
-                                "folder": folder_path,
-                                "file": file_name,
-                            }));
+                            let _ = h.emit(
+                                "file-detected",
+                                serde_json::json!({
+                                    "folder": folder_path,
+                                    "file": file_name,
+                                }),
+                            );
                             crate::tray::update_tray_tooltip(&h, count);
                         } else {
                             let grace = crate::db::get_settings()
@@ -267,7 +326,9 @@ impl FolderWatcher {
                                 let path_str = path.to_string_lossy().to_string();
                                 let mut ignore_guard = ig.lock().unwrap();
                                 if let Some(&instant) = ignore_guard.get(&path_str) {
-                                    if Instant::now().duration_since(instant) < Duration::from_secs(IGNORE_DURATION_SECS) {
+                                    if Instant::now().duration_since(instant)
+                                        < Duration::from_secs(IGNORE_DURATION_SECS)
+                                    {
                                         continue;
                                     }
                                     ignore_guard.remove(&path_str);
@@ -276,7 +337,8 @@ impl FolderWatcher {
 
                                 if is_manual {
                                     // Manual mode: collect for later, do not auto-organize.
-                                    let file_name = path.file_name()
+                                    let file_name = path
+                                        .file_name()
                                         .unwrap_or_default()
                                         .to_string_lossy()
                                         .to_string();
@@ -285,10 +347,13 @@ impl FolderWatcher {
                                     let count = manual.len();
                                     drop(manual);
 
-                                    let _ = h.emit("file-detected", serde_json::json!({
-                                        "folder": folder_path,
-                                        "file": file_name,
-                                    }));
+                                    let _ = h.emit(
+                                        "file-detected",
+                                        serde_json::json!({
+                                            "folder": folder_path,
+                                            "file": file_name,
+                                        }),
+                                    );
                                     crate::tray::update_tray_tooltip(&h, count);
                                 } else {
                                     // Silent mode: schedule for auto-organize after grace period.

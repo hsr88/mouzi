@@ -6,7 +6,8 @@
   },
   "popup": {
     "title": "Mouzi",
-    "cleanNow": "Nettoyer maintenant",
+    "cleanNow": "Organiser maintenant",
+    "organizeNow": "Organiser maintenant",
     "openDownloads": "Ouvrir Téléchargements",
     "recentActions": "Actions récentes",
     "noActions": "Aucune action",
@@ -17,7 +18,11 @@
     "organized": "Organisé : {{file}}",
     "openFolder": "Cliquer pour ouvrir → {{folder}}",
     "pendingFiles": "{{count}} fichiers en attente",
-    "cleanManual": "Nettoyer maintenant"
+    "cleanManual": "Organiser maintenant",
+    "selectAll": "Tout sélectionner",
+    "clearSelection": "Effacer la sélection",
+    "organizeSelected": "Organiser la sélection ({{count}})",
+    "openActionFolder": "Ouvrir le dossier de destination"
   },
   "settings": {
     "title": "Paramètres Mouzi",
@@ -48,6 +53,7 @@
       "title": "Règles",
       "add": "Ajouter une règle",
       "edit": "Modifier",
+      "save": "Enregistrer",
       "delete": "Supprimer",
       "name": "Nom",
       "extensions": "Extensions",
@@ -62,7 +68,17 @@
       "importSuccess": "{{count}} règles importées",
       "importError": "Échec de l'importation des règles",
       "exportError": "Échec de l'exportation des règles",
-      "replaceOnImport": "Remplacer les règles existantes (sinon ajouter)"
+      "replaceOnImport": "Remplacer les règles existantes (sinon ajouter)",
+      "pickDestination": "Choisir le dossier de destination",
+      "actionMove": "Déplacer vers un dossier",
+      "actionRecycle": "Déplacer vers la corbeille",
+      "actionIgnore": "Ignorer",
+      "recycleBin": "Corbeille",
+      "normalizeExtensions": "Normaliser les extensions",
+      "normalizeHelp": "Associez les extensions équivalentes avant le déplacement, par exemple jpeg:jpg. Séparez les associations par des virgules.",
+      "notificationMessage": "Notification personnalisée",
+      "notificationPlaceholder": "Mouzi a déplacé un fichier dangereux : {file}",
+      "notificationHelp": "Facultatif. Variables disponibles : {file}, {rule}, {destination}."
     },
     "history": {
       "title": "Historique",
@@ -71,7 +87,10 @@
       "undone": "Annulé",
       "empty": "Aucun historique",
       "revertAll": "Tout annuler",
-      "revertAllDisabled": "Aucune action à annuler"
+      "revertAllDisabled": "Aucune action à annuler",
+      "confirmTitle": "Supprimer tout l’historique ?",
+      "confirmDescription": "Seul le journal d’activité de Mouzi sera supprimé. Vos fichiers ne seront ni déplacés ni supprimés.",
+      "confirmDelete": "Supprimer l’historique"
     },
     "general": {
       "title": "Général",
@@ -90,7 +109,9 @@
       "gracePeriodMinutes": "Minutes",
       "gracePeriodHours": "Heures",
       "gracePeriodCustom": "Personnalisé",
-      "gracePeriodMaxError": "La période de grâce ne peut pas dépasser 7 jours"
+      "gracePeriodMaxError": "La période de grâce ne peut pas dépasser 7 jours",
+      "autoUpdates": "Recherche automatique des mises à jour",
+      "autoUpdatesDesc": "Rechercher les nouvelles versions de Mouzi et proposer leur installation en un clic."
     },
     "ignore": {
       "title": "Ignorer",
@@ -120,10 +141,10 @@
     },
     "scheduler": {
       "title": "Planificateur",
-      "enable": "Activer le nettoyage planifié",
+      "enable": "Activer l’organisation planifiée",
       "timesPerDay": "Fois par jour",
       "time": "Heure {{number}}",
-      "desc": "Lancez le nettoyage automatiquement aux heures planifiées.",
+      "desc": "Organisez automatiquement les fichiers aux heures planifiées.",
       "once": "Une fois par jour",
       "twice": "Deux fois par jour",
       "thrice": "3 fois par jour",
@@ -135,6 +156,17 @@
   },
   "common": {
     "cancel": "Annuler",
-    "off": "Désactivé"
+    "off": "Désactivé",
+    "close": "Fermer",
+    "back": "Retour"
+  },
+  "updater": {
+    "available": "Mouzi {{version}} est disponible",
+    "checking": "Recherche de mises à jour...",
+    "current": "Vous avez déjà la dernière version.",
+    "error": "Impossible de rechercher les mises à jour. Réessayez plus tard.",
+    "installVersion": "Installer Mouzi {{version}}",
+    "installRestart": "Installer et redémarrer",
+    "installing": "Installation de la mise à jour..."
   }
 }

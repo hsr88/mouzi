@@ -1,5 +1,7 @@
 ---
 import { site, type DownloadArtifact } from '../config/site';
+import { localeFromPath } from '../i18n';
+import { downloadCopy } from '../i18n/download';
 
 interface Props {
   platform: 'windows' | 'linux';
@@ -7,6 +9,7 @@ interface Props {
 }
 const { platform, compact = false } = Astro.props;
 const artifacts: readonly DownloadArtifact[] = site.downloads[platform];
+const text = downloadCopy(localeFromPath(Astro.url.pathname));
 ---
 
 <ul role="list" class="space-y-3">
@@ -21,14 +24,14 @@ const artifacts: readonly DownloadArtifact[] = site.downloads[platform];
         <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
           <div class="min-w-0">
             <div class="flex items-center gap-2">
-              <span class="text-[15px] font-semibold">{a.label}</span>
+              <span class="text-[15px] font-semibold">{text.artifacts[a.label]?.label ?? a.label}</span>
               {a.recommended && (
                 <span class="rounded border border-amber/50 px-1.5 py-0.5 font-mono text-[10px] tracking-[0.1em] text-amber uppercase">
-                  Recommended
+                  {text.recommended}
                 </span>
               )}
             </div>
-            {!compact && a.note && <p class="mt-1 text-[13px] text-muted">{a.note}</p>}
+            {!compact && a.note && <p class="mt-1 text-[13px] text-muted">{text.artifacts[a.label]?.note ?? a.note}</p>}
           </div>
           <a
             href={a.url}
@@ -43,7 +46,7 @@ const artifacts: readonly DownloadArtifact[] = site.downloads[platform];
               a.recommended ? 'bg-amber text-[#151004]' : 'border border-line text-cream hover:bg-surface-2',
             ]}
           >
-            Download
+            {text.download}
           </a>
         </div>
         <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] text-muted">

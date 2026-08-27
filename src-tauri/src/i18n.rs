@@ -11,7 +11,7 @@ impl TrayI18n {
             "pl" => {
                 strings.insert("quit", "Zamknij");
                 strings.insert("settings", "Ustawienia");
-                strings.insert("clean_now", "Posprzątaj teraz");
+                strings.insert("clean_now", "Uporządkuj teraz");
                 strings.insert("tooltip", "Mouzi");
                 strings.insert("tooltip_one_pending", "Mouzi – {} plik czeka");
                 strings.insert("tooltip_many_pending", "Mouzi – {} pliki czekają");
@@ -22,7 +22,7 @@ impl TrayI18n {
             "it" => {
                 strings.insert("quit", "Esci");
                 strings.insert("settings", "Impostazioni");
-                strings.insert("clean_now", "Pulisci ora");
+                strings.insert("clean_now", "Organizza ora");
                 strings.insert("tooltip", "Mouzi");
                 strings.insert("tooltip_one_pending", "Mouzi – {} file in attesa");
                 strings.insert("tooltip_many_pending", "Mouzi – {} file in attesa");
@@ -33,7 +33,7 @@ impl TrayI18n {
             "de" => {
                 strings.insert("quit", "Beenden");
                 strings.insert("settings", "Einstellungen");
-                strings.insert("clean_now", "Jetzt aufräumen");
+                strings.insert("clean_now", "Jetzt organisieren");
                 strings.insert("tooltip", "Mouzi");
                 strings.insert("tooltip_one_pending", "Mouzi – {} Datei wartend");
                 strings.insert("tooltip_many_pending", "Mouzi – {} Dateien wartend");
@@ -44,7 +44,7 @@ impl TrayI18n {
             "fr" => {
                 strings.insert("quit", "Quitter");
                 strings.insert("settings", "Paramètres");
-                strings.insert("clean_now", "Nettoyer maintenant");
+                strings.insert("clean_now", "Organiser maintenant");
                 strings.insert("tooltip", "Mouzi");
                 strings.insert("tooltip_one_pending", "Mouzi – {} fichier en attente");
                 strings.insert("tooltip_many_pending", "Mouzi – {} fichiers en attente");
@@ -55,7 +55,7 @@ impl TrayI18n {
             "ru" => {
                 strings.insert("quit", "Выход");
                 strings.insert("settings", "Настройки");
-                strings.insert("clean_now", "Очистить сейчас");
+                strings.insert("clean_now", "Организовать сейчас");
                 strings.insert("tooltip", "Mouzi");
                 strings.insert("tooltip_one_pending", "Mouzi – {} файл ожидает");
                 strings.insert("tooltip_many_pending", "Mouzi – {} файла ожидают");
@@ -77,7 +77,7 @@ impl TrayI18n {
             "vi" => {
                 strings.insert("quit", "Thoát");
                 strings.insert("settings", "Cài đặt");
-                strings.insert("clean_now", "Dọn dẹp ngay");
+                strings.insert("clean_now", "Sắp xếp ngay");
                 strings.insert("tooltip", "Mouzi");
                 strings.insert("tooltip_one_pending", "Mouzi – {} tệp đang chờ");
                 strings.insert("tooltip_many_pending", "Mouzi – {} tệp đang chờ");
@@ -88,7 +88,7 @@ impl TrayI18n {
             "es" => {
                 strings.insert("quit", "Salir");
                 strings.insert("settings", "Configuración");
-                strings.insert("clean_now", "Limpiar ahora");
+                strings.insert("clean_now", "Organizar ahora");
                 strings.insert("tooltip", "Mouzi");
                 strings.insert("tooltip_one_pending", "Mouzi – {} archivo esperando");
                 strings.insert("tooltip_many_pending", "Mouzi – {} archivos esperando");
@@ -99,7 +99,7 @@ impl TrayI18n {
             "uk" => {
                 strings.insert("quit", "Вийти");
                 strings.insert("settings", "Налаштування");
-                strings.insert("clean_now", "Прибрати зараз");
+                strings.insert("clean_now", "Упорядкувати зараз");
                 strings.insert("tooltip", "Mouzi");
                 strings.insert("tooltip_one_pending", "Mouzi — очікує {} файл");
                 strings.insert("tooltip_many_pending", "Mouzi — очікує файлів: {}");
@@ -110,7 +110,7 @@ impl TrayI18n {
             _ => {
                 strings.insert("quit", "Quit");
                 strings.insert("settings", "Settings");
-                strings.insert("clean_now", "Clean Now");
+                strings.insert("clean_now", "Organize Now");
                 strings.insert("tooltip", "Mouzi");
                 strings.insert("tooltip_one_pending", "Mouzi – {} file waiting");
                 strings.insert("tooltip_many_pending", "Mouzi – {} files waiting");

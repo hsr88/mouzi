@@ -4,7 +4,7 @@ description: Reference for language, theme, startup, safety settings, storage pa
 section: Reference
 order: 2
 platforms: [windows, linux]
-updated: 2026-08-09
+updated: 2026-08-27
 ---
 
 Mouzi stores configuration and history locally in one SQLite database. There is no account or cloud synchronization.
@@ -18,8 +18,9 @@ Mouzi stores configuration and history locally in one SQLite database. There is 
 | Start with system | Launch Mouzi after the current user signs in; enabled on first run |
 | Grace period | Delay Silent-mode processing from 0 seconds to 7 days; default 5 minutes |
 | Check whether files are in use | Leave locked files in place; enabled by default |
+| Automatic update checks | Check the signed public updater feed and offer one-click installation; enabled by default |
 
-Changing the grace period affects newly queued work. Clean now and scheduled cleans bypass the delay.
+Changing the grace period affects newly queued work. Organize now and scheduled runs bypass the delay.
 
 ## Local database
 
@@ -60,4 +61,6 @@ Resetting the database does not delete organized files and does not undo earlier
 
 ## Updates
 
-Mouzi does not download or install updates automatically. The About screen shows the installed version and release date. **Check for updates** opens mouzi.cc, where you can compare the current public version and download it manually.
+Mouzi 0.1.6 can check the official GitHub updater feed and install a newer release after you confirm. Checks can be disabled under **Settings → General**. The About screen also provides a manual check.
+
+Updater packages carry a Tauri updater signature verified against a public key embedded in Mouzi. This integrity signature is separate from Windows Authenticode code signing.

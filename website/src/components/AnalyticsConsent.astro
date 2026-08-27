@@ -1,5 +1,8 @@
 ---
+import { localeFromPath, localizedPath } from '../i18n';
 const measurementId = 'G-GMDTSE5DFS';
+const locale=localeFromPath(Astro.url.pathname);
+const a={en:['Optional analytics cookies','The Mouzi app sends no telemetry. With your consent, this website loads Google Analytics and sends page, device and approximate location data to Google.','Privacy details','Allow analytics','No thanks'],es:['Cookies de análisis opcionales','La aplicación no envía telemetría. Con tu consentimiento, este sitio carga Google Analytics y envía a Google datos de página, dispositivo y ubicación aproximada.','Detalles de privacidad','Permitir análisis','No, gracias'],pl:['Opcjonalne cookies analityczne','Aplikacja Mouzi nie wysyła telemetrii. Za Twoją zgodą strona uruchomi Google Analytics i wyśle Google dane strony, urządzenia i przybliżonej lokalizacji.','Szczegóły prywatności','Zezwól na analitykę','Nie, dziękuję'],de:['Optionale Analyse-Cookies','Die Mouzi-App sendet keine Telemetrie. Mit Zustimmung lädt diese Website Google Analytics und sendet Seiten-, Geräte- und ungefähre Standortdaten an Google.','Datenschutzdetails','Analyse erlauben','Nein, danke'],fr:['Cookies d’analyse facultatifs','L’application Mouzi n’envoie aucune télémétrie. Avec votre accord, ce site charge Google Analytics et transmet à Google la page, l’appareil et la zone approximative.','Détails de confidentialité','Autoriser l’analyse','Non merci'],it:['Cookie analitici opzionali','L’app Mouzi non invia telemetria. Con il consenso, il sito carica Google Analytics e invia a Google pagina, dispositivo e posizione approssimativa.','Dettagli privacy','Consenti analisi','No, grazie']}[locale];
 ---
 
 <aside
@@ -10,10 +13,9 @@ const measurementId = 'G-GMDTSE5DFS';
   aria-describedby="analytics-consent-description"
   hidden
 >
-  <h2 id="analytics-consent-title" class="text-[15px] font-semibold text-cream">Optional analytics cookies</h2>
+  <h2 id="analytics-consent-title" class="text-[15px] font-semibold text-cream">{a[0]}</h2>
   <p id="analytics-consent-description" class="mt-2 text-sm leading-relaxed text-muted">
-    The Mouzi app sends no telemetry. If you agree, this website loads Google Analytics, sets <code>_ga</code> cookies
-    and sends page, device and approximate location data to Google. <a href="/privacy" class="text-amber hover:underline">Privacy details</a>
+    {a[1]} <a href={localizedPath('/privacy',locale)} class="text-amber hover:underline">{a[2]}</a>
   </p>
   <div class="mt-4 flex flex-wrap gap-3">
     <button
@@ -21,14 +23,14 @@ const measurementId = 'G-GMDTSE5DFS';
       type="button"
       class="rounded-btn bg-amber px-4 py-2 text-sm font-semibold text-[#151004] hover:opacity-90"
     >
-      Allow analytics
+      {a[3]}
     </button>
     <button
       id="analytics-decline"
       type="button"
       class="rounded-btn border border-line px-4 py-2 text-sm text-cream hover:bg-surface-2"
     >
-      No thanks
+      {a[4]}
     </button>
   </div>
 </aside>

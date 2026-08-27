@@ -6,7 +6,8 @@
   },
   "popup": {
     "title": "Mouzi",
-    "cleanNow": "Прибрати зараз",
+    "cleanNow": "Упорядкувати зараз",
+    "organizeNow": "Упорядкувати зараз",
     "openDownloads": "Відкрити Завантаження",
     "recentActions": "Останні дії",
     "noActions": "Дій ще не було",
@@ -17,7 +18,11 @@
     "organized": "Впорядковано: {{file}}",
     "openFolder": "Натисніть, щоб відкрити → {{folder}}",
     "pendingFiles": "Очікує файлів: {{count}}",
-    "cleanManual": "Прибрати зараз"
+    "cleanManual": "Упорядкувати зараз",
+    "selectAll": "Вибрати все",
+    "clearSelection": "Зняти вибір",
+    "organizeSelected": "Упорядкувати вибрані ({{count}})",
+    "openActionFolder": "Відкрити папку призначення"
   },
   "settings": {
     "title": "Налаштування Mouzi",
@@ -48,6 +53,7 @@
       "title": "Правила",
       "add": "Додати правило",
       "edit": "Редагувати",
+      "save": "Зберегти",
       "delete": "Видалити",
       "name": "Назва",
       "extensions": "Розширення",
@@ -62,7 +68,17 @@
       "importSuccess": "Імпортовано правил: {{count}}",
       "importError": "Не вдалося імпортувати правила",
       "exportError": "Не вдалося експортувати правила",
-      "replaceOnImport": "Замінити наявні правила (інакше — додати)"
+      "replaceOnImport": "Замінити наявні правила (інакше — додати)",
+      "pickDestination": "Вибрати папку призначення",
+      "actionMove": "Перемістити до папки",
+      "actionRecycle": "Перемістити до кошика",
+      "actionIgnore": "Ігнорувати",
+      "recycleBin": "Кошик",
+      "normalizeExtensions": "Нормалізувати розширення",
+      "normalizeHelp": "Зіставляйте рівнозначні розширення перед переміщенням, наприклад jpeg:jpg. Розділяйте пари комами.",
+      "notificationMessage": "Власне сповіщення",
+      "notificationPlaceholder": "Mouzi перемістив небезпечний файл: {file}",
+      "notificationHelp": "Необов’язково. Доступно: {file}, {rule}, {destination}."
     },
     "history": {
       "title": "Історія",
@@ -71,7 +87,10 @@
       "undone": "Скасовано",
       "empty": "Історія порожня",
       "revertAll": "Скасувати все",
-      "revertAllDisabled": "Немає дій для скасування"
+      "revertAllDisabled": "Немає дій для скасування",
+      "confirmTitle": "Видалити всю історію?",
+      "confirmDescription": "Буде видалено лише журнал дій Mouzi. Ваші файли не буде переміщено чи видалено.",
+      "confirmDelete": "Видалити історію"
     },
     "general": {
       "title": "Загальне",
@@ -90,7 +109,9 @@
       "gracePeriodMinutes": "Хвилин",
       "gracePeriodHours": "Годин",
       "gracePeriodCustom": "Власний",
-      "gracePeriodMaxError": "Період очікування не може перевищувати 7 днів"
+      "gracePeriodMaxError": "Період очікування не може перевищувати 7 днів",
+      "autoUpdates": "Автоматична перевірка оновлень",
+      "autoUpdatesDesc": "Перевіряти нові версії Mouzi й пропонувати встановлення одним натисканням."
     },
     "ignore": {
       "title": "Винятки",
@@ -120,10 +141,10 @@
     },
     "scheduler": {
       "title": "Розклад",
-      "enable": "Прибирання за розкладом",
+      "enable": "Упорядкування за розкладом",
       "timesPerDay": "Разів на день",
       "time": "Час {{number}}",
-      "desc": "Виконувати прибирання у визначений час.",
+      "desc": "Автоматично впорядковувати файли у визначений час.",
       "once": "Раз на день",
       "twice": "Двічі на день",
       "thrice": "Тричі на день",
@@ -135,6 +156,17 @@
   },
   "common": {
     "cancel": "Скасувати",
-    "off": "ВИМК."
+    "off": "ВИМК.",
+    "close": "Закрити",
+    "back": "Назад"
+  },
+  "updater": {
+    "available": "Доступна Mouzi {{version}}",
+    "checking": "Перевірка оновлень...",
+    "current": "У вас уже найновіша версія.",
+    "error": "Не вдалося перевірити оновлення. Спробуйте пізніше.",
+    "installVersion": "Встановити Mouzi {{version}}",
+    "installRestart": "Встановити й перезапустити",
+    "installing": "Встановлення оновлення..."
   }
 }

@@ -4,10 +4,10 @@ description: Understand Mouzi's local design, Windows signing status, release so
 section: Reference
 order: 4
 platforms: [windows, linux]
-updated: 2026-08-09
+updated: 2026-08-27
 ---
 
-Mouzi stores settings, rules and history locally. The application does not require an account, upload your files or implement telemetry. Its **Check for updates** action opens mouzi.cc; it is not a background update service.
+Mouzi stores settings, rules and history locally. The application does not require an account, upload your files or implement telemetry. Optional update checks query the public GitHub release feed and can be disabled in Settings.
 
 ## Official sources
 
@@ -20,7 +20,7 @@ The source and release workflows are public in the [GitHub repository](https://g
 
 ## Windows code signing
 
-Public version 0.1.5 is unsigned. SignPath production signing is being prepared for a future Windows release, but a pending integration does not retroactively sign older files.
+Public version 0.1.6 remains unsigned with Authenticode. SignPath production signing is being prepared for a future Windows release, but a pending integration does not retroactively sign older files.
 
 Check a downloaded EXE or MSI yourself:
 
@@ -44,7 +44,9 @@ Get-FileHash .\Mouzi_*.exe -Algorithm SHA256
 sha256sum Mouzi_*.AppImage
 ```
 
-The current release process does not yet publish a checksum for every platform artifact. A locally calculated hash proves only that two copies are identical when you have a trusted value to compare it with. Never treat a hash shown by the same untrusted download source as independent verification.
+The release publishes `SHA256SUMS.txt` beside the artifacts. A locally calculated hash proves that two copies are identical when the trusted release value matches. Never treat a hash shown by an untrusted download source as independent verification.
+
+Updater-compatible NSIS and AppImage packages also carry Tauri updater signatures. Mouzi verifies those signatures with its embedded public key before installation. This protects the updater channel but does not replace Authenticode publisher identity in Windows.
 
 ## File-system safety
 

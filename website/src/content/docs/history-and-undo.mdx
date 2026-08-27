@@ -4,7 +4,7 @@ description: Review recent moves, restore files and understand what clearing his
 section: Start here
 order: 3
 platforms: [windows, linux]
-updated: 2026-08-09
+updated: 2026-08-27
 ---
 
 Every successful rule move is recorded in the local `mouzi.db` database with its original path, destination, rule and time.
@@ -32,11 +32,13 @@ If Undo fails, move the file manually and verify both locations.
 
 ## Undo all
 
-**Undo all** attempts to restore the recent non-undone entries. It is not a database rollback and cannot recreate missing files. For a large unexpected cleanup, pause the watched folder first, then undo and inspect the result before changing rules.
+**Undo all** attempts to restore the recent non-undone entries. It is not a database rollback and cannot recreate missing files. After a large unexpected organization run, pause the watched folder first, then undo and inspect the result before changing rules.
 
 ## Clear history
 
-Clearing history deletes log and statistics records from the database. It does not delete, move or restore files, and it cannot be reversed from within Mouzi.
+Clearing history first asks for confirmation, then deletes log and statistics records from the database. It does not delete, move or restore files, and it cannot be reversed from within Mouzi.
+
+Actions that send files to the operating system Recycle Bin or Trash are recorded, but Mouzi does not show Undo for them. Restore those files using the operating system.
 
 ## Back up history
 

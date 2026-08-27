@@ -6,7 +6,8 @@
   },
   "popup": {
     "title": "Mouzi",
-    "cleanNow": "Posprzątaj teraz",
+    "cleanNow": "Uporządkuj teraz",
+    "organizeNow": "Uporządkuj teraz",
     "openDownloads": "Otwórz Pobrane",
     "recentActions": "Ostatnie akcje",
     "noActions": "Brak akcji",
@@ -17,7 +18,11 @@
     "organized": "Uporządkowano: {{file}}",
     "openFolder": "Kliknij, aby otworzyć → {{folder}}",
     "pendingFiles": "{{count}} plików oczekuje",
-    "cleanManual": "Posprzątaj teraz"
+    "cleanManual": "Uporządkuj teraz",
+    "selectAll": "Zaznacz wszystko",
+    "clearSelection": "Wyczyść zaznaczenie",
+    "organizeSelected": "Uporządkuj wybrane ({{count}})",
+    "openActionFolder": "Otwórz folder docelowy"
   },
   "settings": {
     "title": "Ustawienia Mouzi",
@@ -48,6 +53,7 @@
       "title": "Reguły",
       "add": "Dodaj regułę",
       "edit": "Edytuj",
+      "save": "Zapisz",
       "delete": "Usuń",
       "name": "Nazwa",
       "extensions": "Rozszerzenia",
@@ -62,7 +68,17 @@
       "importSuccess": "Zaimportowano {{count}} reguł",
       "importError": "Nie udało się zaimportować reguł",
       "exportError": "Nie udało się wyeksportować reguł",
-      "replaceOnImport": "Zastąp istniejące reguły (w przeciwnym razie dopisz)"
+      "replaceOnImport": "Zastąp istniejące reguły (w przeciwnym razie dopisz)",
+      "pickDestination": "Wybierz folder docelowy",
+      "actionMove": "Przenieś do folderu",
+      "actionRecycle": "Przenieś do Kosza",
+      "actionIgnore": "Ignoruj",
+      "recycleBin": "Kosz",
+      "normalizeExtensions": "Normalizuj rozszerzenia plików",
+      "normalizeHelp": "Mapuj równoważne rozszerzenia przed przeniesieniem, np. jpeg:jpg. Oddziel mapowania przecinkami.",
+      "notificationMessage": "Własne powiadomienie",
+      "notificationPlaceholder": "Mouzi przeniósł niebezpieczny plik: {file}",
+      "notificationHelp": "Opcjonalne. Dostępne pola: {file}, {rule}, {destination}."
     },
     "history": {
       "title": "Historia",
@@ -71,7 +87,10 @@
       "undone": "Cofnięto",
       "empty": "Brak historii",
       "revertAll": "Cofnij wszystko",
-      "revertAllDisabled": "Brak akcji do cofnięcia"
+      "revertAllDisabled": "Brak akcji do cofnięcia",
+      "confirmTitle": "Usunąć całą historię?",
+      "confirmDescription": "Usunięty zostanie tylko dziennik działań Mouzi. Pliki nie zostaną przeniesione ani usunięte.",
+      "confirmDelete": "Usuń historię"
     },
     "general": {
       "title": "Ogólne",
@@ -90,7 +109,9 @@
       "gracePeriodMinutes": "Minuty",
       "gracePeriodHours": "Godziny",
       "gracePeriodCustom": "Niestandardowy",
-      "gracePeriodMaxError": "Okres karencji nie może przekraczać 7 dni"
+      "gracePeriodMaxError": "Okres karencji nie może przekraczać 7 dni",
+      "autoUpdates": "Automatyczne sprawdzanie aktualizacji",
+      "autoUpdatesDesc": "Sprawdzaj nowe wersje Mouzi i instaluj je jednym kliknięciem."
     },
     "ignore": {
       "title": "Ignoruj",
@@ -120,10 +141,10 @@
     },
     "scheduler": {
       "title": "Harmonogram",
-      "enable": "Włącz planowe sprzątanie",
+      "enable": "Włącz planowe porządkowanie",
       "timesPerDay": "Razy dziennie",
       "time": "Godzina {{number}}",
-      "desc": "Automatycznie uruchamiaj sprzątanie o zaplanowanych porach.",
+      "desc": "Automatycznie porządkuj pliki o zaplanowanych porach.",
       "once": "Raz dziennie",
       "twice": "Dwa razy dziennie",
       "thrice": "3 razy dziennie",
@@ -135,6 +156,17 @@
   },
   "common": {
     "cancel": "Anuluj",
-    "off": "WYŁ."
+    "off": "WYŁ.",
+    "close": "Zamknij",
+    "back": "Wstecz"
+  },
+  "updater": {
+    "available": "Dostępne jest Mouzi {{version}}",
+    "checking": "Sprawdzanie aktualizacji...",
+    "current": "Masz już najnowszą wersję.",
+    "error": "Nie udało się sprawdzić aktualizacji. Spróbuj później.",
+    "installVersion": "Zainstaluj Mouzi {{version}}",
+    "installRestart": "Zainstaluj i uruchom ponownie",
+    "installing": "Instalowanie aktualizacji..."
   }
 }

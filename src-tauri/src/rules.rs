@@ -3,6 +3,7 @@ use crate::ignore::{is_ignored, load_mouziignore};
 use chrono::Utc;
 use regex::Regex;
 use std::fs;
+use std::io::Read;
 use std::path::{Path, PathBuf};
 
 /// Check if a file is currently locked by another process.
@@ -39,17 +40,49 @@ pub struct FileInfo {
     pub size: u64,
 }
 
+fn extension_from_magic_bytes(path: &Path) -> Option<String> {
+    let mut header = [0_u8; 16];
+    let mut file = fs::File::open(path).ok()?;
+    let bytes_read = file.read(&mut header).ok()?;
+    let header = &header[..bytes_read];
+
+    if header.starts_with(b"MZ")
+        || header.starts_with(b"\x7FELF")
+        || header.starts_with(&[0xFE, 0xED, 0xFA, 0xCE])
+        || header.starts_with(&[0xFE, 0xED, 0xFA, 0xCF])
+        || header.starts_with(&[0xCF, 0xFA, 0xED, 0xFE])
+        || header.starts_with(&[0xCE, 0xFA, 0xED, 0xFE])
+    {
+        return Some("exe".to_string());
+    }
+
+    infer::get(header).map(|kind| kind.extension().to_lowercase())
+}
+
 pub fn should_ignore_file(path: &Path) -> bool {
-    let name = path.file_name()
+    let name = path
+        .file_name()
         .and_then(|n| n.to_str())
         .unwrap_or("")
         .to_lowercase();
 
     let ignored_names = [
-        "desktop.ini", "thumbs.db", "ntuser.dat", "ntuser.ini",
-        "boot.ini", "bootmgr", "pagefile.sys", "hiberfil.sys",
-        "swapfile.sys", "autorun.inf", "config.sys", "io.sys",
-        "msdos.sys", "command.com", "ntldr", "bootsect.bak",
+        "desktop.ini",
+        "thumbs.db",
+        "ntuser.dat",
+        "ntuser.ini",
+        "boot.ini",
+        "bootmgr",
+        "pagefile.sys",
+        "hiberfil.sys",
+        "swapfile.sys",
+        "autorun.inf",
+        "config.sys",
+        "io.sys",
+        "msdos.sys",
+        "command.com",
+        "ntldr",
+        "bootsect.bak",
     ];
     if ignored_names.contains(&name.as_str()) {
         return true;
@@ -84,7 +117,7 @@ pub fn should_ignore_file(path: &Path) -> bool {
 }
 
 /// Check whether a file is ignored by the `.mouziignore` in its parent folder.
-/// This is the single helper used by both the watcher and the manual Clean Now path
+/// This is the single helper used by both the watcher and the manual Organize Now path
 /// so both code paths behave identically.
 pub fn is_file_ignored_by_mouziignore(path: &Path) -> bool {
     if let Some(parent) = path.parent() {
@@ -102,11 +135,16 @@ pub fn scan_file(path: &Path) -> Option<FileInfo> {
     }
     let metadata = fs::metadata(path).ok()?;
     let name = path.file_name()?.to_string_lossy().to_string();
-    let extension = path
+    let path_extension = path
         .extension()
         .and_then(|e| e.to_str())
         .unwrap_or("")
         .to_lowercase();
+    let extension = if path_extension.is_empty() {
+        extension_from_magic_bytes(path).unwrap_or_default()
+    } else {
+        path_extension
+    };
     Some(FileInfo {
         path: path.to_path_buf(),
         name,
@@ -120,8 +158,8 @@ fn matches_rule(file: &FileInfo, rule: &Rule) -> bool {
         return false;
     }
 
-    let ext_matches = rule.extensions.contains(&"*".to_string())
-        || rule.extensions.contains(&file.extension);
+    let ext_matches =
+        rule.extensions.contains(&"*".to_string()) || rule.extensions.contains(&file.extension);
 
     let pattern_matches = if let Some(ref pattern) = rule.pattern {
         if pattern.is_empty() {
@@ -149,6 +187,60 @@ fn resolve_destination(destination: &str, file: &FileInfo) -> PathBuf {
     PathBuf::from(resolved)
 }
 
+fn normalized_extension(rule: &Rule, extension: &str) -> Option<String> {
+    if !rule.normalize_extensions || extension.is_empty() {
+        return None;
+    }
+
+    rule.extension_mappings
+        .split([',', ';', '\n'])
+        .filter_map(|entry| {
+            let (from, to) = entry
+                .trim()
+                .split_once("->")
+                .or_else(|| entry.trim().split_once(':'))?;
+            let from = from.trim().trim_start_matches('.').to_lowercase();
+            let to = to.trim().trim_start_matches('.').to_lowercase();
+            if from.is_empty()
+                || to.is_empty()
+                || !to.chars().all(|c| c.is_ascii_alphanumeric() || c == '_')
+            {
+                return None;
+            }
+            Some((from, to))
+        })
+        .find_map(|(from, to)| (from == extension).then_some(to))
+}
+
+fn output_file_info(file: &FileInfo, rule: &Rule) -> FileInfo {
+    let Some(extension) = normalized_extension(rule, &file.extension) else {
+        return file.clone();
+    };
+
+    // Magic-byte detection may provide a virtual extension for matching, but
+    // normalization only renames a suffix that is actually present.
+    if file.path.extension().is_none() {
+        return file.clone();
+    }
+
+    let stem = file.path.file_stem().unwrap_or_default().to_string_lossy();
+    FileInfo {
+        path: file.path.clone(),
+        name: format!("{stem}.{extension}"),
+        extension,
+        size: file.size,
+    }
+}
+
+fn collision_file_name(path: &Path, extension: &str) -> String {
+    let stem = path.file_stem().unwrap_or_default().to_string_lossy();
+    if extension.is_empty() {
+        format!("{}_{}", stem, Utc::now().timestamp())
+    } else {
+        format!("{}_{}.{}", stem, Utc::now().timestamp(), extension)
+    }
+}
+
 pub fn find_matching_rule(file: &FileInfo) -> Option<Rule> {
     let rules = get_rules().ok()?;
     rules.into_iter().find(|rule| matches_rule(file, rule))
@@ -167,7 +259,8 @@ fn move_file_cross_device(src: &Path, dst: &Path) -> Result<(), std::io::Error> 
     }
 }
 
-pub fn execute_rule(file_info: &FileInfo, rule: &Rule) -> Result<String, String> {
+pub fn execute_rule(file_info: &FileInfo, rule: &Rule) -> Result<Option<String>, String> {
+    let output = output_file_info(file_info, rule);
     let base_folder = file_info
         .path
         .parent()
@@ -176,37 +269,39 @@ pub fn execute_rule(file_info: &FileInfo, rule: &Rule) -> Result<String, String>
 
     let dest = if Path::new(&rule.destination).is_absolute() {
         // Backwards compatibility: old rules with absolute paths
-        resolve_destination(&rule.destination, file_info)
+        resolve_destination(&rule.destination, &output)
     } else {
         // New behavior: relative to the source folder
-        PathBuf::from(&base_folder).join(resolve_destination(&rule.destination, file_info))
+        PathBuf::from(&base_folder).join(resolve_destination(&rule.destination, &output))
     };
 
     match rule.action.as_str() {
         "move" => {
             fs::create_dir_all(&dest).map_err(|e| e.to_string())?;
-            let new_path = dest.join(&file_info.name);
+            let new_path = dest.join(&output.name);
             if new_path.exists() {
-                let stem = file_info
-                    .path
-                    .file_stem()
-                    .unwrap_or_default()
-                    .to_string_lossy();
-                let new_name = format!("{}_{}.{}", stem, Utc::now().timestamp(), file_info.extension);
+                let new_name = collision_file_name(Path::new(&output.name), &output.extension);
                 let new_path = dest.join(&new_name);
                 move_file_cross_device(&file_info.path, &new_path).map_err(|e| e.to_string())?;
-                Ok(new_path.to_string_lossy().to_string())
+                Ok(Some(new_path.to_string_lossy().to_string()))
             } else {
                 move_file_cross_device(&file_info.path, &new_path).map_err(|e| e.to_string())?;
-                Ok(new_path.to_string_lossy().to_string())
+                Ok(Some(new_path.to_string_lossy().to_string()))
             }
         }
-        "ignore" => Ok(file_info.path.to_string_lossy().to_string()),
+        "delete" => {
+            trash::delete(&file_info.path).map_err(|e| e.to_string())?;
+            Ok(None)
+        }
+        "ignore" => Ok(None),
         _ => Err(format!("Unknown action: {}", rule.action)),
     }
 }
 
-pub fn process_file(path: &Path, bypass_grace: bool) -> Result<Option<(Rule, String)>, String> {
+pub fn process_file(
+    path: &Path,
+    bypass_grace: bool,
+) -> Result<Option<(Rule, Option<String>)>, String> {
     let (grace_period, lock_check) = get_settings()
         .map(|s| (s.grace_period_seconds, s.lock_check_enabled))
         .unwrap_or((300, true));
@@ -236,7 +331,7 @@ pub fn process_file(path: &Path, bypass_grace: bool) -> Result<Option<(Rule, Str
         id: None,
         timestamp: Utc::now(),
         source_path: file_info.path.to_string_lossy().to_string(),
-        destination_path: Some(dest.clone()),
+        destination_path: dest.clone(),
         action: rule.action.clone(),
         file_name: file_info.name.clone(),
         file_type: rule.name.clone(),
@@ -257,9 +352,16 @@ pub fn manual_scan_folder(folder: &str) -> Result<Vec<(String, String, String)>,
         if !path.is_file() {
             continue;
         }
-        let file_name = path.file_name().unwrap_or_default().to_string_lossy().to_string();
+        let file_name = path
+            .file_name()
+            .unwrap_or_default()
+            .to_string_lossy()
+            .to_string();
         if should_ignore_file(&path) {
-            eprintln!("[manual_scan] ignoring system/hidden/temp file: {}", file_name);
+            eprintln!(
+                "[manual_scan] ignoring system/hidden/temp file: {}",
+                file_name
+            );
             continue;
         }
         if is_file_ignored_by_mouziignore(&path) {
@@ -268,8 +370,12 @@ pub fn manual_scan_folder(folder: &str) -> Result<Vec<(String, String, String)>,
         }
         match process_file(&path, true) {
             Ok(Some((rule, dest))) => {
-                eprintln!("[manual_scan] organized: {} -> {} ({})", file_name, dest, rule.name);
-                results.push((file_name, rule.name, dest));
+                let destination = dest.unwrap_or_default();
+                eprintln!(
+                    "[manual_scan] organized: {} -> {} ({})",
+                    file_name, destination, rule.name
+                );
+                results.push((file_name, rule.name, destination));
             }
             Ok(None) => {
                 eprintln!("[manual_scan] no matching rule or skipped: {}", file_name);
@@ -290,10 +396,8 @@ mod tests {
 
     #[test]
     fn test_move_file_cross_device() {
-        let test_root = std::env::temp_dir().join(format!(
-            "mouzi-move-test-{}",
-            std::process::id()
-        ));
+        let test_root =
+            std::env::temp_dir().join(format!("mouzi-move-test-{}", std::process::id()));
         let src_dir = test_root.join("src");
         let dst_dir = test_root.join("dst");
         fs::create_dir_all(&src_dir).unwrap();
@@ -309,8 +413,14 @@ mod tests {
 
         move_file_cross_device(&src, &dst).unwrap();
 
-        assert!(dst.exists(), "destination file should exist after cross-device move");
-        assert!(!src.exists(), "source file should be removed after cross-device move");
+        assert!(
+            dst.exists(),
+            "destination file should exist after cross-device move"
+        );
+        assert!(
+            !src.exists(),
+            "source file should be removed after cross-device move"
+        );
 
         // cleanup
         let _ = fs::remove_file(&dst);

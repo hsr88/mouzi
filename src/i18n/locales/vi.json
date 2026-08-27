@@ -12,7 +12,8 @@
   },
   "popup": {
     "title": "Mouzi",
-    "cleanNow": "Dọn dẹp ngay",
+    "cleanNow": "Sắp xếp ngay",
+    "organizeNow": "Sắp xếp ngay",
     "openDownloads": "Mở thư mục tải về",
     "recentActions": "Hoạt động gần đây",
     "noActions": "Chưa có hoạt động nào",
@@ -23,7 +24,11 @@
     "organized": "Đã sắp xếp: {{file}}",
     "openFolder": "Nhấp để mở → {{folder}}",
     "pendingFiles": "{{count}} tệp đang chờ",
-    "cleanManual": "Dọn dẹp ngay"
+    "cleanManual": "Sắp xếp ngay",
+    "selectAll": "Chọn tất cả",
+    "clearSelection": "Bỏ chọn",
+    "organizeSelected": "Sắp xếp mục đã chọn ({{count}})",
+    "openActionFolder": "Mở thư mục đích"
   },
   "settings": {
     "title": "Cài đặt Mouzi",
@@ -54,6 +59,7 @@
       "title": "Quy tắc",
       "add": "Thêm quy tắc",
       "edit": "Sửa",
+      "save": "Lưu",
       "delete": "Xóa",
       "name": "Tên",
       "extensions": "Đuôi tệp",
@@ -68,7 +74,17 @@
       "importSuccess": "Đã nhập {{count}} quy tắc",
       "importError": "Lỗi khi nhập quy tắc",
       "exportError": "Lỗi khi xuất quy tắc",
-      "replaceOnImport": "Thay thế các quy tắc hiện có (nếu không sẽ thêm nối tiếp)"
+      "replaceOnImport": "Thay thế các quy tắc hiện có (nếu không sẽ thêm nối tiếp)",
+      "pickDestination": "Chọn thư mục đích",
+      "actionMove": "Di chuyển vào thư mục",
+      "actionRecycle": "Chuyển vào Thùng rác",
+      "actionIgnore": "Bỏ qua",
+      "recycleBin": "Thùng rác",
+      "normalizeExtensions": "Chuẩn hóa phần mở rộng",
+      "normalizeHelp": "Ánh xạ các phần mở rộng tương đương trước khi di chuyển, ví dụ jpeg:jpg. Phân tách bằng dấu phẩy.",
+      "notificationMessage": "Thông báo tùy chỉnh",
+      "notificationPlaceholder": "Mouzi đã di chuyển tệp nguy hiểm: {file}",
+      "notificationHelp": "Tùy chọn. Có thể dùng: {file}, {rule}, {destination}."
     },
     "history": {
       "title": "Lịch sử",
@@ -77,7 +93,10 @@
       "undone": "Đã hoàn tác",
       "empty": "Không có lịch sử",
       "revertAll": "Khôi phục tất cả",
-      "revertAllDisabled": "Không có hành động nào để khôi phục"
+      "revertAllDisabled": "Không có hành động nào để khôi phục",
+      "confirmTitle": "Xóa toàn bộ lịch sử?",
+      "confirmDescription": "Chỉ nhật ký hoạt động của Mouzi bị xóa. Tệp của bạn sẽ không bị di chuyển hay xóa.",
+      "confirmDelete": "Xóa lịch sử"
     },
     "general": {
       "title": "Chung",
@@ -96,7 +115,9 @@
       "gracePeriodMinutes": "Phút",
       "gracePeriodHours": "Giờ",
       "gracePeriodCustom": "Tùy chỉnh",
-      "gracePeriodMaxError": "Thời gian chờ không được quá 7 ngày"
+      "gracePeriodMaxError": "Thời gian chờ không được quá 7 ngày",
+      "autoUpdates": "Tự động kiểm tra cập nhật",
+      "autoUpdatesDesc": "Kiểm tra phiên bản Mouzi mới và cho phép cài đặt bằng một cú nhấp."
     },
     "ignore": {
       "title": "Bỏ qua",
@@ -126,10 +147,10 @@
     },
     "scheduler": {
       "title": "Lịch trình",
-      "enable": "Bật dọn dẹp theo lịch trình",
+      "enable": "Bật sắp xếp theo lịch",
       "timesPerDay": "Số lần mỗi ngày",
       "time": "Thời gian {{number}}",
-      "desc": "Tự động chạy Dọn dẹp ngay vào các khung giờ đã lên lịch.",
+      "desc": "Tự động sắp xếp tệp vào các khung giờ đã lên lịch.",
       "once": "Một lần mỗi ngày",
       "twice": "Hai lần mỗi ngày",
       "thrice": "3 lần mỗi ngày",
@@ -141,6 +162,17 @@
   },
   "common": {
     "cancel": "Hủy",
-    "off": "TẮT"
+    "off": "TẮT",
+    "close": "Đóng",
+    "back": "Quay lại"
+  },
+  "updater": {
+    "available": "Đã có Mouzi {{version}}",
+    "checking": "Đang kiểm tra cập nhật...",
+    "current": "Bạn đang dùng phiên bản mới nhất.",
+    "error": "Không thể kiểm tra cập nhật. Hãy thử lại sau.",
+    "installVersion": "Cài đặt Mouzi {{version}}",
+    "installRestart": "Cài đặt và khởi động lại",
+    "installing": "Đang cài đặt cập nhật..."
   }
 }

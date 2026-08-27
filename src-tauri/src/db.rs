@@ -1,9 +1,9 @@
 use chrono::{DateTime, Utc};
+use once_cell::sync::OnceCell;
 use rusqlite::{params, Connection, Result as SqliteResult};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
-use once_cell::sync::OnceCell;
 
 // ---------------------------------------------------------------------------
 // Folder modes
@@ -46,6 +46,16 @@ pub struct Rule {
     pub destination: String,
     pub action: String, // "move", "rename", "delete", "ignore"
     pub folder_id: i64,
+    #[serde(default)]
+    pub notification_message: Option<String>,
+    #[serde(default)]
+    pub normalize_extensions: bool,
+    #[serde(default = "default_extension_mappings")]
+    pub extension_mappings: String,
+}
+
+fn default_extension_mappings() -> String {
+    "jpeg:jpg".to_string()
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -80,6 +90,7 @@ pub struct AppSettings {
     pub autostart: bool,
     pub grace_period_seconds: i64,
     pub lock_check_enabled: bool,
+    pub auto_update_enabled: bool,
     pub schedule_enabled: bool,
     pub schedule_times_per_day: i64,
     pub schedule_time_1: Option<String>,
@@ -124,7 +135,10 @@ pub fn init_db(app_dir: PathBuf) -> SqliteResult<()> {
             pattern TEXT,
             destination TEXT NOT NULL,
             action TEXT NOT NULL DEFAULT 'move',
-            folder_id INTEGER NOT NULL DEFAULT 0
+            folder_id INTEGER NOT NULL DEFAULT 0,
+            notification_message TEXT,
+            normalize_extensions INTEGER NOT NULL DEFAULT 0,
+            extension_mappings TEXT NOT NULL DEFAULT 'jpeg:jpg'
         )",
         [],
     )?;
@@ -156,23 +170,45 @@ pub fn init_db(app_dir: PathBuf) -> SqliteResult<()> {
     )?;
 
     // Migration: add missing columns
-    let cols: Vec<String> = conn.prepare("PRAGMA table_info(settings)")?
+    let cols: Vec<String> = conn
+        .prepare("PRAGMA table_info(settings)")?
         .query_map([], |row| row.get::<_, String>(1))?
         .collect::<Result<Vec<_>, _>>()?;
     if !cols.iter().any(|c| c == "autostart") {
-        conn.execute("ALTER TABLE settings ADD COLUMN autostart INTEGER NOT NULL DEFAULT 1", [])?;
+        conn.execute(
+            "ALTER TABLE settings ADD COLUMN autostart INTEGER NOT NULL DEFAULT 1",
+            [],
+        )?;
     }
     if !cols.iter().any(|c| c == "grace_period_seconds") {
-        conn.execute("ALTER TABLE settings ADD COLUMN grace_period_seconds INTEGER NOT NULL DEFAULT 300", [])?;
+        conn.execute(
+            "ALTER TABLE settings ADD COLUMN grace_period_seconds INTEGER NOT NULL DEFAULT 300",
+            [],
+        )?;
     }
     if !cols.iter().any(|c| c == "lock_check_enabled") {
-        conn.execute("ALTER TABLE settings ADD COLUMN lock_check_enabled INTEGER NOT NULL DEFAULT 1", [])?;
+        conn.execute(
+            "ALTER TABLE settings ADD COLUMN lock_check_enabled INTEGER NOT NULL DEFAULT 1",
+            [],
+        )?;
+    }
+    if !cols.iter().any(|c| c == "auto_update_enabled") {
+        conn.execute(
+            "ALTER TABLE settings ADD COLUMN auto_update_enabled INTEGER NOT NULL DEFAULT 1",
+            [],
+        )?;
     }
     if !cols.iter().any(|c| c == "schedule_enabled") {
-        conn.execute("ALTER TABLE settings ADD COLUMN schedule_enabled INTEGER NOT NULL DEFAULT 0", [])?;
+        conn.execute(
+            "ALTER TABLE settings ADD COLUMN schedule_enabled INTEGER NOT NULL DEFAULT 0",
+            [],
+        )?;
     }
     if !cols.iter().any(|c| c == "schedule_times_per_day") {
-        conn.execute("ALTER TABLE settings ADD COLUMN schedule_times_per_day INTEGER NOT NULL DEFAULT 1", [])?;
+        conn.execute(
+            "ALTER TABLE settings ADD COLUMN schedule_times_per_day INTEGER NOT NULL DEFAULT 1",
+            [],
+        )?;
     }
     if !cols.iter().any(|c| c == "schedule_time_1") {
         conn.execute("ALTER TABLE settings ADD COLUMN schedule_time_1 TEXT", [])?;
@@ -186,12 +222,28 @@ pub fn init_db(app_dir: PathBuf) -> SqliteResult<()> {
     if !cols.iter().any(|c| c == "schedule_time_4") {
         conn.execute("ALTER TABLE settings ADD COLUMN schedule_time_4 TEXT", [])?;
     }
+
+    let rule_cols: Vec<String> = conn
+        .prepare("PRAGMA table_info(rules)")?
+        .query_map([], |row| row.get::<_, String>(1))?
+        .collect::<Result<Vec<_>, _>>()?;
+    if !rule_cols.iter().any(|c| c == "notification_message") {
+        conn.execute("ALTER TABLE rules ADD COLUMN notification_message TEXT", [])?;
+    }
+    if !rule_cols.iter().any(|c| c == "normalize_extensions") {
+        conn.execute(
+            "ALTER TABLE rules ADD COLUMN normalize_extensions INTEGER NOT NULL DEFAULT 0",
+            [],
+        )?;
+    }
+    if !rule_cols.iter().any(|c| c == "extension_mappings") {
+        conn.execute(
+            "ALTER TABLE rules ADD COLUMN extension_mappings TEXT NOT NULL DEFAULT 'jpeg:jpg'",
+            [],
+        )?;
+    }
     // Insert default settings if empty
-    let count: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM settings",
-        [],
-        |row| row.get(0),
-    )?;
+    let count: i64 = conn.query_row("SELECT COUNT(*) FROM settings", [], |row| row.get(0))?;
 
     if count == 0 {
         conn.execute(
@@ -216,19 +268,30 @@ pub fn migrate_rules_to_relative() -> SqliteResult<()> {
     let conn = db.lock().unwrap();
     for folder in folders {
         let folder_norm = folder.path.trim_end_matches('/').trim_end_matches('\\');
-        if folder_norm.is_empty() { continue; }
-        let mut stmt = conn.prepare("SELECT id, destination FROM rules WHERE destination LIKE ?1")?;
+        if folder_norm.is_empty() {
+            continue;
+        }
+        let mut stmt =
+            conn.prepare("SELECT id, destination FROM rules WHERE destination LIKE ?1")?;
         let rows: Vec<(i64, String)> = stmt
-            .query_map([format!("{}%", folder_norm)], |row| Ok((row.get(0)?, row.get(1)?)))?
+            .query_map([format!("{}%", folder_norm)], |row| {
+                Ok((row.get(0)?, row.get(1)?))
+            })?
             .collect::<SqliteResult<Vec<_>>>()?;
         for (id, dest) in rows {
             let relative = if dest.starts_with(&folder_norm) {
-                dest[folder_norm.len()..].trim_start_matches('/').trim_start_matches('\\').to_string()
+                dest[folder_norm.len()..]
+                    .trim_start_matches('/')
+                    .trim_start_matches('\\')
+                    .to_string()
             } else {
                 dest.clone()
             };
             if !relative.is_empty() && relative != dest {
-                conn.execute("UPDATE rules SET destination = ?1 WHERE id = ?2", params![relative, id])?;
+                conn.execute(
+                    "UPDATE rules SET destination = ?1 WHERE id = ?2",
+                    params![relative, id],
+                )?;
             }
         }
     }
@@ -246,12 +309,46 @@ pub fn insert_default_rules(_folder_path: &str) -> SqliteResult<()> {
     }
 
     let defaults = vec![
-        ("Images", 1, vec!["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg", "ico", "heic", "heif"], "Images"),
-        ("Documents", 2, vec!["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "rtf", "odt"], "Documents"),
-        ("Archives", 3, vec!["zip", "rar", "7z", "tar", "gz", "bz2", "xz"], "Archives"),
-        ("Installers", 4, vec!["exe", "msi", "msix", "appx"], "Installers"),
-        ("Music", 5, vec!["mp3", "wav", "flac", "aac", "ogg", "wma", "m4a"], "Music"),
-        ("Videos", 6, vec!["mp4", "avi", "mkv", "mov", "wmv", "flv", "webm"], "Videos"),
+        (
+            "Images",
+            1,
+            vec![
+                "jpg", "jpeg", "png", "gif", "webp", "bmp", "svg", "ico", "heic", "heif",
+            ],
+            "Images",
+        ),
+        (
+            "Documents",
+            2,
+            vec![
+                "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "rtf", "odt",
+            ],
+            "Documents",
+        ),
+        (
+            "Archives",
+            3,
+            vec!["zip", "rar", "7z", "tar", "gz", "bz2", "xz"],
+            "Archives",
+        ),
+        (
+            "Installers",
+            4,
+            vec!["exe", "msi", "msix", "appx"],
+            "Installers",
+        ),
+        (
+            "Music",
+            5,
+            vec!["mp3", "wav", "flac", "aac", "ogg", "wma", "m4a"],
+            "Music",
+        ),
+        (
+            "Videos",
+            6,
+            vec!["mp4", "avi", "mkv", "mov", "wmv", "flv", "webm"],
+            "Videos",
+        ),
         ("Others", 99, vec!["*"], "Others"),
     ];
 
@@ -271,24 +368,31 @@ pub fn get_rules() -> SqliteResult<Vec<Rule>> {
     let db = get_db();
     let conn = db.lock().unwrap();
     let mut stmt = conn.prepare(
-        "SELECT id, name, priority, enabled, extensions, pattern, destination, action, folder_id FROM rules ORDER BY priority"
+        "SELECT id, name, priority, enabled, extensions, pattern, destination, action, folder_id, notification_message, normalize_extensions, extension_mappings FROM rules ORDER BY priority"
     )?;
 
-    let rules = stmt.query_map([], |row| {
-        let exts_str: String = row.get(4)?;
-        Ok(Rule {
-            id: row.get(0)?,
-            name: row.get(1)?,
-            priority: row.get(2)?,
-            enabled: row.get::<_, i32>(3)? != 0,
-            extensions: exts_str.split(',').map(|s| s.trim().to_lowercase()).collect(),
-            pattern: row.get(5)?,
-            destination: row.get(6)?,
-            action: row.get(7)?,
-            folder_id: row.get(8)?,
-        })
-    })?
-    .collect::<SqliteResult<Vec<_>>>()?;
+    let rules = stmt
+        .query_map([], |row| {
+            let exts_str: String = row.get(4)?;
+            Ok(Rule {
+                id: row.get(0)?,
+                name: row.get(1)?,
+                priority: row.get(2)?,
+                enabled: row.get::<_, i32>(3)? != 0,
+                extensions: exts_str
+                    .split(',')
+                    .map(|s| s.trim().to_lowercase())
+                    .collect(),
+                pattern: row.get(5)?,
+                destination: row.get(6)?,
+                action: row.get(7)?,
+                folder_id: row.get(8)?,
+                notification_message: row.get(9)?,
+                normalize_extensions: row.get::<_, i32>(10)? != 0,
+                extension_mappings: row.get(11)?,
+            })
+        })?
+        .collect::<SqliteResult<Vec<_>>>()?;
 
     Ok(rules)
 }
@@ -298,8 +402,8 @@ pub fn add_rule(rule: &Rule) -> SqliteResult<i64> {
     let conn = db.lock().unwrap();
     let exts = rule.extensions.join(",");
     conn.execute(
-        "INSERT INTO rules (name, priority, enabled, extensions, pattern, destination, action, folder_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
-        params![rule.name, rule.priority, rule.enabled as i32, exts, rule.pattern, rule.destination, rule.action, rule.folder_id],
+        "INSERT INTO rules (name, priority, enabled, extensions, pattern, destination, action, folder_id, notification_message, normalize_extensions, extension_mappings) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
+        params![rule.name, rule.priority, rule.enabled as i32, exts, rule.pattern, rule.destination, rule.action, rule.folder_id, rule.notification_message, rule.normalize_extensions as i32, rule.extension_mappings],
     )?;
     Ok(conn.last_insert_rowid())
 }
@@ -309,8 +413,8 @@ pub fn update_rule(rule: &Rule) -> SqliteResult<()> {
     let conn = db.lock().unwrap();
     let exts = rule.extensions.join(",");
     conn.execute(
-        "UPDATE rules SET name=?1, priority=?2, enabled=?3, extensions=?4, pattern=?5, destination=?6, action=?7, folder_id=?8 WHERE id=?9",
-        params![rule.name, rule.priority, rule.enabled as i32, exts, rule.pattern, rule.destination, rule.action, rule.folder_id, rule.id],
+        "UPDATE rules SET name=?1, priority=?2, enabled=?3, extensions=?4, pattern=?5, destination=?6, action=?7, folder_id=?8, notification_message=?9, normalize_extensions=?10, extension_mappings=?11 WHERE id=?12",
+        params![rule.name, rule.priority, rule.enabled as i32, exts, rule.pattern, rule.destination, rule.action, rule.folder_id, rule.notification_message, rule.normalize_extensions as i32, rule.extension_mappings, rule.id],
     )?;
     Ok(())
 }
@@ -333,15 +437,16 @@ pub fn get_watched_folders() -> SqliteResult<Vec<WatchedFolder>> {
     let db = get_db();
     let conn = db.lock().unwrap();
     let mut stmt = conn.prepare("SELECT id, path, enabled, mode FROM watched_folders")?;
-    let folders = stmt.query_map([], |row| {
-        Ok(WatchedFolder {
-            id: row.get(0)?,
-            path: row.get(1)?,
-            enabled: row.get::<_, i32>(2)? != 0,
-            mode: row.get(3)?,
-        })
-    })?
-    .collect::<SqliteResult<Vec<_>>>()?;
+    let folders = stmt
+        .query_map([], |row| {
+            Ok(WatchedFolder {
+                id: row.get(0)?,
+                path: row.get(1)?,
+                enabled: row.get::<_, i32>(2)? != 0,
+                mode: row.get(3)?,
+            })
+        })?
+        .collect::<SqliteResult<Vec<_>>>()?;
     Ok(folders)
 }
 
@@ -365,7 +470,10 @@ pub fn remove_watched_folder(id: i64) -> SqliteResult<()> {
 pub fn update_folder_mode(id: i64, mode: &str) -> SqliteResult<()> {
     let db = get_db();
     let conn = db.lock().unwrap();
-    conn.execute("UPDATE watched_folders SET mode=?1 WHERE id=?2", params![mode, id])?;
+    conn.execute(
+        "UPDATE watched_folders SET mode=?1 WHERE id=?2",
+        params![mode, id],
+    )?;
     Ok(())
 }
 
@@ -392,20 +500,23 @@ pub fn get_recent_logs(limit: i64) -> SqliteResult<Vec<ActionLog>> {
     let mut stmt = conn.prepare(
         "SELECT id, timestamp, source_path, destination_path, action, file_name, file_type, undone FROM action_logs ORDER BY timestamp DESC LIMIT ?1"
     )?;
-    let logs = stmt.query_map(params![limit], |row| {
-        let ts_str: String = row.get(1)?;
-        Ok(ActionLog {
-            id: row.get(0)?,
-            timestamp: DateTime::parse_from_rfc3339(&ts_str).unwrap().with_timezone(&Utc),
-            source_path: row.get(2)?,
-            destination_path: row.get(3)?,
-            action: row.get(4)?,
-            file_name: row.get(5)?,
-            file_type: row.get(6)?,
-            undone: row.get::<_, i32>(7)? != 0,
-        })
-    })?
-    .collect::<SqliteResult<Vec<_>>>()?;
+    let logs = stmt
+        .query_map(params![limit], |row| {
+            let ts_str: String = row.get(1)?;
+            Ok(ActionLog {
+                id: row.get(0)?,
+                timestamp: DateTime::parse_from_rfc3339(&ts_str)
+                    .unwrap()
+                    .with_timezone(&Utc),
+                source_path: row.get(2)?,
+                destination_path: row.get(3)?,
+                action: row.get(4)?,
+                file_name: row.get(5)?,
+                file_type: row.get(6)?,
+                undone: row.get::<_, i32>(7)? != 0,
+            })
+        })?
+        .collect::<SqliteResult<Vec<_>>>()?;
     Ok(logs)
 }
 
@@ -413,12 +524,17 @@ pub fn get_undoable_logs() -> SqliteResult<Vec<(i64, String, String)>> {
     let db = get_db();
     let conn = db.lock().unwrap();
     let mut stmt = conn.prepare(
-        "SELECT id, source_path, destination_path FROM action_logs WHERE undone = 0 ORDER BY timestamp DESC"
+        "SELECT id, source_path, destination_path FROM action_logs WHERE undone = 0 AND action = 'move' AND destination_path IS NOT NULL ORDER BY timestamp DESC"
     )?;
-    let logs = stmt.query_map([], |row| {
-        Ok((row.get::<_, i64>(0)?, row.get::<_, String>(1)?, row.get::<_, String>(2)?))
-    })?
-    .collect::<SqliteResult<Vec<_>>>()?;
+    let logs = stmt
+        .query_map([], |row| {
+            Ok((
+                row.get::<_, i64>(0)?,
+                row.get::<_, String>(1)?,
+                row.get::<_, String>(2)?,
+            ))
+        })?
+        .collect::<SqliteResult<Vec<_>>>()?;
     Ok(logs)
 }
 
@@ -428,21 +544,24 @@ pub fn get_weekly_stats() -> SqliteResult<Vec<(String, i64)>> {
     let mut stmt = conn.prepare(
         "SELECT file_type, COUNT(*) FROM action_logs WHERE timestamp > datetime('now', '-7 days') AND undone = 0 GROUP BY file_type"
     )?;
-    let stats = stmt.query_map([], |row| {
-        Ok((row.get::<_, String>(0)?, row.get::<_, i64>(1)?))
-    })?
-    .collect::<SqliteResult<Vec<_>>>()?;
+    let stats = stmt
+        .query_map([], |row| {
+            Ok((row.get::<_, String>(0)?, row.get::<_, i64>(1)?))
+        })?
+        .collect::<SqliteResult<Vec<_>>>()?;
     Ok(stats)
 }
 
 pub fn undo_action(id: i64) -> SqliteResult<Option<(String, String)>> {
     let db = get_db();
     let conn = db.lock().unwrap();
-    let log: Option<(String, String)> = conn.query_row(
-        "SELECT source_path, destination_path FROM action_logs WHERE id=?1 AND undone=0",
-        params![id],
-        |row| Ok((row.get(0)?, row.get(1)?)),
-    ).ok();
+    let log: Option<(String, String)> = conn
+        .query_row(
+            "SELECT source_path, destination_path FROM action_logs WHERE id=?1 AND undone=0 AND action='move' AND destination_path IS NOT NULL",
+            params![id],
+            |row| Ok((row.get(0)?, row.get(1)?)),
+        )
+        .ok();
 
     if log.is_some() {
         conn.execute("UPDATE action_logs SET undone=1 WHERE id=?1", params![id])?;
@@ -454,7 +573,7 @@ pub fn get_settings() -> SqliteResult<AppSettings> {
     let db = get_db();
     let conn = db.lock().unwrap();
     conn.query_row(
-        "SELECT id, language, theme, telemetry_enabled, first_run, autostart, grace_period_seconds, lock_check_enabled, schedule_enabled, schedule_times_per_day, schedule_time_1, schedule_time_2, schedule_time_3, schedule_time_4 FROM settings LIMIT 1",
+        "SELECT id, language, theme, telemetry_enabled, first_run, autostart, grace_period_seconds, lock_check_enabled, auto_update_enabled, schedule_enabled, schedule_times_per_day, schedule_time_1, schedule_time_2, schedule_time_3, schedule_time_4 FROM settings LIMIT 1",
         [],
         |row| {
             Ok(AppSettings {
@@ -466,12 +585,13 @@ pub fn get_settings() -> SqliteResult<AppSettings> {
                 autostart: row.get::<_, i32>(5).unwrap_or(1) != 0,
                 grace_period_seconds: row.get::<_, i64>(6).unwrap_or(300),
                 lock_check_enabled: row.get::<_, i32>(7).unwrap_or(1) != 0,
-                schedule_enabled: row.get::<_, i32>(8).unwrap_or(0) != 0,
-                schedule_times_per_day: row.get::<_, i64>(9).unwrap_or(1),
-                schedule_time_1: row.get(10).ok(),
-                schedule_time_2: row.get(11).ok(),
-                schedule_time_3: row.get(12).ok(),
-                schedule_time_4: row.get(13).ok(),
+                auto_update_enabled: row.get::<_, i32>(8).unwrap_or(1) != 0,
+                schedule_enabled: row.get::<_, i32>(9).unwrap_or(0) != 0,
+                schedule_times_per_day: row.get::<_, i64>(10).unwrap_or(1),
+                schedule_time_1: row.get(11).ok(),
+                schedule_time_2: row.get(12).ok(),
+                schedule_time_3: row.get(13).ok(),
+                schedule_time_4: row.get(14).ok(),
             })
         },
     )
@@ -481,7 +601,7 @@ pub fn update_settings(settings: &AppSettings) -> SqliteResult<()> {
     let db = get_db();
     let conn = db.lock().unwrap();
     conn.execute(
-        "UPDATE settings SET language=?1, theme=?2, telemetry_enabled=?3, first_run=?4, autostart=?5, grace_period_seconds=?6, lock_check_enabled=?7, schedule_enabled=?8, schedule_times_per_day=?9, schedule_time_1=?10, schedule_time_2=?11, schedule_time_3=?12, schedule_time_4=?13 WHERE id=?14",
+        "UPDATE settings SET language=?1, theme=?2, telemetry_enabled=?3, first_run=?4, autostart=?5, grace_period_seconds=?6, lock_check_enabled=?7, auto_update_enabled=?8, schedule_enabled=?9, schedule_times_per_day=?10, schedule_time_1=?11, schedule_time_2=?12, schedule_time_3=?13, schedule_time_4=?14 WHERE id=?15",
         params![
             settings.language,
             settings.theme,
@@ -490,6 +610,7 @@ pub fn update_settings(settings: &AppSettings) -> SqliteResult<()> {
             settings.autostart as i32,
             settings.grace_period_seconds,
             settings.lock_check_enabled as i32,
+            settings.auto_update_enabled as i32,
             settings.schedule_enabled as i32,
             settings.schedule_times_per_day,
             settings.schedule_time_1,

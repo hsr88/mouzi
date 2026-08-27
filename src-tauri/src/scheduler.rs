@@ -10,7 +10,7 @@ use tauri::{AppHandle, Emitter};
 
 const CHECK_INTERVAL_SECONDS: u64 = 60;
 
-/// Background scheduler for running Clean Now at configured local times.
+/// Background scheduler for organizing files at configured local times.
 pub struct Scheduler {
     /// Last run date (local) for each schedule slot, to avoid double-triggering.
     last_run_dates: Arc<Mutex<HashMap<usize, NaiveDate>>>,
@@ -27,12 +27,10 @@ impl Scheduler {
     /// any configured schedule time has been reached in the last minute.
     pub fn start(&self, app_handle: AppHandle) {
         let last_run_dates = self.last_run_dates.clone();
-        thread::spawn(move || {
-            loop {
-                thread::sleep(StdDuration::from_secs(CHECK_INTERVAL_SECONDS));
-                if let Err(e) = check_and_run(&app_handle, &last_run_dates) {
-                    eprintln!("[scheduler] error: {}", e);
-                }
+        thread::spawn(move || loop {
+            thread::sleep(StdDuration::from_secs(CHECK_INTERVAL_SECONDS));
+            if let Err(e) = check_and_run(&app_handle, &last_run_dates) {
+                eprintln!("[scheduler] error: {}", e);
             }
         });
     }
@@ -92,12 +90,15 @@ fn parse_time(time_str: &str) -> Result<NaiveTime, String> {
 }
 
 fn perform_scheduled_clean(app_handle: &AppHandle) -> Result<(), String> {
-    println!("[scheduler] running scheduled clean");
+    println!("[scheduler] running scheduled organization");
 
     let folders = get_watched_folders().map_err(|e| e.to_string())?;
     let mut total = 0usize;
     for folder in folders {
-        if !folder.enabled || is_folder_paused_mode(&folder.mode) || is_folder_manual_mode(&folder.mode) {
+        if !folder.enabled
+            || is_folder_paused_mode(&folder.mode)
+            || is_folder_manual_mode(&folder.mode)
+        {
             continue;
         }
         if !std::path::Path::new(&folder.path).exists() {

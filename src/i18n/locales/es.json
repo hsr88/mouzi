@@ -6,7 +6,8 @@
   },
   "popup": {
     "title": "Mouzi",
-    "cleanNow": "Limpiar ahora",
+    "cleanNow": "Organizar ahora",
+    "organizeNow": "Organizar ahora",
     "openDownloads": "Abrir Descargas",
     "recentActions": "Acciones recientes",
     "noActions": "Sin acciones aún",
@@ -17,7 +18,11 @@
     "organized": "Organizado: {{file}}",
     "openFolder": "Clic para abrir → {{folder}}",
     "pendingFiles": "{{count}} archivos esperando",
-    "cleanManual": "Limpiar ahora"
+    "cleanManual": "Organizar ahora",
+    "selectAll": "Seleccionar todo",
+    "clearSelection": "Borrar selección",
+    "organizeSelected": "Organizar seleccionados ({{count}})",
+    "openActionFolder": "Abrir carpeta de destino"
   },
   "settings": {
     "title": "Configuración Mouzi",
@@ -38,6 +43,7 @@
       "title": "Reglas",
       "add": "Agregar regla",
       "edit": "Editar",
+      "save": "Guardar",
       "delete": "Eliminar",
       "name": "Nombre",
       "extensions": "Extensiones",
@@ -52,7 +58,17 @@
       "importSuccess": "{{count}} reglas importadas",
       "importError": "Error al importar reglas",
       "exportError": "Error al exportar reglas",
-      "replaceOnImport": "Reemplazar reglas existentes (de lo contrario agregar)"
+      "replaceOnImport": "Reemplazar reglas existentes (de lo contrario agregar)",
+      "pickDestination": "Elegir carpeta de destino",
+      "actionMove": "Mover a una carpeta",
+      "actionRecycle": "Mover a la papelera",
+      "actionIgnore": "Ignorar",
+      "recycleBin": "Papelera",
+      "normalizeExtensions": "Normalizar extensiones",
+      "normalizeHelp": "Asigna extensiones equivalentes antes de mover, por ejemplo jpeg:jpg. Separa las asignaciones con comas.",
+      "notificationMessage": "Notificación personalizada",
+      "notificationPlaceholder": "Mouzi movió un archivo peligroso: {file}",
+      "notificationHelp": "Opcional. Marcadores disponibles: {file}, {rule}, {destination}."
     },
     "history": {
       "title": "Historial",
@@ -61,7 +77,10 @@
       "undone": "Revertido",
       "empty": "Sin historial",
       "revertAll": "Deshacer todo",
-      "revertAllDisabled": "Sin acciones para deshacer"
+      "revertAllDisabled": "Sin acciones para deshacer",
+      "confirmTitle": "¿Eliminar todo el historial?",
+      "confirmDescription": "Solo se eliminará el registro de actividad de Mouzi. Tus archivos no se moverán ni se eliminarán.",
+      "confirmDelete": "Eliminar historial"
     },
     "general": {
       "title": "General",
@@ -80,7 +99,9 @@
       "gracePeriodMinutes": "Minutos",
       "gracePeriodHours": "Horas",
       "gracePeriodCustom": "Personalizado",
-      "gracePeriodMaxError": "El período de gracia no puede exceder los 7 días"
+      "gracePeriodMaxError": "El período de gracia no puede exceder los 7 días",
+      "autoUpdates": "Comprobar actualizaciones automáticamente",
+      "autoUpdatesDesc": "Busca nuevas versiones de Mouzi y ofrece instalarlas con un clic."
     },
     "ignore": {
       "title": "Excluir",
@@ -110,10 +131,10 @@
     },
     "scheduler": {
       "title": "Programador",
-      "enable": "Activar limpieza programada",
+      "enable": "Activar organización programada",
       "timesPerDay": "Veces por día",
       "time": "Hora {{number}}",
-      "desc": "Ejecutar Limpiar ahora automáticamente en horarios programados.",
+      "desc": "Organizar archivos automáticamente en horarios programados.",
       "once": "Una vez al día",
       "twice": "Dos veces al día",
       "thrice": "3 veces al día",
@@ -125,6 +146,17 @@
   },
   "common": {
     "cancel": "Cancelar",
-    "off": "DESACTIVADO"
+    "off": "DESACTIVADO",
+    "close": "Cerrar",
+    "back": "Atrás"
+  },
+  "updater": {
+    "available": "Mouzi {{version}} está disponible",
+    "checking": "Buscando actualizaciones...",
+    "current": "Ya tienes la versión más reciente.",
+    "error": "No se pudo comprobar si hay actualizaciones. Inténtalo más tarde.",
+    "installVersion": "Instalar Mouzi {{version}}",
+    "installRestart": "Instalar y reiniciar",
+    "installing": "Instalando actualización..."
   }
 }

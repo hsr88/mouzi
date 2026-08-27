@@ -1,10 +1,18 @@
 ---
 version: 0.1.6
-date: 2026-08-02
-title: Quick rule toggles and smarter ignores
+date: 2026-08-27
+title: Safer organization, selective batches and automatic updates
 ---
 
-- Added a quick enable/disable toggle to every rule row, so pausing one rule no longer requires opening the editor.
-- `.mouziignore` now supports inline `#` comments after patterns.
-- Improved handling of locked files during scheduled cleans.
-- Updated translations across the 10 supported languages.
+- Added secure in-app update checks and one-click installation through the Tauri updater.
+- Renamed cleaning actions to **Organize** so the interface no longer suggests that ordinary sorting deletes files.
+- Added magic-byte detection for extensionless files and routes recognized formats through the existing rules.
+- Added checkboxes for organizing only selected files waiting in Manual mode.
+- Added a destination folder picker, quick enable/disable switches and clearer accessible labels to the rule list.
+- Added per-rule extension normalization with custom mappings such as `jpeg:jpg`.
+- Added optional custom rule notifications with `{file}`, `{rule}` and `{destination}` placeholders.
+- Rule actions that remove a file now use the operating system Recycle Bin or Trash instead of permanent deletion.
+- Added a confirmation step before clearing history and renamed the rule editor action from **Edit** to **Save**.
+- `.mouziignore` now supports inline `#` comments, with `\#` available for a literal hash.
+- Repaired and validated the AppImage icon links as part of the Linux release workflow.
+- Updated translations across all 10 supported languages.

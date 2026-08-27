@@ -6,7 +6,8 @@
   },
   "popup": {
     "title": "Mouzi",
-    "cleanNow": "Сортировать сейчас",
+    "cleanNow": "Организовать сейчас",
+    "organizeNow": "Организовать сейчас",
     "openDownloads": "Открыть загрузки",
     "recentActions": "Недавние действия",
     "noActions": "Пока нет действий",
@@ -17,7 +18,11 @@
     "organized": "Упорядочено: {{file}}",
     "openFolder": "Нажмите, чтобы открыть → {{folder}}",
     "pendingFiles": "{{count}} файлов ожидает",
-    "cleanManual": "Сортировать сейчас"
+    "cleanManual": "Организовать сейчас",
+    "selectAll": "Выбрать все",
+    "clearSelection": "Снять выделение",
+    "organizeSelected": "Организовать выбранные ({{count}})",
+    "openActionFolder": "Открыть папку назначения"
   },
   "settings": {
     "title": "Настройки Mouzi",
@@ -48,6 +53,7 @@
       "title": "Правила",
       "add": "Добавить правило",
       "edit": "Редактировать",
+      "save": "Сохранить",
       "delete": "Удалить",
       "name": "Название",
       "extensions": "Расширения",
@@ -62,7 +68,17 @@
       "importSuccess": "Импортировано {{count}} правил",
       "importError": "Не удалось импортировать правила",
       "exportError": "Не удалось экспортировать правила",
-      "replaceOnImport": "Заменить существующие правила (иначе добавить)"
+      "replaceOnImport": "Заменить существующие правила (иначе добавить)",
+      "pickDestination": "Выбрать папку назначения",
+      "actionMove": "Переместить в папку",
+      "actionRecycle": "Переместить в корзину",
+      "actionIgnore": "Игнорировать",
+      "recycleBin": "Корзина",
+      "normalizeExtensions": "Нормализовать расширения",
+      "normalizeHelp": "Сопоставляйте эквивалентные расширения перед перемещением, например jpeg:jpg. Разделяйте пары запятыми.",
+      "notificationMessage": "Своё уведомление",
+      "notificationPlaceholder": "Mouzi переместил опасный файл: {file}",
+      "notificationHelp": "Необязательно. Доступно: {file}, {rule}, {destination}."
     },
     "history": {
       "title": "История",
@@ -71,7 +87,10 @@
       "undone": "Отменено",
       "empty": "История пуста",
       "revertAll": "Отменить всё",
-      "revertAllDisabled": "Нет действий для отмены"
+      "revertAllDisabled": "Нет действий для отмены",
+      "confirmTitle": "Удалить всю историю?",
+      "confirmDescription": "Будет удалён только журнал действий Mouzi. Ваши файлы не будут перемещены или удалены.",
+      "confirmDelete": "Удалить историю"
     },
     "general": {
       "title": "Общие",
@@ -90,7 +109,9 @@
       "gracePeriodMinutes": "Минуты",
       "gracePeriodHours": "Часы",
       "gracePeriodCustom": "Пользовательский",
-      "gracePeriodMaxError": "Период ожидания не может превышать 7 дней"
+      "gracePeriodMaxError": "Период ожидания не может превышать 7 дней",
+      "autoUpdates": "Автоматическая проверка обновлений",
+      "autoUpdatesDesc": "Проверять новые версии Mouzi и предлагать установку одним нажатием."
     },
     "ignore": {
       "title": "Игнорировать",
@@ -120,10 +141,10 @@
     },
     "scheduler": {
       "title": "Планировщик",
-      "enable": "Включить запланированную очистку",
+      "enable": "Включить организацию по расписанию",
       "timesPerDay": "Раз в день",
       "time": "Время {{number}}",
-      "desc": "Автоматически запускайте очистку по расписанию.",
+      "desc": "Автоматически организовывать файлы по расписанию.",
       "once": "Раз в день",
       "twice": "Два раза в день",
       "thrice": "3 раза в день",
@@ -135,6 +156,17 @@
   },
   "common": {
     "cancel": "Отмена",
-    "off": "ВЫКЛ."
+    "off": "ВЫКЛ.",
+    "close": "Закрыть",
+    "back": "Назад"
+  },
+  "updater": {
+    "available": "Доступна Mouzi {{version}}",
+    "checking": "Проверка обновлений...",
+    "current": "У вас уже последняя версия.",
+    "error": "Не удалось проверить обновления. Повторите позже.",
+    "installVersion": "Установить Mouzi {{version}}",
+    "installRestart": "Установить и перезапустить",
+    "installing": "Установка обновления..."
   }
 }

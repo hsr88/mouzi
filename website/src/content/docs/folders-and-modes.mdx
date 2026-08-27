@@ -1,10 +1,10 @@
 ---
 title: Watched folders and modes
-description: Add several folders, choose Silent, Manual or Paused behavior and understand Clean now.
+description: Add several folders, choose Silent, Manual or Paused behavior and understand Organize now.
 section: Start here
 order: 2
 platforms: [windows, linux]
-updated: 2026-08-09
+updated: 2026-08-27
 ---
 
 Mouzi can watch several folders at once. It processes files directly inside each selected folder; recursive watching of nested subfolders is not available.
@@ -24,29 +24,29 @@ Use an absolute destination only when several source folders should feed one cen
 
 Each watched folder has its own mode:
 
-| Mode | Watches new files | Organizes automatically | Included in Clean now |
+| Mode | Watches new files | Organizes automatically | Included in Organize now |
 | --- | --- | --- | --- |
 | Silent | Yes | Yes, after the grace period | Yes |
 | Manual | Yes | No | Yes |
 | Paused | No | No | No |
 
-Manual mode collects arrivals and leaves them in place until you choose **Clean now**. Switching a Manual folder to Silent sends its pending files to the automatic queue using the current grace period.
+Manual mode collects arrivals and leaves them in place until you choose **Organize now**. In the popup you can select only some waiting files and run the rules for that batch. Switching a Manual folder to Silent sends its pending files to the automatic queue using the current grace period.
 
 ## Existing files
 
-When Mouzi starts watching a folder in Silent mode, it scans existing top-level files too. This is useful for cleaning an established Downloads folder, but it can produce many moves at once.
+When Mouzi starts watching a folder in Silent mode, it scans existing top-level files too. This is useful for organizing an established Downloads folder, but it can produce many moves at once.
 
 For a folder you have not tested:
 
 1. add it in Manual mode
 2. review global rules and exclusions
-3. choose **Clean now**
+3. choose **Organize now**
 4. inspect History
 5. switch to Silent only when the result is correct
 
-## Clean now
+## Organize now
 
-Clean now scans every active Silent and Manual folder. It ignores Paused folders and does not scan nested directories.
+Organize now scans every active Silent and Manual folder. It ignores Paused folders and does not scan nested directories.
 
 It bypasses the grace period, so do not run it while a browser or another application is still writing a download. Built-in exclusions, `.mouziignore` and file-lock checking still apply.
 
