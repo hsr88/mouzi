@@ -129,15 +129,14 @@ impl TrayI18n {
                 strings.insert("popup_title", "Mouzi");
                 strings.insert("settings_title", "Mouzi Settings");
                 strings.insert("organized", "Organized {} file(s)");
+                strings.insert("notification_title", "Mouzi – click to open folder");
             }
         }
         Self { strings }
     }
 
     pub fn get<'a>(&self, key: &'a str) -> &'a str {
-        self.strings.get(key).copied().unwrap_or_else(|| match key {
-            "notification_title" => "Mouzi – click to open folder",
-            _ => key,
-        })
+        self.strings.get(key).copied().unwrap_or(key)
     }
 }
+
