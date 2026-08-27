@@ -912,6 +912,7 @@ export default function Settings() {
                   <option value="vi">Tiếng Việt</option>
                   <option value="es">Español</option>
                   <option value="uk">Українська</option>
+                  <option value="zh-CN">简体中文</option>
                 </select>
               </div>
               <div>
