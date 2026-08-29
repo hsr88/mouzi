@@ -1,0 +1,73 @@
+---
+title: "Mouzi 0.1.6: automatic updates and safer file handling"
+description: Mouzi 0.1.6 adds automatic update checks, extensionless file detection, selective batches, safer removal and several rule editor improvements.
+pubDate: 2026-08-29
+tags: [releases, updates, rules]
+related: [practical-downloads-folder-rules, building-a-trusted-release-pipeline]
+cover: /images/og-image.png
+coverAlt: Mouzi, a local Downloads folder organizer for Windows and Linux
+---
+
+Mouzi 0.1.6 is out. It is not a dramatic redesign, and that is fine. Most of the work went into the parts you notice after using the app for more than five minutes: updating it, adjusting rules and recovering when something does not go as planned.
+
+The headline change is automatic updates. There is quite a bit more in the release, though, including support for files without extensions, selective batches in Manual mode and safer removal through the system Recycle Bin or Trash.
+
+## Automatic updates, finally
+
+Mouzi can now check for a new release and install it from the app. Automatic checks are enabled by default, and you can turn them off under **Settings > General**. There is also a manual check in the About screen.
+
+The updater verifies every update package with the public key built into Mouzi before installing it. This is a Tauri updater signature and is separate from Windows Authenticode signing.
+
+There is one catch for anyone running 0.1.5 or older: those builds do not contain the updater. You need to install 0.1.6 manually this time. Once 0.1.6 is installed, future releases can arrive through the app.
+
+## "Clean" is now "Organize"
+
+The old **Clean Downloads** label suggested that Mouzi might delete files. That was never what the normal action did. Mouzi sorts files into folders, so **Organize Downloads** is a much better description.
+
+This sounds like a tiny wording change, but labels matter in an application that touches real files. The interface should not make you stop and wonder whether clicking a button will move something or erase it.
+
+The actual remove action is safer too. When a rule removes a file, Mouzi now sends it to the operating system Recycle Bin or Trash instead of deleting it permanently. You restore those files through the operating system rather than Mouzi History.
+
+## Files without extensions no longer get stranded
+
+Some browsers, chat applications and download tools save files without a useful extension. Until now, Mouzi could not send those files through an extension rule because there was no extension to match.
+
+Version 0.1.6 inspects recognizable file signatures, often called magic bytes. If an extensionless file is really a PNG, JPEG, PDF, ZIP or another supported format, Mouzi uses the detected type while evaluating your existing rules. Executable formats such as PE, ELF and Mach-O go through the existing executable category.
+
+Mouzi does not rename the file just because it detected a type. It only uses that information to choose a rule.
+
+## Manual mode works in batches
+
+Manual mode is useful when you want to review files before Mouzi organizes them. It was less useful when a folder contained twenty files and you had to handle them one at a time.
+
+The pending file list now has checkboxes. Select the files you want, leave the rest where they are and organize the chosen batch with the current rules. This also makes Manual mode a safer place to test a broad new rule before enabling Silent mode.
+
+## Rules are quicker to adjust
+
+Each rule row now has its own enable or disable switch, so pausing a questionable rule does not require opening the editor. The destination field also has a folder picker. Folders inside the watched directory remain relative destinations, while locations elsewhere on the computer can use an absolute path.
+
+The rule editor action now says **Save** instead of **Edit**, and icon-only controls have clearer labels and tooltips. These are small changes, but the rules screen is where most configuration happens. It should not make you guess.
+
+## Extension normalization and custom notifications
+
+Different applications often use different extensions for the same format. A camera may produce `.jpeg`, while an image editor saves `.jpg`. Per-rule extension normalization lets you map one to the other, for example `jpeg:jpg`, before the file reaches its destination.
+
+Rules can also show a custom notification after a match. The message supports `{file}`, `{rule}` and `{destination}` placeholders, so a notification can tell you exactly what moved and where it went instead of showing a generic success message.
+
+## A few annoyances fixed
+
+Clearing History now asks for confirmation. The `.mouziignore` file accepts inline `#` comments, and you can write `\#` when a pattern needs a literal hash character. The Linux release workflow also repairs and checks AppImage icon links, which fixes installation through AppManager.
+
+Translations were updated across all ten languages included in the app.
+
+## A note about the Windows builds
+
+The Windows installers for 0.1.6 are not Authenticode-signed yet. Production signing through SignPath Foundation is still being prepared, so Windows may show an unknown publisher or SmartScreen warning.
+
+Only download Mouzi from [mouzi.cc](/download) or the [official GitHub release](https://github.com/hsr88/mouzi/releases/tag/v0.1.6). The release includes `SHA256SUMS.txt` for checking the files. Updater packages have their own cryptographic signatures, but those signatures do not replace the publisher identity shown by Windows.
+
+## Getting 0.1.6
+
+Download Mouzi 0.1.6 from the [Windows download page](/download/windows) or the [Linux download page](/download/linux). The full list of changes is in the [changelog](/changelog).
+
+If something breaks, open an issue in the [GitHub repository](https://github.com/hsr88/mouzi/issues). Include the Mouzi version, operating system and what happened. That is far more useful than a report that only says it did not work.
