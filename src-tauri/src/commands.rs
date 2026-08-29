@@ -17,17 +17,72 @@ pub fn greet(name: &str) -> String {
 #[tauri::command]
 pub fn get_system_language() -> String {
     let locale = sys_locale::get_locale().unwrap_or_else(|| "en".to_string());
-    let lang = locale.split('-').next().unwrap_or("en").to_lowercase();
-    match lang.as_str() {
-        "pl" => "pl".to_string(),
-        "it" => "it".to_string(),
-        "de" => "de".to_string(),
-        "fr" => "fr".to_string(),
-        "ru" => "ru".to_string(),
-        "ja" => "ja".to_string(),
-        "es" => "es".to_string(),
-        "uk" => "uk".to_string(),
-        _ => "en".to_string(),
+    map_system_locale(&locale).to_string()
+}
+
+fn map_system_locale(locale: &str) -> &'static str {
+    let normalized = locale.replace('_', "-").to_lowercase();
+    let mut parts = normalized.split('-');
+    let language = parts.next().unwrap_or("en");
+
+    if language == "zh" {
+        let variants: Vec<&str> = parts.collect();
+
+        if variants.contains(&"hant") {
+            return "en";
+        }
+        if variants.contains(&"hans") {
+            return "zh-CN";
+        }
+        if variants
+            .iter()
+            .any(|part| matches!(*part, "tw" | "hk" | "mo"))
+        {
+            return "en";
+        }
+        if variants.iter().any(|part| matches!(*part, "cn" | "sg")) {
+            return "zh-CN";
+        }
+
+        return "en";
+    }
+
+    match language {
+        "pl" => "pl",
+        "it" => "it",
+        "de" => "de",
+        "fr" => "fr",
+        "ru" => "ru",
+        "ja" => "ja",
+        "es" => "es",
+        "uk" => "uk",
+        _ => "en",
+    }
+}
+
+#[cfg(test)]
+mod locale_tests {
+    use super::map_system_locale;
+
+    #[test]
+    fn maps_simplified_chinese_variants_to_zh_cn() {
+        for locale in ["zh-CN", "zh-SG", "zh-Hans", "zh-Hans-CN", "zh_CN"] {
+            assert_eq!(map_system_locale(locale), "zh-CN", "locale: {locale}");
+        }
+    }
+
+    #[test]
+    fn falls_back_for_traditional_and_ambiguous_chinese_locales() {
+        for locale in ["zh-TW", "zh-HK", "zh-MO", "zh-Hant", "zh-Hant-TW", "zh"] {
+            assert_eq!(map_system_locale(locale), "en", "locale: {locale}");
+        }
+    }
+
+    #[test]
+    fn preserves_existing_supported_language_mapping() {
+        assert_eq!(map_system_locale("pl-PL"), "pl");
+        assert_eq!(map_system_locale("ja_JP"), "ja");
+        assert_eq!(map_system_locale("en-US"), "en");
     }
 }
 

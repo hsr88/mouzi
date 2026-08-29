@@ -10,6 +10,7 @@ import ja from './locales/ja.json';
 import vi from './locales/vi.json';
 import es from './locales/es.json';
 import uk from './locales/uk.json';
+import zhCN from './locales/zh-CN.json';
 
 const resources = {
   en: { translation: en },
@@ -22,9 +23,10 @@ const resources = {
   vi: { translation: vi },
   es: { translation: es },
   uk: { translation: uk },  
+  'zh-CN': { translation: zhCN },
 };
 
-export type SupportedLang = 'en' | 'pl' | 'it' | 'de' | 'fr' | 'ru' | 'ja' | 'vi' | 'es' | 'uk';
+export type SupportedLang = 'en' | 'pl' | 'it' | 'de' | 'fr' | 'ru' | 'ja' | 'vi' | 'es' | 'uk' | 'zh-CN';
 
 export async function initI18n(lang: SupportedLang) {
   await i18n.use(initReactI18next).init({

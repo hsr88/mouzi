@@ -1,4 +1,5 @@
 use crate::db::{get_watched_folders, is_folder_manual_mode, is_folder_paused_mode};
+use crate::i18n::TrayI18n;
 use crate::rules::{is_file_ignored_by_mouziignore, process_file, should_ignore_file};
 use notify::{Config, Event, RecommendedWatcher, RecursiveMode, Watcher};
 use std::collections::{HashMap, HashSet};
@@ -184,21 +185,27 @@ impl FolderWatcher {
                     // when the user clicks the notification (Windows activates the app)
                     *pending_open_folder.lock().unwrap() = Some(last_dest_folder.clone());
 
+                    let lang = crate::db::get_settings()
+                        .map(|settings| settings.language)
+                        .unwrap_or_else(|_| "en".to_string());
+                    let i18n = TrayI18n::new(&lang);
+                    let notification_title = i18n.get("notification_title").to_string();
                     let body = if organized_count == 1 {
                         last_notification_message
                             .clone()
                             .unwrap_or_else(|| format!("{} → {}", last_file_name, last_rule_name))
                     } else {
-                        format!("Organized {} files", organized_count)
+                        i18n.get("organized").replace("{}", &organized_count.to_string())
                     };
 
                     #[cfg(target_os = "windows")]
                     {
                         let dest_folder_clone = last_dest_folder.clone();
                         let body_clone = body.clone();
+                        let title_clone = notification_title.clone();
                         let _ = std::thread::spawn(move || {
                             let _ = tauri_winrt_notification::Toast::new("cc.mouzi.app")
-                                .title("Mouzi – click to open folder")
+                                .title(&title_clone)
                                 .text1(&body_clone)
                                 .on_activated(move |_action| {
                                     // Open the folder in Explorer robustly
@@ -216,7 +223,7 @@ impl FolderWatcher {
                         let _ = handle
                             .notification()
                             .builder()
-                            .title("Mouzi – click to open folder")
+                            .title(notification_title)
                             .body(body)
                             .extra("destFolder", last_dest_folder)
                             .show();

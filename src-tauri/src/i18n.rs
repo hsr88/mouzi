@@ -96,6 +96,18 @@ impl TrayI18n {
                 strings.insert("settings_title", "Configuración de Mouzi");
                 strings.insert("organized", "{} archivo(s) organizado(s)");
             }
+            "zh-CN" => {
+                strings.insert("quit", "退出");
+                strings.insert("settings", "设置");
+                strings.insert("clean_now", "立即整理");
+                strings.insert("tooltip", "Mouzi");
+                strings.insert("tooltip_one_pending", "Mouzi – {} 个文件等待整理");
+                strings.insert("tooltip_many_pending", "Mouzi – {} 个文件等待整理");
+                strings.insert("popup_title", "Mouzi");
+                strings.insert("settings_title", "Mouzi 设置");
+                strings.insert("organized", "已整理 {} 个文件");
+                strings.insert("notification_title", "Mouzi – 点击打开文件夹");
+            }
             "uk" => {
                 strings.insert("quit", "Вийти");
                 strings.insert("settings", "Налаштування");
@@ -117,6 +129,7 @@ impl TrayI18n {
                 strings.insert("popup_title", "Mouzi");
                 strings.insert("settings_title", "Mouzi Settings");
                 strings.insert("organized", "Organized {} file(s)");
+                strings.insert("notification_title", "Mouzi – click to open folder");
             }
         }
         Self { strings }
@@ -126,3 +139,4 @@ impl TrayI18n {
         self.strings.get(key).copied().unwrap_or(key)
     }
 }
+
