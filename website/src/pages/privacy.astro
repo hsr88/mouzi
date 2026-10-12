@@ -6,7 +6,7 @@ import { site } from '../config/site';
 
 <BaseLayout
   title="Privacy policy — Mouzi"
-  description="The Mouzi privacy policy: the app collects no telemetry, while optional Google Analytics on mouzi.cc runs only after consent."
+  description="The Mouzi privacy policy: the app collects no telemetry, while optional Google Analytics on mouzi.cc runs by default and can be turned off."
   canonical="/privacy"
 >
   <div class="mx-auto max-w-3xl px-5 py-16">
@@ -37,15 +37,15 @@ import { site } from '../config/site';
 
       <h2>This website</h2>
       <p>
-        mouzi.cc is a static site. If you allow optional analytics, it loads Google Analytics 4 using measurement ID
+        mouzi.cc is a static site. It loads Google Analytics 4 using measurement ID
         <code>G-GMDTSE5DFS</code>. Google Analytics records page visits, session information, approximate location,
         and browser and device details. It may store a first-party client identifier in cookies whose names begin with
         <code>_ga</code>. It does not receive file names, paths, rules or other data from the Mouzi application.
       </p>
       <p>
-        Google Analytics does not load until you choose <strong>Allow analytics</strong>. Advertising storage, advertising
+        Google Analytics runs by default unless you have previously turned it off. Choose <strong>Turn off analytics</strong> to stop further measurement and remove analytics cookies. The page reloads to unload Google Analytics. Advertising storage, advertising
         user data and advertising personalization remain disabled. Your choice is saved locally in your browser under
-        <code>mouzi-analytics-consent</code> for up to 180 days. You can change it below. See{' '}
+        <code>mouzi-analytics-consent</code> until you change it or clear browser storage. No choice or consent is recorded if you do not interact with the banner. Opening preferences does not change your choice. You can change it below. See{' '}
         <a href="https://policies.google.com/privacy" rel="noopener">Google's privacy policy</a> for information about
         Google's processing.
       </p>
@@ -54,19 +54,19 @@ import { site } from '../config/site';
         Sponsor links are ordinary links and sponsors cannot place tracking scripts on this site.
       </p>
 
-      <h2>Purpose and legal basis</h2>
+      <h2>Purpose</h2>
       <p>
         Analytics is used to count visits, understand which documentation and download pages are useful, and find site
         navigation problems. When you click an official release download, the site records the Mouzi version, operating
         system, package type, file name and page containing the button. It does not record files from your computer or
-        anything Mouzi organizes. The legal basis is your consent under Article 6(1)(a) GDPR. Refusing analytics does not
+        anything Mouzi organizes. Analytics starts by default; silence is not treated as consent. Turning it off does not
         limit the website, downloads or the Mouzi application. No analytics data is used for automated decisions or
         profiling by Mouzi.
       </p>
 
       <h2>Cookies, retention and recipients</h2>
       <p>
-        After consent, Google Analytics may set <code>_ga</code> and <code>_ga_&lt;container-id&gt;</code> cookies to
+        When analytics is enabled, Google Analytics may set <code>_ga</code> and <code>_ga_&lt;container-id&gt;</code> cookies to
         distinguish users and sessions. Google documents a default lifetime of up to two years, although browsers may
         shorten it. User-level and event-level information in a standard GA4 property may be retained for up to 14
         months. Aggregated reports may remain available for longer.
@@ -85,7 +85,7 @@ import { site } from '../config/site';
       </p>
       <p>
         For website analytics data, you may request access, rectification, deletion or restriction where applicable.
-        You may withdraw consent at any time without affecting processing that took place before withdrawal. You may
+        You can turn off future analytics at any time. This does not erase data already sent to Google. You may
         also lodge a complaint with the{' '}
         <a href="https://uodo.gov.pl/en/681" rel="noopener">President of the Personal Data Protection Office (UODO)</a>
         in Poland or another competent supervisory authority.
@@ -100,7 +100,7 @@ import { site } from '../config/site';
       <p>
         Questions about this policy: <a href={`mailto:${site.funding.contactEmail}`}>{site.funding.contactEmail}</a>.
       </p>
-      <p>Last updated: 9 August 2026.</p>
+      <p>Last updated: 12 October 2026.</p>
     </section>
   </div>
 </BaseLayout>
