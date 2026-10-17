@@ -1,4 +1,5 @@
 import type { Locale } from './index';
+import { storePrivacy } from './store-privacy';
 type L = Exclude<Locale,'en'>;
 type Pair=[string,string];
 export type ProjectCopy={privacy:{title:string;lead:string;sections:Pair[];manage:string};support:{title:string;lead:string;cards:Array<[string,string,string]>};sponsors:{title:string;lead:string;sections:Pair[];tiers:string;partners:string;placements:string;buttons:string[]};impact:{title:string;lead:string;mission:Pair;numbers:string;reach:Pair;demand:Pair;security:Pair;costs:Pair;funding:string[];buttons:string[]};changelog:{title:string;lead:string;older:string;entries:Record<string,{title:string;items:string[]}>}};
@@ -73,7 +74,9 @@ for (const lang of Object.keys(analyticsPrivacy) as L[]) {
   sections[2][1] = copy[0];
   sections[3] = [copy[1], copy[2]];
   sections[5][1] = copy[3];
-  sections[6][1] = copy[4];
+  sections[1][1] = storePrivacy[lang].app;
+  sections[6][1] = storePrivacy[lang].updated;
+  sections.splice(2, 0, [storePrivacy[lang].title, storePrivacy[lang].paragraphs.join(' ')]);
 }
 
 export const projectPageCopy=data;
