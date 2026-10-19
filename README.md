@@ -266,6 +266,7 @@ MVP with default rules, multi-language support, dark mode, history & undo, start
 
 ### Upcoming
 
+- [ ] Optional recursive folder watching: monitor a folder and its subfolders, with safeguards against reprocessing files in destination folders and creating move loops. Planned, with no release date set.
 - [ ] Optional screenshot cleanup: move screenshots older than a chosen number of days from system and custom screenshot folders to the Recycle Bin
 - [ ] npm wrapper (`npm install -g mouzi`) for cross-platform CLI install
 - [ ] Local AI tagging (ONNX runtime for content classification)
