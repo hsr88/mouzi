@@ -2,6 +2,7 @@
 import { site, type DownloadArtifact } from '../config/site';
 import { localeFromPath } from '../i18n';
 import { downloadCopy } from '../i18n/download';
+import { microsoftStoreCopy } from '../i18n/microsoft-store';
 
 interface Props {
   platform: 'windows' | 'linux';
@@ -10,7 +11,22 @@ interface Props {
 const { platform, compact = false } = Astro.props;
 const artifacts: readonly DownloadArtifact[] = site.downloads[platform];
 const text = downloadCopy(localeFromPath(Astro.url.pathname));
+const storeText = microsoftStoreCopy[localeFromPath(Astro.url.pathname)];
 ---
+
+{platform === 'windows' && (
+  <div data-microsoft-store class="mb-4 rounded-card border border-amber/50 bg-surface p-5">
+    <h3 class="text-lg font-semibold">Microsoft Store</h3>
+    <p class="mt-2 text-sm leading-relaxed text-cream">{storeText.support}</p>
+    <p class="mt-2 text-sm leading-relaxed text-muted">{storeText.certification}</p>
+    <a href={site.microsoftStore} rel="noopener" class="mt-4 inline-flex min-h-11 items-center justify-center rounded-btn bg-amber px-4 py-2 text-center text-sm font-semibold text-[#151004] transition-opacity hover:opacity-90">
+      {storeText.button}
+    </a>
+    <p class="mt-4 text-sm leading-relaxed">
+      <a href={site.github.releases} class="text-amber underline underline-offset-4 hover:no-underline">{storeText.free}</a>
+    </p>
+  </div>
+)}
 
 <ul role="list" class="space-y-3">
   {
@@ -23,7 +39,7 @@ const text = downloadCopy(localeFromPath(Astro.url.pathname));
       >
         <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
           <div class="min-w-0">
-            <div class="flex items-center gap-2">
+            <div class="flex flex-wrap items-center gap-2">
               <span class="text-[15px] font-semibold">{text.artifacts[a.label]?.label ?? a.label}</span>
               {a.recommended && (
                 <span class="rounded border border-amber/50 px-1.5 py-0.5 font-mono text-[10px] tracking-[0.1em] text-amber uppercase">
@@ -50,13 +66,13 @@ const text = downloadCopy(localeFromPath(Astro.url.pathname));
           </a>
         </div>
         <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] text-muted">
-          <span>{a.file}</span>
+          <span class="[overflow-wrap:anywhere]">{a.file}</span>
           <span>{a.arch}</span>
           <span>v{site.version}</span>
           <span>{a.size ?? '—'}</span>
         </div>
         {!compact && a.sha256 && (
-          <div class="mt-2 font-mono text-[11px] text-muted">
+          <div class="mt-2 break-all font-mono text-[11px] text-muted">
             SHA-256: {a.sha256}
           </div>
         )}

@@ -13,7 +13,7 @@ const copy: Record<Locale, {
   en: {
     download: 'Download',
     recommended: 'Recommended',
-    signingPending: 'Code signing approval in progress with SignPath Foundation.',
+    signingPending: 'Direct GitHub downloads: code signing approval in progress with SignPath Foundation.',
     signingApproved: 'Cryptographically signed releases.',
     artifacts: {
       'Installer (NSIS)': { label: 'Installer (NSIS)', note: 'Recommended for most users.' },
@@ -27,7 +27,7 @@ const copy: Record<Locale, {
   es: {
     download: 'Descargar',
     recommended: 'Recomendado',
-    signingPending: 'La aprobación de la firma de código mediante SignPath Foundation está en curso.',
+    signingPending: 'Descargas directas de GitHub: la aprobación de la firma de código mediante SignPath Foundation está en curso.',
     signingApproved: 'Versiones firmadas criptográficamente.',
     artifacts: {
       'Installer (NSIS)': { label: 'Instalador (NSIS)', note: 'Recomendado para la mayoría de usuarios.' },
@@ -41,7 +41,7 @@ const copy: Record<Locale, {
   pl: {
     download: 'Pobierz',
     recommended: 'Polecany',
-    signingPending: 'Trwa proces zatwierdzania podpisywania kodu przez SignPath Foundation.',
+    signingPending: 'Pliki pobierane bezpośrednio z GitHuba: trwa proces zatwierdzania podpisywania kodu przez SignPath Foundation.',
     signingApproved: 'Wydania są podpisane kryptograficznie.',
     artifacts: {
       'Installer (NSIS)': { label: 'Instalator (NSIS)', note: 'Polecany dla większości użytkowników.' },
@@ -55,7 +55,7 @@ const copy: Record<Locale, {
   de: {
     download: 'Herunterladen',
     recommended: 'Empfohlen',
-    signingPending: 'Die Freigabe der Codesignierung durch die SignPath Foundation läuft.',
+    signingPending: 'Direkte GitHub-Downloads: Die Freigabe der Codesignierung durch die SignPath Foundation läuft.',
     signingApproved: 'Kryptografisch signierte Releases.',
     artifacts: {
       'Installer (NSIS)': { label: 'Installer (NSIS)', note: 'Für die meisten Nutzer empfohlen.' },
@@ -69,7 +69,7 @@ const copy: Record<Locale, {
   fr: {
     download: 'Télécharger',
     recommended: 'Recommandé',
-    signingPending: 'L’approbation de la signature du code par la SignPath Foundation est en cours.',
+    signingPending: 'Téléchargements directs depuis GitHub : l’approbation de la signature du code par la SignPath Foundation est en cours.',
     signingApproved: 'Versions signées cryptographiquement.',
     artifacts: {
       'Installer (NSIS)': { label: 'Programme d’installation (NSIS)', note: 'Recommandé pour la plupart des utilisateurs.' },
@@ -83,7 +83,7 @@ const copy: Record<Locale, {
   it: {
     download: 'Scarica',
     recommended: 'Consigliato',
-    signingPending: 'L’approvazione della firma del codice tramite SignPath Foundation è in corso.',
+    signingPending: 'Download diretti da GitHub: l’approvazione della firma del codice tramite SignPath Foundation è in corso.',
     signingApproved: 'Versioni firmate crittograficamente.',
     artifacts: {
       'Installer (NSIS)': { label: 'Programma di installazione (NSIS)', note: 'Consigliato per la maggior parte degli utenti.' },

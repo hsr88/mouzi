@@ -50,6 +50,8 @@ export const site = {
   version: '0.2.1',
   releaseDate: '2026-09-27',
 
+  microsoftStore: 'https://apps.microsoft.com/detail/9N4GMH0PL58R',
+
   /**
    * Code signing status.
    * 'pending'  → "Code signing approval in progress with SignPath Foundation."
@@ -197,5 +199,5 @@ export const site = {
 export function signingMessage(): string {
   return site.signingStatus === 'approved'
     ? 'Cryptographically signed releases.'
-    : 'Code signing approval in progress with SignPath Foundation.';
+    : 'Direct GitHub downloads: code signing approval in progress with SignPath Foundation.';
 }

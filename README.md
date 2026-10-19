@@ -120,6 +120,10 @@ If you want to add a new language, open an issue first so we can confirm the lan
 
 ### Windows
 
+[![Buy in Microsoft Store](https://img.shields.io/badge/Buy_in-Microsoft_Store-0078D4?style=for-the-badge)](https://apps.microsoft.com/detail/9N4GMH0PL58R)
+
+**Buying Mouzi in the Microsoft Store supports its development.** The Store edition has passed Microsoft Store certification and is digitally signed by Microsoft. Mouzi remains open source, and you can still [download it for free from GitHub Releases](https://github.com/hsr88/mouzi/releases).
+
 | Installer | Size | Best For |
 |-----------|------|----------|
 | [`Mouzi_0.2.1_x64-setup.exe`](https://mouzi.cc/download) | ~4.8 MB | Regular users (auto-installer) |

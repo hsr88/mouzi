@@ -17,7 +17,7 @@ import { softwareApplicationLd, breadcrumbLd } from '../../lib/seo';
     <SectionHeading
       kicker={`Version ${site.version} · Windows 10 & 11 · x64`}
       title="Mouzi for Windows"
-      lead="Three builds, one app. The installer suits most people; the MSI is for deployment tools; the portable build runs from anywhere without touching the registry."
+      lead="Buy Mouzi in the Microsoft Store to support development, or choose a free download from GitHub: installer, MSI or portable."
     />
     <div class="mt-10">
       <DownloadCards platform="windows" />
@@ -35,7 +35,7 @@ import { softwareApplicationLd, breadcrumbLd } from '../../lib/seo';
 
       <h2>About the SmartScreen prompt</h2>
       <p>
-        {signingMessage()} Until signing is complete, Windows may show a "Windows protected your PC" prompt for new
+        This applies to direct downloads from GitHub. {signingMessage()} Until signing is complete, Windows may show a "Windows protected your PC" prompt for new
         downloads. If you downloaded the file from this site or from{' '}
         <a href={site.github.releases} rel="noopener">GitHub Releases</a>, confirm that the file name matches the current
         release before choosing <strong>More info → Run anyway</strong>. The{' '}
