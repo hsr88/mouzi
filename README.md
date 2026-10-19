@@ -18,7 +18,8 @@ Mouzi is a silent, elegant file organizer that lives in your system tray and kee
 
 <a href="https://trendshift.io/repositories/36929?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-36929" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/36929/daily?language=Astro" alt="hsr88/mouzi | Trendshift daily ranking for Astro" width="250" height="55" /></a>
 
-[![Download Mouzi](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/mozui/files/latest/download)
+<a href="https://sourceforge.net/projects/mozui/files/latest/download"><img src="https://a.fsdn.com/con/app/sf-download-button" alt="Download Mouzi from SourceForge" height="48" /></a>
+<a href="https://apps.microsoft.com/detail/9N4GMH0PL58R"><img src="https://img.shields.io/badge/Buy_in-Microsoft_Store-0078D4?style=for-the-badge" alt="Buy Mouzi in Microsoft Store to support development" height="48" /></a>
 
 ---
 
