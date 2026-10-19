@@ -1,0 +1,50 @@
+---
+title: "Mouzi is now on the Microsoft Store"
+description: "Buy Mouzi in the Microsoft Store to support its development, with a Microsoft-signed package and Store-managed updates. Free downloads remain available on GitHub."
+pubDate: 2026-10-19
+tags: [releases, windows, microsoft-store]
+related: [mouzi-0-2-0-preview-and-approve-file-organization, why-mouzi-processes-everything-locally]
+cover: /images/mouzi-microsoft-store-launch.png
+coverAlt: "A paper mouse beside amber file folders and a Microsoft Store shopping bag, with the words Mouzi: Now on Microsoft Store."
+draft: false
+---
+
+import { site } from '../../config/site';
+
+Mouzi is now available on the <a href={site.microsoftStore}>Microsoft Store</a>. After preparing the package, testing it and working through certification, it's good to see the app listed there.
+
+The Store edition is a one-time paid purchase that supports my work on Mouzi. **You can still download Mouzi for free from GitHub**, and the project remains open source under the MIT license.
+
+## What Mouzi does
+
+Mouzi sits in your system tray and organizes files in Downloads or other folders you choose. You define the rules: PDFs can go into Documents, installers into their own folder, and files into dated subfolders. File organization runs locally on your computer.
+
+The current version includes:
+
+- **Custom rules** that combine extensions and filename patterns with file-size and modification-date conditions.
+- **Organization previews** showing each file, the rule it matched and its proposed destination before you approve any changes.
+- **Automatic, manual and Suggest modes**, depending on whether you want files sorted immediately or queued for review.
+- **History and undo**, including grouped organization runs and checks for changed files or destination conflicts.
+- **Rename-only templates** and an option to process only newly arriving files while leaving an existing backlog alone.
+
+The [getting started guide](/docs/getting-started) walks through adding a folder and creating your first rule.
+
+## What the Store edition offers
+
+The Store edition has passed Microsoft Store certification, and Microsoft digitally signs the package distributed through the Store. Installation and app updates are handled by Microsoft Store. It does not use Mouzi's separate GitHub updater.
+
+Buying it is a way to support continued development while using the Store to manage the app. There is no subscription or additional in-app purchase. The price for your region is shown on the listing.
+
+<a href={site.microsoftStore}>
+  <img src="https://get.microsoft.com/images/en-us%20dark.svg" alt="Get Mouzi from Microsoft Store" width="220" height="60" />
+</a>
+
+## Free downloads are staying
+
+The Windows installer, MSI and portable build remain available for free on <a href={site.github.releases}>GitHub Releases</a>, alongside the Linux packages. You can also find them on the [download page](/download).
+
+If you're happy with your existing installation, you can keep using it. You don't need to buy the Store edition to continue receiving updates to the direct-download version.
+
+If you do switch, the Store edition keeps its settings separately, so plan to set up your folders and rules there. Stop the old edition from watching those folders before enabling them in the Store edition; the two should not organize the same folder at the same time.
+
+Thanks to everyone who has tested Mouzi, reported bugs or helped with translations. If you choose to buy it in the Store, thank you for supporting the time I put into the project.
