@@ -10,8 +10,10 @@ interface Props {
 }
 const { platform, compact = false } = Astro.props;
 const artifacts: readonly DownloadArtifact[] = site.downloads[platform];
-const text = downloadCopy(localeFromPath(Astro.url.pathname));
-const storeText = microsoftStoreCopy[localeFromPath(Astro.url.pathname)];
+const locale = localeFromPath(Astro.url.pathname);
+const text = downloadCopy(locale);
+const storeText = microsoftStoreCopy[locale];
+const storeBadgeLocale = locale === 'en' ? 'en-us' : locale;
 ---
 
 {platform === 'windows' && (
@@ -19,8 +21,14 @@ const storeText = microsoftStoreCopy[localeFromPath(Astro.url.pathname)];
     <h3 class="text-lg font-semibold">Microsoft Store</h3>
     <p class="mt-2 text-sm leading-relaxed text-cream">{storeText.support}</p>
     <p class="mt-2 text-sm leading-relaxed text-muted">{storeText.certification}</p>
-    <a href={site.microsoftStore} rel="noopener" class="mt-4 inline-flex min-h-11 items-center justify-center rounded-btn bg-amber px-4 py-2 text-center text-sm font-semibold text-[#151004] transition-opacity hover:opacity-90">
-      {storeText.button}
+    <a href={site.microsoftStore} rel="noopener" class="mt-4 inline-block max-w-full rounded-btn transition-opacity hover:opacity-90">
+      <img
+        src={`https://get.microsoft.com/images/${storeBadgeLocale}%20dark.svg`}
+        alt={storeText.button}
+        width={locale === 'de' ? 183 : 161}
+        height="44"
+        class="h-14 w-auto max-w-full"
+      />
     </a>
     <p class="mt-4 text-sm leading-relaxed">
       <a href={site.github.releases} class="text-amber underline underline-offset-4 hover:no-underline">{storeText.free}</a>
