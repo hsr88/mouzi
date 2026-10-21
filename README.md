@@ -3,9 +3,7 @@
 <p align="center"><strong>Your downloads, tamed.</strong></p>
 
 <p align="center">
-  A local file organizer for Windows and Linux that lives in your system tray.<br />
-  Sort, move and rename files with custom rules, previews and undo.<br />
-  No account. No cloud processing. Open source.
+  Mouzi is a silent, elegant file organizer that lives in your system tray and keeps your Downloads folder (and any other folder) automatically tidy. It runs quietly in the background, monitors selected folders, and moves, renames, or sorts files based on customizable rules.
 </p>
 
 <p align="center">
