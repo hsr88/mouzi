@@ -7,6 +7,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import GitHubStats from '../components/GitHubStats.astro';
 import AnalyticsConsent from '../components/AnalyticsConsent.astro';
+import StoreWelcome from '../components/StoreWelcome.astro';
 import { site } from '../config/site';
 import { common, localeFromPath, localizedPath, stripLocale, translatedLocales } from '../i18n';
 
@@ -98,5 +99,6 @@ const alternates = translatable
     <Footer />
     <GitHubStats />
     <AnalyticsConsent />
+    <StoreWelcome />
   </body>
 </html>

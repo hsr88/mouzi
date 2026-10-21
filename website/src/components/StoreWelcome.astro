@@ -1,0 +1,151 @@
+---
+import { Image } from 'astro:assets';
+import mouse from '../../public/images/icon.png';
+import { site } from '../config/site';
+import { localeFromPath } from '../i18n';
+import { microsoftStoreCopy } from '../i18n/microsoft-store';
+import { storeWelcomeCopy } from '../i18n/store-welcome';
+
+const locale = localeFromPath(Astro.url.pathname);
+const copy = storeWelcomeCopy[locale];
+const store = microsoftStoreCopy[locale];
+---
+
+<dialog id="store-welcome" aria-labelledby="store-welcome-title" aria-describedby="store-welcome-description" data-pagefind-ignore>
+  <div class="store-welcome-content">
+    <form method="dialog" class="close-form">
+      <button class="close" aria-label={copy.close} autofocus>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" stroke="currentColor" stroke-width="1.7" /></svg>
+      </button>
+    </form>
+    <Image src={mouse} width={96} height={96} format="webp" alt="" class="mouse" loading="lazy" />
+    <p class="recommendation">{copy.recommendation}</p>
+    <h2 id="store-welcome-title">{copy.title}</h2>
+    <p id="store-welcome-description" class="description">{store.certification}</p>
+    <p class="updates">{copy.updates}</p>
+    <a class="store-button" href={site.microsoftStore} data-store-welcome-link>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M1 1h8v8H1zm10 0h8v8h-8zM1 11h8v8H1zm10 0h8v8h-8z" /></svg>
+      <span>{store.button}</span>
+    </a>
+    <p class="support">{store.support}</p>
+    <a class="free-download" href={site.github.releases} data-store-welcome-link>{store.free}</a>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('#store-welcome');
+  const seenKey = 'mouzi-store-welcome-seen';
+
+  function showWelcome() {
+    if (!dialog || typeof dialog.showModal !== 'function') return;
+    try {
+      if (localStorage.getItem(seenKey)) return;
+      // Without persistent storage, skip the announcement rather than repeat it on every page.
+      localStorage.setItem(seenKey, '1');
+    } catch {
+      return;
+    }
+    dialog.showModal();
+  }
+
+  if (dialog) {
+    let pointerStartedOutside = false;
+    function isOutside(event: MouseEvent) {
+      if (!dialog || event.target !== dialog) return false;
+      const bounds = dialog.getBoundingClientRect();
+      return event.clientX < bounds.left || event.clientX > bounds.right ||
+        event.clientY < bounds.top || event.clientY > bounds.bottom;
+    }
+    dialog.addEventListener('pointerdown', event => { pointerStartedOutside = isOutside(event); });
+    dialog.addEventListener('click', event => {
+      if (pointerStartedOutside && isOutside(event)) dialog.close();
+      pointerStartedOutside = false;
+    });
+    dialog.querySelectorAll('[data-store-welcome-link]').forEach(link => {
+      link.addEventListener('click', () => dialog.close());
+    });
+    window.addEventListener('storage', event => {
+      if (event.key === seenKey && event.newValue && dialog.open) dialog.close();
+    });
+    // A background tab must not consume the first visible visit.
+    if (document.visibilityState === 'hidden') {
+      const onVisible = () => {
+        if (document.visibilityState !== 'visible') return;
+        document.removeEventListener('visibilitychange', onVisible);
+        showWelcome();
+      };
+      document.addEventListener('visibilitychange', onVisible);
+    } else {
+      showWelcome();
+    }
+  }
+</script>
+
+<style>
+  dialog {
+    width: min(30rem, calc(100% - 2rem));
+    max-height: calc(100dvh - 2rem);
+    margin: auto;
+    padding: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+    color: var(--color-cream);
+    box-shadow: 0 24px 80px rgb(0 0 0 / 0.3);
+  }
+  dialog::backdrop { background: rgb(0 0 0 / 0.65); }
+  :global(html:has(#store-welcome[open])) { overflow: hidden; }
+  .store-welcome-content { position: relative; padding: 1.5rem 2rem 2rem; }
+  .close-form { position: absolute; top: 0.5rem; right: 0.5rem; }
+  .close {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-btn);
+    color: var(--color-muted);
+    cursor: pointer;
+  }
+  .close:hover { background: var(--color-surface-2); color: var(--color-cream); }
+  .mouse { display: block; margin-left: -1rem; }
+  .recommendation { font-size: 0.8125rem; color: var(--color-muted); margin: 0.25rem 0 0.75rem; }
+  h2 { font-size: clamp(1.65rem, 5vw, 2rem); font-weight: 650; line-height: 1.15; letter-spacing: -0.025em; text-wrap: balance; }
+  .description { margin-top: 1.25rem; line-height: 1.6; }
+  .updates { margin-top: 0.5rem; line-height: 1.6; color: var(--color-muted); }
+  .store-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 52px;
+    padding: 0.8rem 1rem;
+    margin-top: 1.5rem;
+    border-radius: var(--radius-btn);
+    background: #f4b23a;
+    color: #0b0d10;
+    font-weight: 650;
+    line-height: 1.4;
+    text-align: center;
+  }
+  .store-button svg { flex-shrink: 0; }
+  .store-button:hover { background: #ffc85e; }
+  .support { margin-top: 0.75rem; color: var(--color-muted); font-size: 0.8125rem; line-height: 1.5; text-align: center; }
+  .free-download {
+    display: block;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-line);
+    color: var(--color-muted);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .free-download:hover { color: var(--color-cream); }
+  @media (max-width: 400px) {
+    .store-welcome-content { padding: 1.25rem; }
+    .mouse { width: 80px; height: 80px; }
+  }
+</style>
