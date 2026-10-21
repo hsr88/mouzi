@@ -15,9 +15,9 @@
 </p>
 
 <p align="center">
-  <a href="https://apps.microsoft.com/detail/9N4GMH0PL58R"><img src="https://get.microsoft.com/images/en-us%20dark.svg" alt="Buy in Microsoft Store and support Mouzi development" height="64" align="middle" /></a>
+  <a href="https://apps.microsoft.com/detail/9N4GMH0PL58R"><img src="https://get.microsoft.com/images/en-us%20dark.svg" alt="Buy in Microsoft Store and support Mouzi development" width="234" height="64" align="middle" /></a>
   &nbsp;&nbsp;
-  <a href="https://sourceforge.net/projects/mozui/files/latest/download"><img src="https://a.fsdn.com/con/app/sf-download-button" alt="Download Mouzi for free from SourceForge" height="64" align="middle" /></a>
+  <a href="https://sourceforge.net/projects/mozui/files/latest/download"><img src="https://a.fsdn.com/con/app/sf-download-button" alt="Download Mouzi for free from SourceForge" width="368" height="64" align="middle" /></a>
 </p>
 
 <p align="center">
