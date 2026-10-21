@@ -1,25 +1,43 @@
-# Mouzi 🧹🐁
+<h1 align="center">Mouzi 🧹🐁</h1>
 
-> **Your downloads, tamed.**
+<p align="center"><strong>Your downloads, tamed.</strong></p>
 
-Mouzi is a silent, elegant file organizer that lives in your system tray and keeps your Downloads folder (and any other folder) automatically tidy. It runs quietly in the background, monitors selected folders, and moves, renames, or sorts files based on customizable rules.
+<p align="center">
+  A local file organizer for Windows and Linux that lives in your system tray.<br />
+  Sort, move and rename files with custom rules, previews and undo.<br />
+  No account. No cloud processing. Open source.
+</p>
 
-[![Product Hunt](https://img.shields.io/badge/Product%20Hunt-🚀%20Launch-orange?logo=producthunt&color=ff6154)](https://www.producthunt.com/products/mouzi?launch=mouzi)
-[![Reddit](https://img.shields.io/badge/Reddit-r%2FMouzi-FF4500?logo=reddit)](https://www.reddit.com/r/Mouzi/)
-[![X](https://img.shields.io/badge/X-@hsrvibe-black?logo=x&logoColor=white)](https://x.com/hsrvibe)
+<p align="center">
+  <a href="https://mouzi.cc/download/windows"><img src="https://img.shields.io/badge/Windows-10%2F11-blue?logo=windows" alt="Windows 10 and 11" /></a>
+  <a href="https://mouzi.cc/download/linux"><img src="https://img.shields.io/badge/Linux-AppImage%2Fdeb%2Frpm-yellow?logo=linux" alt="Linux: AppImage, DEB and RPM" /></a>
+  <a href="LICENSE.md"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT license" /></a>
+</p>
 
-[![Windows](https://img.shields.io/badge/Windows-10%2F11-blue?logo=windows)](https://mouzi.cc)
-[![Linux](https://img.shields.io/badge/Linux-AppImage%2Fdeb%2Frpm-yellow?logo=linux)](https://mouzi.cc)
-[![Tauri](https://img.shields.io/badge/Built%20with-Tauri-FFC131?logo=tauri)](https://tauri.app)
-[![Rust](https://img.shields.io/badge/Backend-Rust-000000?logo=rust)](https://www.rust-lang.org)
-[![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react)](https://react.dev)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![GitGem](https://gitgem.org/api/badge/github/hsr88/mouzi.svg)](https://gitgem.org/github/hsr88/mouzi)
+<p align="center">
+  <a href="https://apps.microsoft.com/detail/9N4GMH0PL58R"><img src="https://get.microsoft.com/images/en-us%20dark.svg" alt="Buy in Microsoft Store and support Mouzi development" height="64" align="middle" /></a>
+  &nbsp;&nbsp;
+  <a href="https://sourceforge.net/projects/mozui/files/latest/download"><img src="https://a.fsdn.com/con/app/sf-download-button" alt="Download Mouzi for free from SourceForge" height="64" align="middle" /></a>
+</p>
 
-<a href="https://trendshift.io/repositories/36929?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-36929" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/36929/daily?language=Astro" alt="hsr88/mouzi | Trendshift daily ranking for Astro" width="250" height="55" /></a>
+<p align="center">
+  Buying in Microsoft Store supports development.<br />
+  <strong><a href="https://github.com/hsr88/mouzi/releases">Free downloads on GitHub</a></strong> · <a href="https://mouzi.cc">Website</a> · <a href="https://mouzi.cc/docs">Documentation</a>
+</p>
 
-<a href="https://apps.microsoft.com/detail/9N4GMH0PL58R"><img src="https://get.microsoft.com/images/en-us%20dark.svg" alt="Get it from Microsoft Store — purchase supports Mouzi development" width="276" height="75" align="middle" /></a>
-<a href="https://sourceforge.net/projects/mozui/files/latest/download"><img src="https://a.fsdn.com/con/app/sf-download-button" alt="Download Mouzi from SourceForge" width="276" height="48" align="middle" /></a>
+<p align="center">
+  <a href="https://tauri.app"><img src="https://img.shields.io/badge/Tauri-FFC131?logo=tauri&amp;logoColor=000" alt="Built with Tauri" /></a>
+  <a href="https://www.rust-lang.org"><img src="https://img.shields.io/badge/Rust-000000?logo=rust" alt="Rust backend" /></a>
+  <a href="https://react.dev"><img src="https://img.shields.io/badge/React-61DAFB?logo=react&amp;logoColor=000" alt="React frontend" /></a>
+  <br />
+  <a href="https://www.producthunt.com/products/mouzi?launch=mouzi">Product Hunt</a> · <a href="https://www.reddit.com/r/Mouzi/">r/Mouzi</a> · <a href="https://x.com/hsrvibe">X / @hsrvibe</a>
+</p>
+
+<p align="center">
+  <a href="https://trendshift.io/repositories/36929?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-36929"><img src="https://trendshift.io/api/badge/trendshift/repositories/36929/daily?language=Astro" alt="hsr88/mouzi | Trendshift daily ranking for Astro" width="250" height="55" align="middle" /></a>
+  &nbsp;&nbsp;
+  <a href="https://gitgem.org/github/hsr88/mouzi"><img src="https://gitgem.org/api/badge/github/hsr88/mouzi.svg" alt="Mouzi on GitGem" align="middle" /></a>
+</p>
 
 ---
 
