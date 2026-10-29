@@ -282,6 +282,7 @@ MVP with default rules, multi-language support, dark mode, history & undo, start
 
 ### Upcoming
 
+- [ ] Optional archive-content rules: sort whole archives by the file extensions inside them, starting with ZIP file lists without extracting files. Include scan limits and safeguards for unreadable archives; nested archives are outside the initial scope. Tracked in [#70](https://github.com/hsr88/mouzi/issues/70), with no target version or release date set.
 - [ ] Optional recursive folder watching: monitor a folder and its subfolders, with safeguards against reprocessing files in destination folders and creating move loops. Planned, with no release date set.
 - [ ] Optional screenshot cleanup: move screenshots older than a chosen number of days from system and custom screenshot folders to the Recycle Bin
 - [ ] npm wrapper (`npm install -g mouzi`) for cross-platform CLI install
