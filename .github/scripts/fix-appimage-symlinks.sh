@@ -93,6 +93,10 @@ done < <(find "$appdir" -maxdepth 1 -type l -print0)
 validate_root_symlinks "$appdir"
 echo "Rewritten absolute root symlinks: $fixed_links"
 
+# Extracted AppDirs can retain owner-only directory modes from the packager.
+chmod -R a+rX "$appdir"
+chmod a+rx "$appdir/AppRun"
+
 appimagetool="${APPIMAGETOOL_PATH:-$work_dir/appimagetool-x86_64.AppImage}"
 if [[ ! -x "$appimagetool" ]]; then
   curl -fsSL \

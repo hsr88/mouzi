@@ -20,6 +20,7 @@ jobs:
         with:
           workspaces: src-tauri
           key: cosmic-test
+          cache-on-failure: true
       - name: Install Linux build and test dependencies
         run: |
           sudo apt-get update
