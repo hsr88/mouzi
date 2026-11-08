@@ -288,7 +288,7 @@ pub fn undo_all_cmd(state: tauri::State<AppState>) -> Result<i32, String> {
 #[tauri::command]
 pub fn get_version_cmd(app: AppHandle) -> Result<(String, String), String> {
     let version = app.package_info().version.to_string();
-    let release_date = "2026-09-27".to_string();
+    let release_date = "2026-11-08".to_string();
     Ok((version, release_date))
 }
 
@@ -298,7 +298,11 @@ pub fn get_settings_cmd() -> Result<AppSettings, String> {
 }
 
 #[tauri::command]
-pub fn update_settings_cmd(settings: AppSettings) -> Result<(), String> {
+pub fn update_settings_cmd(mut settings: AppSettings) -> Result<(), String> {
+    if env!("CARGO_PKG_VERSION").contains("beta") {
+        settings.autostart = false;
+        settings.auto_update_enabled = false;
+    }
     update_settings(&settings).map_err(|e| e.to_string())
 }
 
@@ -460,16 +464,25 @@ pub fn show_notification(app: AppHandle, title: String, body: String) {
 
 #[tauri::command]
 pub fn enable_autostart_cmd(app: AppHandle) -> Result<(), String> {
+    if env!("CARGO_PKG_VERSION").contains("beta") {
+        return Err("Autostart is disabled in this test build.".into());
+    }
     app.autolaunch().enable().map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 pub fn disable_autostart_cmd(app: AppHandle) -> Result<(), String> {
+    if env!("CARGO_PKG_VERSION").contains("beta") {
+        return Ok(());
+    }
     app.autolaunch().disable().map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 pub fn is_autostart_enabled_cmd(app: AppHandle) -> Result<bool, String> {
+    if env!("CARGO_PKG_VERSION").contains("beta") {
+        return Ok(false);
+    }
     app.autolaunch().is_enabled().map_err(|e| e.to_string())
 }
 

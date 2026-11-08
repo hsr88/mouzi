@@ -1,0 +1,74 @@
+name: COSMIC Settings test build
+on:
+  push:
+    branches: [codex/issue72-cosmic-test]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  appimage:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+          key: cosmic-test
+      - name: Install Linux build and test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf xauth xvfb libfuse2 weston xwayland imagemagick tesseract-ocr xdotool
+      - run: npm ci
+      - name: Test source
+        run: |
+          npm test
+          cargo test --locked --manifest-path src-tauri/Cargo.toml --lib
+      - name: Build isolated test AppImage
+        run: npm run tauri build -- --ci --bundles appimage
+      - name: Repair and validate AppImage symlinks
+        run: |
+          APPIMAGE=$(find src-tauri/target/release/bundle/appimage -maxdepth 1 -name '*.AppImage' -print -quit)
+          test -n "$APPIMAGE"
+          bash .github/scripts/fix-appimage-symlinks.sh "$APPIMAGE"
+          echo "APPIMAGE_PATH=$APPIMAGE" >> "$GITHUB_ENV"
+      - name: Test Settings without AppIndicator on Wayland and X11
+        run: xvfb-run -a -s '-screen 0 1440x1000x24' dbus-run-session -- bash .github/scripts/test-settings-without-tray.sh "$APPIMAGE_PATH" cosmic-test-evidence
+      - name: Install with AppManager 3.7.3
+        run: |
+          curl -fsSL https://github.com/kem-a/AppManager/releases/download/v3.7.3/AppManager-3.7.3-anylinux-x86_64.AppImage -o "$RUNNER_TEMP/AppManager.AppImage"
+          chmod +x "$RUNNER_TEMP/AppManager.AppImage"
+          export XDG_CONFIG_HOME="$RUNNER_TEMP/appmanager-home/.config"
+          export XDG_DATA_HOME="$RUNNER_TEMP/appmanager-home/.local/share"
+          mkdir -p "$XDG_CONFIG_HOME" "$XDG_DATA_HOME"
+          cp "$APPIMAGE_PATH" "$RUNNER_TEMP/Mouzi-COSMIC-Test.AppImage"
+          xvfb-run -a "$RUNNER_TEMP/AppManager.AppImage" install "$RUNNER_TEMP/Mouzi-COSMIC-Test.AppImage"
+      - name: Package test download
+        run: |
+          mkdir test-download
+          cp "$APPIMAGE_PATH" test-download/Mouzi-COSMIC-Test-0.2.1-beta.cosmic.1-x86_64.AppImage
+          cp testing/cosmic/README.txt testing/cosmic/run-settings.sh test-download/
+          chmod +x test-download/*.sh test-download/*.AppImage
+          cd test-download
+          sha256sum *.AppImage > SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        id: package
+        with:
+          name: Mouzi-0.2.1-beta.cosmic.1-linux-x64
+          path: test-download/
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 0
+      - name: Record download URL
+        run: echo '${{ steps.package.outputs.artifact-url }}' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cosmic-test-evidence
+          path: cosmic-test-evidence/
+          retention-days: 30

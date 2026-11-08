@@ -844,7 +844,8 @@ export default function Settings() {
                   {t("settings.general.startWithSystem")}
                 </label>
                 <button
-                  onClick={() => setAutostart(!settings?.autostart)}
+                    disabled={PRIVATE_BETA}
+                    onClick={() => setAutostart(!settings?.autostart)}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings?.autostart ? "bg-primary" : "bg-surface-dark"
                     }`}
                   role="switch"

@@ -1,5 +1,9 @@
 use tauri::{Emitter, Manager};
 
+pub(crate) fn settings_requested(args: &[String]) -> bool {
+    args.iter().skip(1).any(|arg| arg == "--settings")
+}
+
 pub fn handle_folder_args(app: &tauri::AppHandle, args: &[String]) -> bool {
     let Some(index) = args.iter().position(|arg| arg == "--add-folder") else {
         return false;
@@ -76,5 +80,23 @@ pub fn set_enabled(enabled: bool) -> Result<(), String> {
     {
         let _ = enabled;
         Err("Explorer integration is available on Windows".into())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::settings_requested;
+
+    #[test]
+    fn settings_flag_is_explicit_and_works_for_forwarded_arguments() {
+        let args = |values: &[&str]| values.iter().map(|s| s.to_string()).collect::<Vec<_>>();
+        assert!(settings_requested(&args(&["mouzi", "--settings"])));
+        assert!(settings_requested(&args(&[
+            "/opt/Mouzi.AppImage",
+            "--settings"
+        ])));
+        assert!(!settings_requested(&args(&["mouzi", "--autostart"])));
+        assert!(!settings_requested(&args(&["mouzi"])));
+        assert!(!settings_requested(&args(&["mouzi", "--settings-other"])));
     }
 }

@@ -1,7 +1,7 @@
 {
   "name": "mouzi",
   "private": true,
-  "version": "0.2.1",
+  "version": "0.2.1-beta.cosmic.1",
   "type": "module",
   "scripts": {
     "dev": "vite",

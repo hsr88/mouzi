@@ -38,17 +38,26 @@ pub struct AppState {
 pub fn run() {
     let ignored_files = Arc::new(Mutex::new(HashMap::new()));
     let pending_open_folder: Arc<Mutex<Option<String>>> = Arc::new(Mutex::new(None));
-    tauri::Builder::default()
+    let beta = env!("CARGO_PKG_VERSION").contains("beta");
+    let mut builder = tauri::Builder::default();
+    if !beta {
+        builder = builder
+            .plugin(tauri_plugin_updater::Builder::new().build())
+            .plugin(tauri_plugin_autostart::init(
+                tauri_plugin_autostart::MacosLauncher::LaunchAgent,
+                Some(vec!["--autostart"]),
+            ));
+    }
+    builder
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_process::init())
-        .plugin(tauri_plugin_updater::Builder::new().build())
-        .plugin(tauri_plugin_autostart::init(
-            tauri_plugin_autostart::MacosLauncher::LaunchAgent,
-            Some(vec!["--autostart"]),
-        ))
         .plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
+            if integration::settings_requested(&args) {
+                tray::show_settings_window(app);
+                return;
+            }
             if integration::handle_folder_args(app, &args) {
                 return;
             }
@@ -103,9 +112,11 @@ pub fn run() {
 
             // Initialize database
             let beta = env!("CARGO_PKG_VERSION").contains("beta");
-            if let Some(proj_dirs) =
-                ProjectDirs::from("cc", "mouzi", if beta { "mouzi-beta" } else { "mouzi" })
-            {
+            if let Some(proj_dirs) = ProjectDirs::from(
+                "cc",
+                "mouzi",
+                if beta { "mouzi-cosmic-test" } else { "mouzi" },
+            ) {
                 let data_dir = proj_dirs.data_dir().to_path_buf();
                 std::fs::create_dir_all(&data_dir).ok();
                 init_db(data_dir.clone()).expect("Failed to initialize database");
@@ -133,21 +144,44 @@ pub fn run() {
             let tray_lang = db::get_settings()
                 .map(|s| s.language)
                 .unwrap_or_else(|_| "en".to_string());
-            tray::setup_tray(&app_handle, &tray_lang)?;
+            let args = std::env::args().collect::<Vec<_>>();
+            #[cfg(target_os = "linux")]
+            let tray_unavailable = if integration::settings_requested(&args) {
+                // Skip AppIndicator initialization when explicitly opening Settings.
+                true
+            } else {
+                match tray::setup_tray(&app_handle, &tray_lang) {
+                    Ok(()) => false,
+                    Err(error) => {
+                        eprintln!("Unable to create system tray: {error}");
+                        true
+                    }
+                }
+            };
+            #[cfg(not(target_os = "linux"))]
+            let tray_unavailable = {
+                tray::setup_tray(&app_handle, &tray_lang)?;
+                false
+            };
 
             // Test builds open Settings on normal launches; autostart stays quiet.
-            if (is_first_run || beta) && !std::env::args().any(|arg| arg == "--autostart") {
+            if integration::settings_requested(&args)
+                || tray_unavailable
+                || ((is_first_run || beta) && !args.iter().any(|arg| arg == "--autostart"))
+            {
                 tray::show_settings_window(&app_handle);
             }
-            integration::handle_folder_args(&app_handle, &std::env::args().collect::<Vec<_>>());
+            integration::handle_folder_args(&app_handle, &args);
 
             // Sync autostart with user settings
-            if let Ok(settings) = db::get_settings() {
-                let auto_manager = app.autolaunch();
-                if settings.autostart {
-                    let _ = auto_manager.enable();
-                } else {
-                    let _ = auto_manager.disable();
+            if !beta {
+                if let Ok(settings) = db::get_settings() {
+                    let auto_manager = app.autolaunch();
+                    if settings.autostart {
+                        let _ = auto_manager.enable();
+                    } else {
+                        let _ = auto_manager.disable();
+                    }
                 }
             }
 
