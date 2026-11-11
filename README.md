@@ -282,6 +282,9 @@ MVP with default rules, multi-language support, dark mode, history & undo, start
 
 ### Upcoming
 
+- [ ] File-age conditions per rule: match files older or newer than a chosen interval, starting with modification time and reviewing support for creation/access timestamps. File age and time spent in a folder need separate treatment. Tracked in [#73](https://github.com/hsr88/mouzi/issues/73), with no target version or release date set.
+- [ ] Optional filename normalization when moving files: case conversion, spaces to underscores/hyphens, configurable special-character handling, Unicode NFC normalization and whitespace cleanup. Include a preview and collision handling. Tracked in [#73](https://github.com/hsr88/mouzi/issues/73) (original request [#74](https://github.com/hsr88/mouzi/issues/74)), with no target version or release date set.
+- [ ] Destination folders based on file dates: configurable date sources and folder templates, including quarters such as `Archive/{year}/{quarter}` or `{year}-Q{quarter}`. Tracked in [#73](https://github.com/hsr88/mouzi/issues/73) (original request [#75](https://github.com/hsr88/mouzi/issues/75)), with no target version or release date set.
 - [ ] Optional archive-content rules: sort whole archives by the file extensions inside them, starting with ZIP file lists without extracting files. Include scan limits and safeguards for unreadable archives; nested archives are outside the initial scope. Tracked in [#70](https://github.com/hsr88/mouzi/issues/70), with no target version or release date set.
 - [ ] Optional recursive folder watching: monitor a folder and its subfolders, with safeguards against reprocessing files in destination folders and creating move loops. Planned, with no release date set.
 - [ ] Optional screenshot cleanup: move screenshots older than a chosen number of days from system and custom screenshot folders to the Recycle Bin
